@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2024/12/24 18:22:04 by dakojic          ###   ########.fr       */
+/*   Updated: 2024/12/24 20:16:44 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ int player_filler(t_cube *cube)
 		direction_filler(&cube->player, 1, 0);
 	cube->player.fov_rad = FOV * PI / 180;
 	fov_rad = cube->player.fov_rad;
-	cube->player.plane_x = cube->player.dir_x * tan(fov_rad / 2);
-	cube->player.plane_y = cube->player.dir_y * tan(fov_rad / 2);
+	// cube->player.plane_x = cube->player.dir_x * tan(fov_rad / 2);
+	// cube->player.plane_y = cube->player.dir_y * tan(fov_rad / 2);
 	cube->player.x = cube->data.pos_x * CELL_SIZE;
 	cube->player.y = cube->data.pos_y * CELL_SIZE;
 	return (0);
@@ -116,15 +116,230 @@ int key_press(int keysym, t_cube *cube)
 	return (0);
 }
 
+void draw_pixel(t_img_data *img, int x, int y, int color)
+{
+    char *pixel;
+
+    pixel = img->adress + (y * img->size + x * (img->bpp / 8));
+    *(unsigned int *)pixel = color;
+}
+
+void render_floor_and_ceiling(t_cube *cube)
+{
+    int x, y;
+
+    // Couleur du ciel (par exemple, bleu clair)
+    int sky_color = 0x67CEEB;
+    // Couleur du sol (par exemple, vert foncé)
+    int floor_color = 0x928B22;
+
+    // Remplir la moitié supérieure de l'écran avec la couleur du ciel
+    for (y = 0; y < WIN_H / 2; y++)
+    {
+        for (x = 0; x < WIN_W; x++)
+        {
+            draw_pixel(&cube->img, x, y, sky_color);
+        }
+    }
+
+    // Remplir la moitié inférieure de l'écran avec la couleur du sol
+    for (y = WIN_H / 2; y < WIN_H; y++)
+    {
+        for (x = 0; x < WIN_W; x++)
+        {
+            draw_pixel(&cube->img, x, y, floor_color);
+        }
+    }
+}
+
+float horizontal_intersection(t_cube *cube, float ray_angle)
+{
+    float x_intercept, y_intercept;
+    float x_step, y_step;
+    int map_x, map_y;
+    float distance = 0.0;
+
+    // Calculer les coordonnées de l'intersection initiale
+    y_intercept = floor(cube->player.y / CELL_SIZE) * CELL_SIZE;
+    if (ray_angle > 0 && ray_angle < PI)
+        y_intercept += CELL_SIZE;
+    else
+        y_intercept -= 0.0001;
+
+    x_intercept = cube->player.x + (y_intercept - cube->player.y) / tan(ray_angle);
+
+    // Calculer les pas pour les intersections suivantes
+    y_step = CELL_SIZE;
+    if (!(ray_angle > 0 && ray_angle < PI))
+        y_step *= -1;
+
+    x_step = CELL_SIZE / tan(ray_angle);
+    if ((ray_angle > PI / 2 && ray_angle < 3 * PI / 2) && x_step > 0)
+        x_step *= -1;
+    if (!(ray_angle > PI / 2 && ray_angle < 3 * PI / 2) && x_step < 0)
+        x_step *= -1;
+
+    // Vérifier les intersections successives
+    while (1)
+    {
+        map_x = (int)(x_intercept / CELL_SIZE);
+        map_y = (int)(y_intercept / CELL_SIZE);
+
+        // Vérifier si l'intersection est dans les limites de la carte
+        if (map_x >= 0 && map_x < cube->data.map_w && map_y >= 0 && map_y < cube->data.map_h)
+        {
+            // Vérifier si l'intersection est avec un mur
+            if (cube->data.map[map_y][map_x] == '1')
+            {
+                distance = sqrt((x_intercept - cube->player.x) * (x_intercept - cube->player.x) +
+                                (y_intercept - cube->player.y) * (y_intercept - cube->player.y));
+                break;
+            }
+        }
+        else
+        {
+            // Si l'intersection est hors des limites de la carte, arrêter la recherche
+            distance = FLT_MAX;
+            break;
+        }
+
+        // Passer à l'intersection suivante
+        x_intercept += x_step;
+        y_intercept += y_step;
+    }
+
+    return distance;
+}
+float vertical_intersection(t_cube *cube, float ray_angle)
+{
+    float x_intercept, y_intercept;
+    float x_step, y_step;
+    int map_x, map_y;
+    float distance = 0.0;
+
+    // Calculer les coordonnées de l'intersection initiale
+    x_intercept = floor(cube->player.x / CELL_SIZE) * CELL_SIZE;
+    if (ray_angle < PI / 2 || ray_angle > 3 * PI / 2)
+        x_intercept += CELL_SIZE;
+    else
+        x_intercept -= 0.0001;
+
+    y_intercept = cube->player.y + (x_intercept - cube->player.x) * tan(ray_angle);
+
+    // Calculer les pas pour les intersections suivantes
+    x_step = CELL_SIZE;
+    if (!(ray_angle < PI / 2 || ray_angle > 3 * PI / 2))
+        x_step *= -1;
+
+    y_step = CELL_SIZE * tan(ray_angle);
+    if ((ray_angle > 0 && ray_angle < PI) && y_step < 0)
+        y_step *= -1;
+    if (!(ray_angle > 0 && ray_angle < PI) && y_step > 0)
+        y_step *= -1;
+
+    // Vérifier les intersections successives
+    while (1)
+    {
+        map_x = (int)(x_intercept / CELL_SIZE);
+        map_y = (int)(y_intercept / CELL_SIZE);
+
+        // Vérifier si l'intersection est dans les limites de la carte
+        if (map_x >= 0 && map_x < cube->data.map_w && map_y >= 0 && map_y < cube->data.map_h)
+        {
+            // Vérifier si l'intersection est avec un mur
+            if (cube->data.map[map_y][map_x] == '1')
+            {
+                distance = sqrt((x_intercept - cube->player.x) * (x_intercept - cube->player.x) +
+                                (y_intercept - cube->player.y) * (y_intercept - cube->player.y));
+                break;
+            }
+        }
+        else
+        {
+            // Si l'intersection est hors des limites de la carte, arrêter la recherche
+            distance = FLT_MAX;
+            break;
+        }
+
+        // Passer à l'intersection suivante
+        x_intercept += x_step;
+        y_intercept += y_step;
+    }
+
+    return distance;
+}
+// void render_floor_and_ceiling(t_cube *cube)
+// {
+//     int x, y;
+
+//     // Couleur du ciel (par exemple, bleu clair)
+//     int sky_color = 0x87CEEB;
+//     // Couleur du sol (par exemple, vert foncé)
+//     int floor_color = 0x228B22;
+
+//     // Remplir la moitié supérieure de l'écran avec la couleur du ciel
+//     for (y = 0; y < WIN_H / 2; y++)
+//     {
+//         for (x = 0; x < WIN_W; x++)
+//         {
+//             draw_pixel(&cube->img, x, y, sky_color);
+//         }
+//     }
+
+//     // Remplir la moitié inférieure de l'écran avec la couleur du sol
+//     for (y = WIN_H / 2; y < WIN_H; y++)
+//     {
+//         for (x = 0; x < WIN_W; x++)
+//         {
+//             draw_pixel(&cube->img, x, y, floor_color);
+//         }
+//     }
+// }
+
+void cast(t_cube *cube)
+{
+    int ray;
+    float vertic_inter, horiz_inter;
+
+    render_floor_and_ceiling(cube); // Ajoutez cette ligne pour rendre le sol et le ciel
+
+    ray = 0;
+    cube->ray.ray_angle = cube->player.angle - (cube->player.fov_rad / 2);
+    while (ray < WIN_W)
+    {
+        vertic_inter = vertical_intersection(cube, cube->ray.ray_angle);
+        horiz_inter = horizontal_intersection(cube, cube->ray.ray_angle);
+        if (vertic_inter <= horiz_inter)
+        {
+            cube->ray.distance = vertic_inter;
+            cube->ray.flag = 0; // Intersection verticale
+        }
+        else
+        {
+            cube->ray.distance = horiz_inter;
+            cube->ray.flag = 1; // Intersection horizontale
+        }
+
+        ray++;
+        cube->ray.ray_angle += (cube->player.fov_rad / WIN_W);
+    }
+}
+
+int loop_render(t_cube *cube)
+{
+	cast(cube);
+	return (0);
+}
+
+
 int game(t_cube *cube)
 {
 	init_mlx(cube);
 
 	mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
 	mlx_hook(cube->win_ptr, 17, 0, &escape, cube);
-
-	if(cube->mlx_ptr)
-		mlx_loop(cube->mlx_ptr);
+	mlx_loop_hook(cube->mlx_ptr, &loop_render, cube);
+	mlx_loop(cube->mlx_ptr);
 	return (0);
 }
 int main(void)

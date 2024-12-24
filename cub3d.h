@@ -16,6 +16,8 @@
 # include "utils/gnl/get_next_line.h"
 # include <stdbool.h>
 # include <math.h>
+# include <float.h>
+
 # define WIN_W 960
 # define WIN_H 540
 # define FOV 60
@@ -56,21 +58,29 @@ typedef struct s_data
     (0, 1)      N
     (0, -1)     S
 */
+typedef struct s_ray
+{
+    float ray_angle;
+    float distance;
+    int flag;
+} t_ray;
+
 typedef struct s_player
 {
-    int  x;
-    int  y;
-    float  dir_x;
-    float  dir_y;
-    float  plane_x;
-    float  plane_y;
+    int     x;
+    int     y;
+    float   angle;
+    float   dir_x;
+    float   dir_y;
+    float   plane_x;
+    float   plane_y;
     float   fov_rad;
 }   t_player;
 
 typedef struct s_cube
 {
     int     fd;
-    char    **av;;
+    char    **av; //utile ?
     void    *mlx_ptr;
     void    *win_ptr;
     bool    inputs[128];
@@ -79,7 +89,7 @@ typedef struct s_cube
     t_img_data  img;
     t_data      data;
     t_player    player;
-
+    t_ray       ray;
 }   t_cube;
 
 #endif
