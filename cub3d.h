@@ -17,14 +17,17 @@
 # include <stdbool.h>
 # include <math.h>
 # include <float.h>
-
+# define MAX_VIEW_DISTANCE 50
 # define WIN_W 960
 # define WIN_H 540
 # define FOV 60
-# define ROTATION_SPEED 0.045
+# define ROTATION_SPEED 0.501
 # define PLAYER_SPEED 4
 # define PI 3.14159265358979323846
 # define CELL_SIZE 30
+# define EPSILON 1e-6
+# define LARGE_NUMBER 1e6
+
 typedef struct s_img_data
 {
     void    *img_ptr;
@@ -60,15 +63,22 @@ typedef struct s_data
 */
 typedef struct s_ray
 {
+    int index;
     float ray_angle;
     float distance;
     int flag;
+
+    double h_x;
+    double h_y;
+
+    double v_x;
+    double v_y;
 } t_ray;
 
 typedef struct s_player
 {
-    int     x;
-    int     y;
+    double     x;
+    double     y;
     float   angle;
     float   dir_x;
     float   dir_y;
@@ -90,6 +100,14 @@ typedef struct s_cube
     t_data      data;
     t_player    player;
     t_ray       ray;
+    t_img_data     texture[5];
 }   t_cube;
+
+
+int map_filler(t_data *data);
+int	escape(t_cube *cube);
+int key_press(int keysym, t_cube *cube);
+int init_mlx(t_cube *cube);
+
 
 #endif

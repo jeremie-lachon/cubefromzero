@@ -10,7 +10,7 @@ UTILS_DIR = utils/
 #PRINTF_DIR = $(UTILS_DIR)printf/
 GNL_DIR = $(UTILS_DIR)gnl/
 
-SRC = test.c
+SRC = test.c done.c
 
 OBJ = $(SRC:.c=.o)
 
