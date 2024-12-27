@@ -18,13 +18,13 @@
 # include <math.h>
 # include <float.h>
 # define MAX_VIEW_DISTANCE 50
-# define WIN_W 960
-# define WIN_H 540
+# define WIN_W 640
+# define WIN_H 420
 # define FOV 60
-# define ROTATION_SPEED 0.501
+# define ROTATION_SPEED 0.006
 # define PLAYER_SPEED 4
-# define PI 3.14159265358979323846
-# define CELL_SIZE 30
+# define PI 3.1415926535897932384
+# define CELL_SIZE 60
 # define EPSILON 1e-6
 # define LARGE_NUMBER 1e6
 

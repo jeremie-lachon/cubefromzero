@@ -1,6 +1,6 @@
 NAME = cub3d
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -MMD -Wall -Werror -Wextra -g3
 
 # Path to mlx header files
 MLX_INCLUDE = minilibx-linux/
@@ -12,6 +12,7 @@ GNL_DIR = $(UTILS_DIR)gnl/
 
 SRC = test.c done.c
 
+DEP = $(SRC:.c=.d)
 OBJ = $(SRC:.c=.o)
 
 %.o: %.c
@@ -24,7 +25,9 @@ $(NAME): $(OBJ)
 	$(CC) $(OBJ) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
 #	$(CC) $(OBJ) $(PRINTF_DIR)libftprintf.a -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
 
-all: $(NAME)
+-include $(DEP)
+
+all: touch test.c $(NAME)
 
 clean:
 	$(MAKE) -C $(PRINTF_DIR) clean

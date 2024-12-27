@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2024/12/25 21:39:52 by dakojic          ###   ########.fr       */
+/*   Updated: 2024/12/27 19:24:48 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ int player_filler(t_cube *cube)
         cube->player.angle = PI;
 	cube->player.fov_rad = (FOV * PI) / 180;
 	fov_rad = cube->player.fov_rad;
-	// cube->player.plane_x = cube->player.dir_x * tan(fov_rad / 2);
-	// cube->player.plane_y = cube->player.dir_y * tan(fov_rad / 2);
 	cube->player.x = cube->data.pos_x * CELL_SIZE + CELL_SIZE / 2;
 	cube->player.y = cube->data.pos_y * CELL_SIZE + CELL_SIZE / 2;
 	return (0);
@@ -70,7 +68,6 @@ void draw_floor_ceiling(t_cube *cube, int ray, double top, double bot)
 {
     int i;
     i = bot;
-
     while(i < WIN_H)
         ft_putpixel(cube, ray, i++, 0x00FF0060);
     i = 0;
@@ -96,17 +93,19 @@ t_img_data side_texture(t_cube *cube)
 			return (cube->texture[3]);
 	}
 }
+
 double get_offset_x(t_img_data *texture, t_cube *cube)
 {
-    double ret;
+	double	offset_x;
 
-    if(cube->ray.flag == 1)
-        ret = (int)fmodf((cube->ray.h_x * (texture->pix_w / CELL_SIZE)), texture->pix_w);
-    else
-        ret = (int)fmodf((cube->ray.v_y * (texture->pix_w / CELL_SIZE)), texture->pix_w);
-    return (ret);
+	if (cube->ray.flag == 1)
+		offset_x = (int)fmodf((cube->ray.h_x * (texture->pix_w / CELL_SIZE)),
+				texture->pix_w);
+	else
+		offset_x = (int)fmodf((cube->ray.v_y * (texture->pix_w / CELL_SIZE)),
+				texture->pix_w);
+	return (offset_x);
 }
-
 int	reverse_bytes(int c)
 {
 	unsigned int	b;
@@ -124,9 +123,8 @@ void draw_wall(t_cube *cube, double top, double bot, double wall)
     unsigned int *arr;
     double fact;
 
+
     text = side_texture(cube);
-    if(!text.adress)
-        printf("Y A PLUS\n");
     arr = (unsigned int *)text.adress;
     fact = (double)text.pix_h / wall;
     off_x = get_offset_x(&text, cube);
@@ -206,7 +204,7 @@ int	wall_hit(float x, float y, t_cube *cube)
 	y_m = floor(y / CELL_SIZE);
 	if (x_m < 0 || y_m < 0)
 		return (0);
-	if (y_m >= cube->data.map_h || x_m >= cube->data.map_w)
+	if (y_m >= cube->data.map_w || x_m >= cube->data.map_h)
 		return (0);
 	if (cube->data.map[y_m] && x_m <= (int)strlen(cube->data.map[y_m]))
 		if (cube->data.map[y_m][x_m] == '1'
@@ -226,7 +224,7 @@ float horizon_crossing(t_cube *cube, float angle)
     steps_y = CELL_SIZE;
     steps_x = CELL_SIZE / tan(angle);
     hy = floor(cube->player.y / CELL_SIZE) * CELL_SIZE;
-    pixel = inter_check(cube->player.angle, &hy, &steps_y, 1);
+    pixel = inter_check(angle, &hy, &steps_y, 1);
     hx = cube->player.x + (hy - cube->player.y) / tan(angle);
     if((unit_circle(angle, 'y') && steps_x > 0) || (!unit_circle(angle, 'y') && steps_x < 0))
         steps_x *= -1;
@@ -249,15 +247,15 @@ float vertical_crossing(t_cube *cube, float angle)
     int pixel;
 
     steps_x = CELL_SIZE;
-    steps_y = CELL_SIZE / tan(angle);
+    steps_y = CELL_SIZE * tan(angle);
     if (fabs(tan(angle)) < EPSILON)
         steps_y = LARGE_NUMBER;
     else
-        steps_y = CELL_SIZE / tan(angle);
+        steps_y = CELL_SIZE * tan(angle);
     vx = floor(cube->player.x / CELL_SIZE) * CELL_SIZE;
-    pixel = inter_check(cube->player.angle, &vx, &steps_x, 0);
-    vy = cube->player.y + (vx - cube->player.x) / tan(angle);
-    if((unit_circle(angle, 'y') && steps_y > 0) || (!unit_circle(angle, 'y') && steps_y < 0))
+    pixel = inter_check(angle, &vx, &steps_x, 0);
+    vy = cube->player.y + (vx - cube->player.x) * tan(angle);
+    if((unit_circle(angle_fix(angle), 'y') && steps_y > 0) || (!unit_circle(angle_fix(angle), 'y') && steps_y < 0))
         steps_y *= -1;
     while(wall_hit(vy, vx - pixel, cube))
     {
@@ -294,11 +292,13 @@ void render(t_cube *cube)
         cube->ray.ray_angle = angle_fix(cube->ray.ray_angle);
     }
 }
+
 void rotate_player(t_cube *cube, int key)
 {
     cube->player.angle += ROTATION_SPEED * key;
     cube->player.angle = angle_fix(cube->player.angle);
 }
+
 void	move_player(t_cube *cube, double angle)
 {
 	int		map_grid_y;
@@ -309,17 +309,24 @@ void	move_player(t_cube *cube, double angle)
 	new_x = (cube->player.x + cos(angle));
 	new_y = (cube->player.y + sin(angle));
 	map_grid_x = ((int)new_x / CELL_SIZE);
-	map_grid_y = ((int)new_y / CELL_SIZE);
-	if (cube->data.map[map_grid_y][map_grid_x] != '1'
-		&& (cube->data.map[map_grid_y][(int)cube->player.x
-			/ CELL_SIZE] != '1' || cube->data.map[(int)cube->player.y
-			/ CELL_SIZE][map_grid_x] != '1'))
+    
+    if(map_grid_x > cube->data.map_h)
+    {
+        map_grid_x = cube->data.map_h;
+    }
+    map_grid_y = ((int)new_y / CELL_SIZE);
+
+    if(map_grid_y > cube->data.map_w)
+    {
+        map_grid_y = cube->data.map_w;
+    }
+	if (cube->data.map[map_grid_y][map_grid_x] != '1' && (cube->data.map[map_grid_y][(int)cube->player.x / CELL_SIZE] != '1' || cube->data.map[(int)cube->player.y / CELL_SIZE][map_grid_x] != '1'))
 	{
 		cube->player.x = new_x;
 		cube->player.y = new_y;
-        printf("La position est %f et %f\n", cube->player.x, cube->player.y);
 	}
 }
+
 void moving(t_cube *cube)
 {
     rotate_player(cube, cube->inputs[126] - cube->inputs[127]);
@@ -332,6 +339,7 @@ void moving(t_cube *cube)
     if(cube->inputs[100]) //a
         move_player(cube, angle_fix(cube->player.angle + (PI / 2.0)));
 }
+
 int loop_render(t_cube *cube)
 {
 	render(cube);

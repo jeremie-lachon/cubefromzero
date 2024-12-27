@@ -2,26 +2,32 @@
 
 int map_filler(t_data *data)
 {
-    data->map = calloc(10, sizeof(char *));
+    data->map = calloc(15, sizeof(char *));
     if (!data->map)
         return (-1);
 
-    data->map_h = 9;
-    data->map_w = 25;
-    data->map[0] = strdup("000000000000000000000000");
-    data->map[1] = strdup("000000000000000000000000");
-    data->map[2] = strdup("000000000000000000000000");
-    data->map[3] = strdup("000000000000000000000000");
-    data->map[4] = strdup("000000000000000000000000");
-    data->map[5] = strdup("000000000000000000000000");
-    data->map[6] = strdup("000000000000000000000000");
-    data->map[7] = strdup("000000000000000000000000");
-    data->map[8] = strdup("000000000000000000000000");
-    data->map[9] = NULL;
+    data->map_h = 14;
+    data->map_w = 24;
 
-    data->pos_x = 5;
-    data->pos_y = 5;
-	data->facing = 'S';
+    data->map[0] = strdup("111111111111111111111111");
+    data->map[1] = strdup("100000000000000000000001");
+    data->map[3] = strdup("100000000000000000000001");
+    data->map[4] = strdup("100000000000000000000001");
+    data->map[6] = strdup("100000000000000000000001");
+    data->map[7] = strdup("100000000000000000000001");
+    data->map[8] = strdup("100000000000000000000001");
+    data->map[9] = strdup("100000000000000000000001");
+    data->map[10] = strdup("100000000000000000000001");
+    data->map[11] = strdup("100000000000000000000001");
+    data->map[12] = strdup("100000000000000000000001");
+    data->map[13] = strdup("100000000000000000000001");
+    data->map[14] = strdup("100000000000000000000001");
+    data->map[15] = strdup("111111111111111111111111");
+    data->map[16] = NULL;
+
+    data->pos_x = 10;
+    data->pos_y = 7;
+	data->facing = 'N';
     return (0);
 }
 
@@ -66,10 +72,10 @@ int init_mlx(t_cube *cube)
 												&cube->img.size, 
 												&cube->img.endl);
 	// protection
-    cube->texture[0].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/altar.xpm", &cube->texture[0].pix_w, &cube->texture[0].pix_h);  
-    cube->texture[1].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/altar1.xpm", &cube->texture[1].pix_w, &cube->texture[1].pix_h);                             
-    cube->texture[2].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/altar2.xpm", &cube->texture[2].pix_w, &cube->texture[2].pix_h);                             
-    cube->texture[3].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/altar3.xpm", &cube->texture[3].pix_w, &cube->texture[3].pix_h);
+    cube->texture[0].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/west.xpm", &cube->texture[0].pix_w, &cube->texture[0].pix_h);  //west
+    cube->texture[1].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/east.xpm", &cube->texture[1].pix_w, &cube->texture[1].pix_h);   //east                          
+    cube->texture[2].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/1000x1600.xpm", &cube->texture[2].pix_w, &cube->texture[2].pix_h);   // nord                          
+    cube->texture[3].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/1000_1600.xpm", &cube->texture[3].pix_w, &cube->texture[3].pix_h);          // sud
 
 
     cube->texture[0].adress = mlx_get_data_addr(cube->texture[0].img_ptr, &cube->texture[0].bpp, &cube->texture[0].size, &cube->texture[0].endl);
