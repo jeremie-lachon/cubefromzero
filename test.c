@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2024/12/27 19:24:48 by dakojic          ###   ########.fr       */
+/*   Updated: 2024/12/30 18:03:21 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,6 @@ int player_filler(t_cube *cube)
 	return (0);
 }
 
-
-void draw_pixel(t_img_data *img, int x, int y, int color)
-{
-    char *pixel;
-
-    pixel = img->adress + (y * img->size + x * (img->bpp / 8));
-    *(unsigned int *)pixel = color;
-}
 
 float angle_fix(float ray_angle)
 {
@@ -144,7 +136,9 @@ void    render_wall(t_cube *cube, int ray)
     double bot_pixel;
     double top_pixel;
 
+
     cube->ray.distance *= cos(angle_fix(cube->ray.ray_angle - cube->player.angle));
+    
     wall_h = (CELL_SIZE / cube->ray.distance) * ((WIN_W / 2) / tan(cube->player.fov_rad / 2));
     bot_pixel = (WIN_H / 2) + (wall_h / 2);
     top_pixel = (WIN_H / 2) - (wall_h / 2);
@@ -206,6 +200,7 @@ int	wall_hit(float x, float y, t_cube *cube)
 		return (0);
 	if (y_m >= cube->data.map_w || x_m >= cube->data.map_h)
 		return (0);
+    printf("%d\n", y_m);
 	if (cube->data.map[y_m] && x_m <= (int)strlen(cube->data.map[y_m]))
 		if (cube->data.map[y_m][x_m] == '1'
 			|| cube->data.map[y_m][x_m] == ' ')
@@ -317,14 +312,22 @@ void	move_player(t_cube *cube, double angle)
     map_grid_y = ((int)new_y / CELL_SIZE);
 
     if(map_grid_y > cube->data.map_w)
-    {
+    {   
         map_grid_y = cube->data.map_w;
     }
-	if (cube->data.map[map_grid_y][map_grid_x] != '1' && (cube->data.map[map_grid_y][(int)cube->player.x / CELL_SIZE] != '1' || cube->data.map[(int)cube->player.y / CELL_SIZE][map_grid_x] != '1'))
-	{
-		cube->player.x = new_x;
-		cube->player.y = new_y;
-	}
+    printf(":%d: :%d: %c:\n",map_grid_y,map_grid_x, cube->data.map[map_grid_y][map_grid_x]);
+	if (cube->data.map[map_grid_y][map_grid_x] != '1')
+    {
+        // printf("Y :%d: X / DIV :%d:\n", map_grid_y, (int)cube->player.x / CELL_SIZE);
+        // printf("Y/DIV :%d: X :%d:\n", (int)cube->player.y / CELL_SIZE, map_grid_x);
+
+        if(cube->data.map[map_grid_y][(int)cube->player.x / CELL_SIZE] != '1' ||
+          cube->data.map[(int)cube->player.y / CELL_SIZE][map_grid_x] != '1')
+            {
+                cube->player.x = new_x;
+                cube->player.y = new_y;
+            }
+    }
 }
 
 void moving(t_cube *cube)

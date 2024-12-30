@@ -6,13 +6,15 @@ int map_filler(t_data *data)
     if (!data->map)
         return (-1);
 
-    data->map_h = 14;
+    data->map_h = 15;
     data->map_w = 24;
 
     data->map[0] = strdup("111111111111111111111111");
-    data->map[1] = strdup("100000000000000000000001");
+    data->map[1] = strdup("100000000111111000000001");
+    data->map[2] = strdup("100000000000000000000001");
     data->map[3] = strdup("100000000000000000000001");
     data->map[4] = strdup("100000000000000000000001");
+    data->map[5] = strdup("100000000000000000000001");
     data->map[6] = strdup("100000000000000000000001");
     data->map[7] = strdup("100000000000000000000001");
     data->map[8] = strdup("100000000000000000000001");
@@ -20,14 +22,12 @@ int map_filler(t_data *data)
     data->map[10] = strdup("100000000000000000000001");
     data->map[11] = strdup("100000000000000000000001");
     data->map[12] = strdup("100000000000000000000001");
-    data->map[13] = strdup("100000000000000000000001");
-    data->map[14] = strdup("100000000000000000000001");
-    data->map[15] = strdup("111111111111111111111111");
-    data->map[16] = NULL;
+    data->map[13] = strdup("111111111111111111111111");
+    data->map[14] = NULL;
 
     data->pos_x = 10;
     data->pos_y = 7;
-	data->facing = 'N';
+	data->facing = 'S';
     return (0);
 }
 
