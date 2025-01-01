@@ -3,16 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/01 17:54:30 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/01/01 22:19:23 by jla-chon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cube.h"
 // settings check 0
 // map      check 1
+
+typedef struct s_list
+{
+	struct s_list *next;
+	void *data;
+}	t_list;
 
 static void gnlfree(int fd)
 {
@@ -173,6 +179,84 @@ int cube_filler2(char *buf, t_cube *cube)
     return (0);
 }
 
+int	fillmap(t_list *node, int *mp, int width)
+{
+	int	j;
+	char	*str;
+
+	str = (char *)node->data;
+	j = 0;
+	while (j < width && str[j])
+	{
+		if (str[j] == ' ' || str[j] == '0')
+			mp[j] = 0;
+		else if (str[j] == '1')
+			mp[j] = 1;
+		else if (str[j] == 'N')
+			mp[j] = 2;
+		else if (str[j] == 'E')
+			mp[j] = 3;
+		else if (str[j] == 'S')
+			mp[j] = 4;
+		else if (str[j] == 'W')
+			mp[j] = 5;
+		else if (str[j] == '\n')
+			break ;
+		else
+			return (1);
+		j++;
+	}
+	while (j < width)
+		mp[j++] = 0;
+	return (0);
+}
+
+int	mapcheckandstock(t_list *list, t_map *map)
+{
+	int	i;
+	int **mp;
+	t_list	*tmp;
+
+	map->length = listsize(list);
+	mp = calloc(sizeof(int *), map->length);
+	if (!mp)
+		return (listfree(list), 1);
+	map->width = maxsize(list);
+	i = 0;
+	tmp = list;
+	while (i < map->length)
+	{
+		mp[i] = calloc(sizeof(int), map->width);
+		if (!mp[i])
+			return (listfree(list), intfree(mp, i), 1)
+		if (fillmap(tmp, mp, map->width))
+			return (listfree(list), intfree(mp, i), 1);
+		tmp = tmp->next;
+		i++;
+	}
+	return (listfree(list), 0);
+}
+
+int	mapper( int fd)
+{
+	char *str;
+	t_list	*list;
+
+	list = 0;
+	str = custom_read(fd, 0);
+	listaddfront(&list, str);
+	while (str)
+	{
+		free(str);
+		str = custom_read(fd, 1);
+		if (*str == '\n')
+			break ;
+		listaddfront(&list, str);
+	}
+	free(str);
+	if (mapcheckandstock())
+}
+
 int cube_filler(int fd, t_cube *cube)
 {
     char *buff;
@@ -193,6 +277,9 @@ int cube_filler(int fd, t_cube *cube)
     buff = custom_read(fd, 0);
     if(cube_filler2(&buff, &cube))
         return (gnlfree(fd) ,1);
+	if (!cube-> || !cube-> ...)
+		return (gnlfree(fd), 1);
+	mapper(map, fd);
     return (gnlfree(fd) ,0);
 }
 

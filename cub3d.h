@@ -32,11 +32,9 @@ typedef struct s_img_data
 {
     void    *img_ptr;
     char    *adress;
-
     int     bpp;
     int     size;
     int     endl;
-    
     int     pix_w;
     int     pix_h;
 
@@ -48,7 +46,6 @@ typedef struct s_data
 
     int     pos_x;
     int     pos_y;
-    
     int     map_w;
     int     map_h;
     char    facing;
@@ -67,10 +64,8 @@ typedef struct s_ray
     float ray_angle;
     float distance;
     int flag;
-
     double h_x;
     double h_y;
-
     double v_x;
     double v_y;
 } t_ray;
