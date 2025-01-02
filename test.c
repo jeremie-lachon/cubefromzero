@@ -14,24 +14,22 @@
 
 int player_filler(t_cube *cube)
 {
-	float fov_rad;
 
 	if(cube->data.facing == 'N')
-        cube->player.angle = PI / 2.0;
+        cube->player.angle = 0.5;
 	if(cube->data.facing == 'S')
-        cube->player.angle = (PI * 3) / 2;
+        cube->player.angle = 1.5;
 	if(cube->data.facing == 'E')
-        cube->player.angle = 0;
+        cube->player.angle = 1;
 	if(cube->data.facing == 'W')
-        cube->player.angle = PI;
-	cube->player.fov_rad = (FOV * PI) / 180;
-	fov_rad = cube->player.fov_rad;
+        cube->player.angle = 0;
 	cube->player.x = cube->data.pos_x * CELL_SIZE + CELL_SIZE / 2;
 	cube->player.y = cube->data.pos_y * CELL_SIZE + CELL_SIZE / 2;
 	return (0);
 }
 
 
+/*
 float angle_fix(float ray_angle)
 {
     if(ray_angle < 0)
@@ -373,6 +371,7 @@ int game(t_cube *cube)
 	mlx_loop(cube->mlx_ptr);
 	return (0);
 }
+ */
 int main(void)
 {
     t_cube cube;
@@ -380,6 +379,7 @@ int main(void)
     cube = (t_cube){0};
    	map_filler(&cube.data);
 	player_filler(&cube);
-	game(&cube);
+	// game(&cube);
+    raycasting(&cube);
     return (0);
 }

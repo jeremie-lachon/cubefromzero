@@ -1,40 +1,42 @@
 NAME = cub3d
 CC = cc
-CFLAGS = -MMD -Wall -Werror -Wextra -g3
-
+CFLAGS = -Wall -Werror -Wextra -g3 
+# CFLAGS += -MMD
 # Path to mlx header files
-MLX_INCLUDE = minilibx-linux/
+MLX_INCLUDE = -Iminilibx-linux/
 
 # Path to utils directory
 UTILS_DIR = utils/
 #PRINTF_DIR = $(UTILS_DIR)printf/
-GNL_DIR = $(UTILS_DIR)gnl/
+GNL_DIR = -I$(UTILS_DIR)gnl/
 
-SRC = test.c done.c
+# CFLAGS += $(MLX_INCLUDE) $(GNL_DIR)
 
-DEP = $(SRC:.c=.d)
+SRC = test.c done.c raycasting.c
+
+#DEP = $(SRC:.c=.d)
 OBJ = $(SRC:.c=.o)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I$(MLX_INCLUDE) -I$(GNL_DIR) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 #	$(CC) $(CFLAGS) -I$(MLX_INCLUDE) -I$(PRINTF_DIR) -I$(GNL_DIR) -c $< -o $@
 
 $(NAME): $(OBJ)
 #	$(MAKE) -C $(PRINTF_DIR)
-	$(MAKE) -C $(MLX_INCLUDE)
-	$(CC) $(OBJ) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
+#	$(MAKE) -C $(MLX_INCLUDE)
+#	$(CC) $(OBJ) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
 #	$(CC) $(OBJ) $(PRINTF_DIR)libftprintf.a -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -lm -lz -o $(NAME)
+#-include $(DEP)
 
--include $(DEP)
-
-all: touch test.c $(NAME)
+all: $(NAME)
 
 clean:
-	$(MAKE) -C $(PRINTF_DIR) clean
+#	$(MAKE) -C $(PRINTF_DIR) clean
 	rm -f $(OBJ)
 
 fclean: clean
-	$(MAKE) -C $(PRINTF_DIR) fclean
+#	$(MAKE) -C $(PRINTF_DIR) fclean
 	rm -f $(NAME)
 
 re: fclean all

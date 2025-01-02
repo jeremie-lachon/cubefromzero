@@ -2,7 +2,7 @@
 
 # define CUB3D_H
 
-# include "minilibx-linux/mlx.h"
+// # include "minilibx-linux/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <X11/X.h>
@@ -13,7 +13,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h> 
-# include "utils/gnl/get_next_line.h"
+// # include "utils/gnl/get_next_line.h"
 # include <stdbool.h>
 # include <math.h>
 # include <float.h>
@@ -25,7 +25,7 @@
 # define ROTATION_SPEED .006
 # define PLAYER_SPEED 40
 # define PI 3.14159265358979
-# define CELL_SIZE 60
+# define CELL_SIZE 1
 # define EPSILON 1e-6
 # define LARGE_NUMBER 1e6
 
@@ -104,6 +104,6 @@ int map_filler(t_data *data);
 int	escape(t_cube *cube);
 int key_press(int keysym, t_cube *cube);
 int init_mlx(t_cube *cube);
-
+void raycasting(t_cube *cube);
 
 #endif

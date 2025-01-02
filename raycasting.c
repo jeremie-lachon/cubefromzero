@@ -19,10 +19,21 @@ float ft_min(float x, float y)
     return (x);
 }
 
-float find_y_ray(t_cube *cube, float angle)
+int check_wall(float y, float x, t_cube *cube)
+{
+    printf("X :%d: Y :%d:\n", (int)floor(x), (int)floor(y));
+    sleep(1);
+    if ((int)floor(x) < 0 || (int)floor(y) < 0)
+        return (1);
+    if ((int)floor(x) >= cube->data.map_w || (int)floor(y) >= cube->data.map_h)
+        return (1);
+    if(cube->data.map[(int)floor(x)][(int)floor(y)] == '1')
+        return (0);
+    return (1);
+}
+float find_y_ray(t_cube *cube, float angle, float fixed_angle)
 {
     float   delta;
-    float   fixed_angle;
     float   move_x;
     float   wall_y;
 
@@ -65,7 +76,7 @@ float find_x_ray(t_cube *cube, float angle, float fixed_angle)
     {
         move_x = floorf(cube->player.y);
         wall_y = delta + move_x / fixed_angle;  
-        while (check_wall(wall_y, move_x, cube))
+        while (check_wall(move_x, wall_y, cube))
         {
             move_x -= 1.0;
             wall_y = delta + move_x / fixed_angle; 
@@ -75,7 +86,7 @@ float find_x_ray(t_cube *cube, float angle, float fixed_angle)
     {
         move_x = ceilf(cube->player.y);
         wall_y = delta + move_x / fixed_angle; 
-        while (check_wall(wall_y, move_x, cube))
+        while (check_wall(move_x, wall_y, cube))
         {
             move_x += 1.0;
             wall_y = delta + move_x / fixed_angle; 
@@ -95,17 +106,23 @@ float fix_angle(float angle)
     return (angle);
 }
 
+void wall_check(float dist_x, float dist_y, t_cube *cube)
+{
+    // float x;
+    // float y;
+
+    printf("dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:  X2 :%f: Y2 :%f:\n", dist_x, dist_y, cube->ray.v_x,cube->ray.v_y,cube->ray.h_x,cube->ray.h_y);
+}
+
 void raycasting(t_cube *cube)
 {
     float fixed_angle;
     int i;
     static float pov_h;
     float angle;
-    float distance_x;
-    float distance_y;
 
     if(!pov_h)
-        pov_h = FOV_W / WIN_W;
+        pov_h = (float)FOV_W / (float)WIN_W;
     i = -1;
     angle = fix_angle(cube->player.angle - pov_h / 2);
     while(++i < WIN_W)
@@ -115,6 +132,7 @@ void raycasting(t_cube *cube)
         else
             fixed_angle = tanf(ft_min(1 - angle, angle) * PI);
         angle = fix_angle(angle + pov_h);
-        distance_x = find_x_ray(cube, ,fixed_angle); 
+        printf("fixedanvle angle %f %f %f\n", fixed_angle , angle, tanf(ft_min(2 -angle, angle -1) * PI));
+        wall_check(find_x_ray(cube, angle,fixed_angle), find_y_ray(cube, angle,fixed_angle), cube);
     }
 }
