@@ -19,9 +19,9 @@ float ft_min(float x, float y)
     return (x);
 }
 
-int check_wall(float y, float x, t_cube *cube)
+int check_wall(float y, float x, t_cube *cube, int entry)
 {
-    printf("X :%d: Y :%d:\n", (int)floor(x), (int)floor(y));
+    printf("From %d X :%d: Y :%d:\n",entry, (int)floor(x), (int)floor(y));
     sleep(1);
     if ((int)floor(x) < 0 || (int)floor(y) < 0)
         return (1);
@@ -42,8 +42,11 @@ float find_y_ray(t_cube *cube, float angle, float fixed_angle)
     if(angle < 0.5 || angle > 1.5)
     {
         move_x = floorf(cube->player.x);
-        wall_y = fixed_angle * move_x - delta; 
-        while (check_wall(wall_y, move_x, cube))
+        // pb here and wall_y calc \/
+        wall_y = fixed_angle * move_x + delta; 
+        printf("WALL Y %f\n", wall_y);
+
+        while (check_wall(wall_y, move_x, cube, 1))
         {
             move_x -= 1.0;
             wall_y = fixed_angle * move_x - delta; 
@@ -53,7 +56,7 @@ float find_y_ray(t_cube *cube, float angle, float fixed_angle)
     {
         move_x = ceilf(cube->player.x);
         wall_y = fixed_angle * move_x - delta; 
-        while (check_wall(wall_y, move_x, cube))
+        while (check_wall(wall_y, move_x, cube, 1))
         {
             move_x += 1.0;
             wall_y = fixed_angle * move_x - delta; 
@@ -76,7 +79,7 @@ float find_x_ray(t_cube *cube, float angle, float fixed_angle)
     {
         move_x = floorf(cube->player.y);
         wall_y = delta + move_x / fixed_angle;  
-        while (check_wall(move_x, wall_y, cube))
+        while (check_wall(move_x, wall_y, cube, 2))
         {
             move_x -= 1.0;
             wall_y = delta + move_x / fixed_angle; 
@@ -86,7 +89,7 @@ float find_x_ray(t_cube *cube, float angle, float fixed_angle)
     {
         move_x = ceilf(cube->player.y);
         wall_y = delta + move_x / fixed_angle; 
-        while (check_wall(move_x, wall_y, cube))
+        while (check_wall(move_x, wall_y, cube, 2))
         {
             move_x += 1.0;
             wall_y = delta + move_x / fixed_angle; 
