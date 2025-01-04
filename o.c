@@ -3,22 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/01 22:19:23 by jla-chon         ###   ########.fr       */
+/*   Updated: 2025/01/04 04:53:49 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cube.h"
+// #include "cube.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
 // settings check 0
 // map      check 1
+
+enum
+{
+	PLAYER_X,
+	PLAYER_Y,
+	ANGLE
+};
 
 typedef struct s_list
 {
 	struct s_list *next;
 	void *data;
 }	t_list;
+
+typedef struct s_parse
+{
+	char	*NO;
+	char	*WE;
+	char	*SO;
+	char	*EA;
+	char	*F;
+	char	*C;
+	float	player[3];
+	int		**map;
+	int		width;
+	int		length;
+}	t_parse;
+
+int	listsize(t_list *list)
+{
+	int	i;
+
+	i = 0;
+	while (list)
+	{
+		list = list->next;
+		i++;
+	}
+	return (i);
+}
+
+int	maxsize(t_list *list)
+{
+	int	maxlen;
+	int	len;
+
+	maxlen = -1;
+	while (list)
+	{
+		len = strlen((char *)list->data);
+		if (((char *)list->data)[len - 1] == '\n')
+			len--;
+		if (len > maxlen)
+			maxlen = len;
+		list = list->next;
+	}
+	return (maxlen);
+}
 
 static void gnlfree(int fd)
 {
@@ -31,6 +87,34 @@ static void gnlfree(int fd)
         buf = get_next_line(fd);
     }
     close(fd);
+}
+
+int	parsefree(t_parse *parse)
+{
+	free(parse->EA);
+	free(parse->WE);
+	free(parse->SO);
+	free(parse->NO);
+	free(parse->F);
+	free(parse->C);
+	free(parse);
+	return (0);
+}
+
+int	parse_error(t_parse *parse)
+{
+	int	i;
+
+	i = 0;
+	write(2, "Error\n", 6);
+	if (parse->map)
+	{
+		while (i < parse->length)
+			free(parse->map[i++]);
+		free(parse->map);
+	}
+	parsefree(parse);
+	return (1);
 }
 
 char *custom_read(int fd, int check)
@@ -156,7 +240,7 @@ int function(char *s)
     return (ret);
 }
 
-int cube_filler2(char *buf, t_cube *cube)
+int cube_filler2(char *buf, t_parse *cube)
 {
     char *tmp;
     
@@ -179,65 +263,108 @@ int cube_filler2(char *buf, t_cube *cube)
     return (0);
 }
 
-int	fillmap(t_list *node, int *mp, int width)
+int	fillmap(t_list *node, t_parse *parse, int i)
 {
 	int	j;
 	char	*str;
 
 	str = (char *)node->data;
 	j = 0;
-	while (j < width && str[j])
+	while (j < parse->width && str[j])
 	{
-		if (str[j] == ' ' || str[j] == '0')
-			mp[j] = 0;
+		if (str[j] == '0')
+			parse->map[j] = 0;
 		else if (str[j] == '1')
-			mp[j] = 1;
-		else if (str[j] == 'N')
-			mp[j] = 2;
-		else if (str[j] == 'E')
-			mp[j] = 3;
-		else if (str[j] == 'S')
-			mp[j] = 4;
-		else if (str[j] == 'W')
-			mp[j] = 5;
-		else if (str[j] == '\n')
-			break ;
+			parse->map[j] = 1;
+		else if (strchr("NSEW", str[j]))
+		{
+			parse->map[j] = 0;
+			parse->player[PLAYER_X] = j + 0.5;
+			parse->player[PLAYER_Y] = j + 0.5;
+			if (str[j] == 'N')
+				parse->player[ANGLE] = 0.5;
+			else if (str[j] == 'E')
+				parse->player[ANGLE] = 0;
+			else if (str[j] == 'S')
+				parse->player[ANGLE] = 1.5;
+			else
+				parse->player[ANGLE] = 1;
+		}
+		else if (str[j] == ' ')
+			parse->map[j] = -1;
 		else
 			return (1);
 		j++;
 	}
-	while (j < width)
-		mp[j++] = 0;
+	while (j < parse->width)
+		parse->map[j++] = 0;
 	return (0);
 }
 
-int	mapcheckandstock(t_list *list, t_map *map)
+int	checksides(t_parse *parse, int i, int j)
+{
+	if (!i || i == parse->length)
+		return (1);
+	if (!j || j == parse->width)
+		return (1);
+	if (parse->map[i -1][j] == -1)
+		return (1);
+	if (parse->map[i][j - 1] == -1)
+		return (1);
+	if (parse->map[i][j + 1] == -1)
+		return (1);
+	if (parse->map[i + 1][j] == -1)
+		return (1);
+	return (0);
+}
+
+int	checkmap(t_parse *parse)
 {
 	int	i;
-	int **mp;
+	int	j;
+
+	i = 0;
+	while (i < parse->length)
+	{
+		j = 0;
+		while (j < parse->width)
+		{
+			if (parse->map[j] == 0)
+				if (checksides(parse, i, j))
+					return (1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	mapcheckandstock(t_list *list, t_parse *map)
+{
+	int	i;
 	t_list	*tmp;
 
 	map->length = listsize(list);
-	mp = calloc(sizeof(int *), map->length);
-	if (!mp)
+	map->map = calloc(sizeof(int *), map->length);
+	if (!map->map)
 		return (listfree(list), 1);
 	map->width = maxsize(list);
 	i = 0;
 	tmp = list;
 	while (i < map->length)
 	{
-		mp[i] = calloc(sizeof(int), map->width);
-		if (!mp[i])
-			return (listfree(list), intfree(mp, i), 1)
-		if (fillmap(tmp, mp, map->width))
-			return (listfree(list), intfree(mp, i), 1);
+		map->map[i] = calloc(sizeof(int), map->width);
+		if (!map->map[i])
+			return (listfree(list), intfree(map->map, i), 1);
+		if (fillmap(tmp, map, i))
+			return (listfree(list), intfree(map->map, i), 1);
 		tmp = tmp->next;
 		i++;
 	}
-	return (listfree(list), 0);
+	return (listfree(list), checkmap(map));
 }
 
-int	mapper( int fd)
+int	mapper(int fd, t_parse *parse)
 {
 	char *str;
 	t_list	*list;
@@ -253,11 +380,14 @@ int	mapper( int fd)
 			break ;
 		listaddfront(&list, str);
 	}
-	free(str);
-	if (mapcheckandstock())
+	if (str)
+		return (free(str), listfree(list), 1);
+	if (mapcheckandstock(list, parse))
+		return (free(str), 1);
+	return (free(str), 0);
 }
 
-int cube_filler(int fd, t_cube *cube)
+int cube_filler(int fd, t_parse *cube)
 {
     char *buff;
     int i;
@@ -277,15 +407,14 @@ int cube_filler(int fd, t_cube *cube)
     buff = custom_read(fd, 0);
     if(cube_filler2(&buff, &cube))
         return (gnlfree(fd) ,1);
-	if (!cube-> || !cube-> ...)
+	if (mapper(fd, cube))
 		return (gnlfree(fd), 1);
-	mapper(map, fd);
     return (gnlfree(fd) ,0);
 }
 
 int main(int ac, char **av)
 {
-    t_cube *cube;
+    t_parse *cube;
     int fd;
 
     if(ac != 2)
@@ -298,9 +427,19 @@ int main(int ac, char **av)
     cube = ft_calloc(sizeof(cube), 1);
     if(!cube || cube_filler(fd, cube))
         return (1);
-
-
-
-    null_cube(&cube);
+	int	i;
+	int	j;
+	i = 0;
+	printf("NO:%s, SO%s, EA%s, WE%s, F%s, C%s\n", cube->NO, cube->SO, cube->EA, cube->WE, cube->F, cube->C);
+	while (i < cube->length)
+	{
+		j = 0;
+		while (j < cube->width)
+			printf("%d", cube->map[i][j++]);
+		printf("\n");
+		i++;
+	}
+	parse_error(cube);
+    // null_cube(&cube);
     return (0);
 }
