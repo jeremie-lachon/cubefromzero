@@ -20,8 +20,8 @@
 # define MAX_VIEW_DISTANCE 50
 # define WIN_W 1200
 # define WIN_H 800
-# define FOV_W 210
-# define FOV_H 150
+# define FOV_W 210.0
+# define FOV_H 150.0
 # define ROTATION_SPEED .006
 # define PLAYER_SPEED 40
 # define PI 3.14159265358979
@@ -73,8 +73,8 @@ typedef struct s_ray
 
 typedef struct s_player
 {
-    double     x;
-    double     y;
+    float     x;
+    float     y;
     float   angle;
     float   dir_x;
     float   dir_y;

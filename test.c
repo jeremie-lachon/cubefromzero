@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2024/12/30 18:03:21 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/01/04 20:00:38 by jla-chon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ int player_filler(t_cube *cube)
         cube->player.angle = 1;
 	if(cube->data.facing == 'W')
         cube->player.angle = 0;
-	cube->player.x = cube->data.pos_x * CELL_SIZE + CELL_SIZE / 2;
-	cube->player.y = cube->data.pos_y * CELL_SIZE + CELL_SIZE / 2;
+	cube->player.x = cube->data.pos_x + (float)0.5;
+	cube->player.y = cube->data.pos_y + (float)0.5;
 	return (0);
 }
 
