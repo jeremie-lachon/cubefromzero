@@ -5,8 +5,8 @@
 // # include "minilibx-linux/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
-# include <X11/X.h>
-# include <X11/keysym.h>
+// # include <X11/X.h>
+// # include <X11/keysym.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdlib.h>

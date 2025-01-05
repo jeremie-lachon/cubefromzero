@@ -41,4 +41,8 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+launch: re
+	clear
+	./$(NAME)
+
+.PHONY: all clean fclean re launc
