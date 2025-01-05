@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/04 04:53:49 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/05 22:43:44 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "get_next_line.h"
 // settings check 0
 // map      check 1
 
@@ -37,13 +38,56 @@ typedef struct s_parse
 	char	*WE;
 	char	*SO;
 	char	*EA;
-	char	*F;
-	char	*C;
+	int		F;
+	int		C;
 	float	player[3];
 	int		**map;
 	int		width;
 	int		length;
 }	t_parse;
+
+int	listfree(t_list *list)
+{
+	if (list)
+	{
+		listfree(list->next);
+		free(list->data);
+	}
+	free(list);
+	return (0);
+}
+
+int	listaddfront(t_list **list, t_list *new)
+{
+	new->next = *list;
+	*list = new;
+	return (0);
+}
+
+t_list	*listnew(void *data)
+{
+	t_list	*new;
+
+	new = malloc(sizeof(t_list));
+	if (!new)
+		return (0);
+	new->data = data;
+	new->next = 0;
+	return (new);
+}
+
+int	intfree(int **array, int i)
+{
+	int	j;
+
+	if (!array)
+		return (1);
+	j = 0;
+	while (j < i)
+		free(array[j++]);
+	free(array);
+	return (0);
+}
 
 int	listsize(t_list *list)
 {
@@ -67,8 +111,6 @@ int	maxsize(t_list *list)
 	while (list)
 	{
 		len = strlen((char *)list->data);
-		if (((char *)list->data)[len - 1] == '\n')
-			len--;
 		if (len > maxlen)
 			maxlen = len;
 		list = list->next;
@@ -95,8 +137,6 @@ int	parsefree(t_parse *parse)
 	free(parse->WE);
 	free(parse->SO);
 	free(parse->NO);
-	free(parse->F);
-	free(parse->C);
 	free(parse);
 	return (0);
 }
@@ -107,6 +147,8 @@ int	parse_error(t_parse *parse)
 
 	i = 0;
 	write(2, "Error\n", 6);
+	if (!parse)
+		return (1);
 	if (parse->map)
 	{
 		while (i < parse->length)
@@ -161,12 +203,12 @@ char	*ft_substr(char const *s, int start, int len)
 	char	*copy;
     if(start < 0)
         return (0);
-	if (start > ft_strlen(s))
-		return (ft_calloc(1, 1));
-	if (len + start <= ft_strlen(s))
+	if (start > strlen(s))
+		return (calloc(1, 1));
+	if (len + start <= strlen(s))
 		copy = (char *)malloc(sizeof(char) * (len + 1));
 	else
-		copy = (char *)malloc(sizeof(char) * (ft_strlen(s + start) + 1));
+		copy = (char *)malloc(sizeof(char) * (strlen(s + start) + 1));
 	if (!copy)
 		return (NULL);
 	i = 0;
@@ -198,19 +240,23 @@ int settings_split(char *str)
     return (-1);
 }
 
-int skip(char *s, int *i)
+int skip(char *s, int *i, int check)
 {
-    int com;
+	int com;
 
-    com = 0;
-    while (ft_strchr(" \t\v\f\r,", s[*i]))
-    {
-        if(s[*i] == ',')
-            com++;
-        (*i)++;
-    }
-    return (com);
+	com = 0;
+	if (check)
+		while (s[*i] <= '9' && s[*i] >= '0')
+			(*i)++;
+	while (ft_strchr(" \t\v\f\r,", s[*i]))
+	{
+		if(s[*i] == ',')
+			com++;
+		(*i)++;
+	}
+	return (com);
 }
+
 int function(char *s)
 {
     int i;
@@ -219,48 +265,51 @@ int function(char *s)
 
     ret = 0;
     i = 2;
-    if (!skip(s, &i) && !s[i])
+    if (!skip(s, &i, 0) || !s[i])
         return (-1);
-    tmp = ft_atoi(s);
+    tmp = atoi(s + i);
     if (tmp < 0 || tmp > 255)
         return (-1);
-    ret = tmp << 24;
-    if(skip(s, &i) != 1 && !s[i])
+    ret = tmp << 16;
+    if(skip(s, &i, 1) != 1 || !s[i])
         return (-1);
-    tmp = ft_atoi(s);
-    if (tmp < 0 || tmp > 255)
-        return (-1);
-    ret |= tmp << 16;
-    if(skip(s, &i) != 1 && !s[i])
-        return (-1);
-    tmp = ft_atoi(s);
+    tmp = atoi(s + i);
     if (tmp < 0 || tmp > 255)
         return (-1);
     ret |= tmp << 8;
+    if(skip(s, &i, 1) != 1 || !s[i])
+        return (-1);
+    tmp = atoi(s + i);
+    if (tmp < 0 || tmp > 255)
+        return (-1);
+    ret |= tmp;
     return (ret);
 }
 
 int cube_filler2(char *buf, t_parse *cube)
 {
-    char *tmp;
-    
+    char	*tmp;
+
     if (!buf)
         return (1);
-    if (ft_strncmp("NO ", buf, 3) && !cube->NO)
-        cube->NO = ft_substr(buf, settings_split(buf), ft_strchr(buf, '\n'));
-    else if (ft_strncmp("WE ", buf, 3) && !cube->WE)
-        cube->WE = ft_substr(buf, settings_split(buf), ft_strchr(buf, '\n'));
-    else if (ft_strncmp("SO ", buf, 3) && !cube->SO)
-        cube->SO = ft_substr(buf, settings_split(buf), ft_strchr(buf, '\n'));
-    else if (ft_strncmp("EA ", buf, 3) && !cube->EA)
-        cube->EA = ft_substr(buf, settings_split(buf), ft_strchr(buf, '\n'));
-    else if (ft_strncmp("F ", buf, 2) && !cube->F)
+	tmp = ft_strchr(buf, '\n');
+	if (!tmp)
+		return (1);
+    if (!strncmp("NO ", buf, 3) && !cube->NO)
+        cube->NO = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+    else if (!strncmp("WE ", buf, 3) && !cube->WE)
+        cube->WE = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+    else if (!strncmp("SO ", buf, 3) && !cube->SO)
+        cube->SO = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+    else if (!strncmp("EA ", buf, 3) && !cube->EA)
+        cube->EA = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+    else if (!strncmp("F ", buf, 2) && !cube->F)
         cube->F = function(buf);
-    else if (ft_strncmp("C ", buf, 2) && !cube->C)
+    else if (!strncmp("C ", buf, 2) && !cube->C)
         cube->C = function(buf);
     else
-        return (1);
-    return (0);
+        return (free(buf), 1);
+    return (free(buf), 0);
 }
 
 int	fillmap(t_list *node, t_parse *parse, int i)
@@ -273,12 +322,12 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 	while (j < parse->width && str[j])
 	{
 		if (str[j] == '0')
-			parse->map[j] = 0;
+			parse->map[i][j] = 0;
 		else if (str[j] == '1')
-			parse->map[j] = 1;
+			parse->map[i][j] = 1;
 		else if (strchr("NSEW", str[j]))
 		{
-			parse->map[j] = 0;
+			parse->map[i][j] = 0;
 			parse->player[PLAYER_X] = j + 0.5;
 			parse->player[PLAYER_Y] = j + 0.5;
 			if (str[j] == 'N')
@@ -291,13 +340,13 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 				parse->player[ANGLE] = 1;
 		}
 		else if (str[j] == ' ')
-			parse->map[j] = -1;
+			parse->map[i][j] = -1;
 		else
 			return (1);
 		j++;
 	}
 	while (j < parse->width)
-		parse->map[j++] = 0;
+		parse->map[i][j++] = -1;
 	return (0);
 }
 
@@ -318,18 +367,40 @@ int	checksides(t_parse *parse, int i, int j)
 	return (0);
 }
 
+int	printmap(t_parse *parse)
+{
+	int	i;
+	int	j;
+	i = parse->length - 1;
+	while (i >= 0)
+	{
+		j = 0;
+		while (j < parse->width)
+		{
+			if (parse->map[i][j] == -1)
+				printf("2");
+			else
+				printf("%d", parse->map[i][j]);
+			j++;
+		}
+		printf("\n");
+		i--;
+	}
+}
+
 int	checkmap(t_parse *parse)
 {
 	int	i;
 	int	j;
 
 	i = 0;
+	printmap(parse);
 	while (i < parse->length)
 	{
 		j = 0;
 		while (j < parse->width)
 		{
-			if (parse->map[j] == 0)
+			if (parse->map[i][j] == 0)
 				if (checksides(parse, i, j))
 					return (1);
 			j++;
@@ -364,21 +435,39 @@ int	mapcheckandstock(t_list *list, t_parse *map)
 	return (listfree(list), checkmap(map));
 }
 
+char	*remove_end(char *str)
+{
+	char	*tmp;
+
+	tmp = strchr(str, '\n');
+	if (!tmp)
+		return (strdup(str));
+	tmp = ft_substr(str, 0, tmp - str);
+	return (tmp);
+}
+
 int	mapper(int fd, t_parse *parse)
 {
 	char *str;
 	t_list	*list;
+	t_list	*new;
 
 	list = 0;
 	str = custom_read(fd, 0);
-	listaddfront(&list, str);
+	new = listnew(remove_end(str));
+	if (!new)
+		return (free(str), 1);
+	listaddfront(&list, new);
 	while (str)
 	{
 		free(str);
 		str = custom_read(fd, 1);
-		if (*str == '\n')
+		if (!str || *str == '\n')
 			break ;
-		listaddfront(&list, str);
+		new = listnew(remove_end(str));
+		if (!new)
+			return (free(str), listfree(list), 1);
+		listaddfront(&list, new);
 	}
 	if (str)
 		return (free(str), listfree(list), 1);
@@ -396,20 +485,52 @@ int cube_filler(int fd, t_parse *cube)
     if(cube_filler2(buff, cube))
         return (gnlfree(fd) ,1);
     buff = custom_read(fd, 0);
-    if(cube_filler2(&buff, &cube))
+    if(cube_filler2(buff, cube))
         return (gnlfree(fd) ,1);
     buff = custom_read(fd, 0);
-    if(cube_filler2(&buff, &cube))
+    if(cube_filler2(buff, cube))
         return (gnlfree(fd) ,1);
     buff = custom_read(fd, 0);
-    if(cube_filler2(&buff, &cube))
+    if(cube_filler2(buff, cube))
         return (gnlfree(fd) ,1);    
     buff = custom_read(fd, 0);
-    if(cube_filler2(&buff, &cube))
+    if(cube_filler2(buff, cube))
+        return (gnlfree(fd) ,1);
+    buff = custom_read(fd, 0);
+    if(cube_filler2(buff, cube))
         return (gnlfree(fd) ,1);
 	if (mapper(fd, cube))
 		return (gnlfree(fd), 1);
     return (gnlfree(fd) ,0);
+}
+
+int	cub_check(char *str)
+{
+	int	i;
+
+	i = strlen(str);
+	if (i < 5)
+		return (1);
+	i--;
+	if (str[i] != 'b')
+		return (1);
+	if (str[i - 1] != 'u')
+		return (1);
+	if (str[i - 2] != 'c')
+		return (1);
+	if (str[i - 3] != '.')
+		return (1);
+	return (0);
+}
+
+t_parse	*cubeinit(void)
+{
+	t_parse	*parse;
+
+	parse = calloc(sizeof(t_parse), 1);
+	if (!parse)
+		return (0);
+	return (parse);
 }
 
 int main(int ac, char **av)
@@ -418,27 +539,17 @@ int main(int ac, char **av)
     int fd;
 
     if(ac != 2)
-        return (error("Wrong number of arguments.\n"), 1);
-    if(!cub_check(av[1]))
-        return (error("Map is not using .cub extension.\n"), 1);
-    fd = open(av[1]);
+        return (perror("Wrong number of arguments.\n"), 1);
+    if(cub_check(av[1]))
+        return (perror("Map is not using .cub extension.\n"), 1);
+    fd = open(av[1], O_RDONLY);
     if (fd == -1)
         return (perror("Open"), 1);
-    cube = ft_calloc(sizeof(cube), 1);
+    cube = cubeinit();
     if(!cube || cube_filler(fd, cube))
-        return (1);
-	int	i;
-	int	j;
-	i = 0;
-	printf("NO:%s, SO%s, EA%s, WE%s, F%s, C%s\n", cube->NO, cube->SO, cube->EA, cube->WE, cube->F, cube->C);
-	while (i < cube->length)
-	{
-		j = 0;
-		while (j < cube->width)
-			printf("%d", cube->map[i][j++]);
-		printf("\n");
-		i++;
-	}
+        return (parse_error(cube));
+	printf("NO:%s, SO%s, EA%s, WE%s\n", cube->NO, cube->SO, cube->EA, cube->WE);
+	printf("F %d:%d:%d C %d:%d:%d \n", cube->F >> 16, cube->F >> 8 & 255, cube->F & 255, cube->C >> 16, cube->C >> 8 & 255, cube->C & 255);
 	parse_error(cube);
     // null_cube(&cube);
     return (0);
