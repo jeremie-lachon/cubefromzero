@@ -16,8 +16,8 @@ int map_filler(t_data *data)
     data->map[1] = strdup("100000000111111000000001");
 	data->map[0] = strdup("111111111111111111111111");
     data->pos_x = 1;
-    data->pos_y = 1;
-	data->facing = 'S';
+    data->pos_y = 4;
+	data->facing = 'N';
     return (0);
 }
 

@@ -26,8 +26,6 @@ int check_wall(float y, float x, t_cube *cube)
 
 	intx = (int)floorf(x);
 	inty = (int)floorf(y);
-	// printf("X :%d: Y :%d:\n", (int)floor(x), (int)floor(y));
-	// usleep(500 * 1000);
 	if (intx < 0 || inty < 0)
 		return (-1);
 	if (intx >= cube->data.map_w || inty >= cube->data.map_h)
@@ -69,11 +67,6 @@ float find_y_ray(t_cube *cube, float angle, float fixed_angle)
 			check = check_wall(wall_y, move_x, cube);
 		}
 	}
-	// if(angle > 0.44 && angle < 0.45)
-	// {
-	// 	printf("Wall problem1: Angle %f Fixed %f Delta %f X %f Y %f\n", angle, fixed_angle, delta, move_x, wall_y);
-	// 	sleep(2);
-	// }
 	if (check == -1)
 		return (-1.0);
 	cube->ray.h_x = move_x;
@@ -115,18 +108,13 @@ float find_x_ray(t_cube *cube, float angle, float fixed_angle)
 			check = check_wall(move_y, wall_x, cube);
         }
     }
-	// if (angle > 0.44 && angle < 0.45)
-	// {
-	// 	printf("Wall problem2: Angle %f Fixed %f Delta %f X %f Y %f\n", angle, fixed_angle, delta, wall_x, move_y);
-	// 	sleep(2);
-	// }
 	if (check == -1)
 		return (-1.0);
     cube->ray.v_y = move_y;
 	if (angle > 1)
 		cube->ray.v_y -= 1;
     cube->ray.v_x = wall_x;
-    return (sqrt(powf(wall_x - cube->player.y, 2) + powf(move_y - cube->player.x, 2)));    
+    return (sqrt(powf(wall_x - cube->player.x, 2) + powf(move_y - cube->player.y, 2)));    
 }
 
 float fix_angle(float angle)
@@ -138,8 +126,17 @@ float fix_angle(float angle)
     return (angle);
 }
 
+void wall_display(t_cube *cube, float dist)
+{
+	static float tetta;
+
+	if(!tetta)
+		tetta = tanf(FOV_H * PI / 180);
+}
 void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 {
+	int	texture;
+	float dist;
     float x;
     float y;
 	if (dist_x == -1  && dist_y == -1)
@@ -148,12 +145,28 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 	{
 		x = cube->ray.h_x;
 		y = cube->ray.h_y;
+		if (angle > 0.5 && angle < 1.5)
+		{
+			texture = west;
+		}
+		else
+			texture = east;
+		dist = dist_y;
 	}
 	else
 	{
+		dist = dist_x;
 		x = cube->ray.v_x;
 		y = cube->ray.v_y;
+		if (angle > 1)
+		{
+			texture = north;
+		}	
+		else
+			texture = south;
 	}
+	wall_display(cube, dist); 
+
     printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
 }
 
@@ -171,8 +184,6 @@ void raycasting(t_cube *cube)
 	}
 	i = -1;
     angle = fix_angle(cube->player.angle - (FOV_W / 360));
-	printf("POV %f\n", pov_h);
-	sleep(1);
     while(++i < WIN_W)
     {
         if (angle > 1)
@@ -190,7 +201,13 @@ void raycasting(t_cube *cube)
 				fixed_angle = tanf(angle * -PI);
 		}
         angle = fix_angle(angle + pov_h);
-        // printf("fixedanvle angle %f %f %f\n", fixed_angle , angle, tanf(ft_min(2 -angle, angle -1) * PI));
         wall_check(find_x_ray(cube, angle,fixed_angle), find_y_ray(cube, angle,fixed_angle), cube, angle);
     }
+Okey donc if dist_x cest north south et dist_y cest east_wst ?
+
+ok donc une fois dedans 
+
+faudra quon les departage....
+
+
 }

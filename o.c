@@ -266,7 +266,7 @@ int function(char *s)
     int ret;
     int tmp;
     ret = 0;
-    i = 2;
+    i = 1;
     if (skip(s, &i, 0) || !s[i])
         return (-1);
 	tmp = atoi(s + i);
@@ -287,7 +287,83 @@ int function(char *s)
     ret |= tmp;
     return (ret);
 }
+// Trim
 
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	size_t				i;
+	unsigned char		*new;
+
+	i = nmemb * size;
+	if (i == 0)
+	{
+		new = malloc(0);
+		if (!new)
+			return (0);
+		*new = 0;
+		return (new);
+	}
+	if (i < nmemb || i < size)
+		return (0);
+	new = malloc(i);
+	if (!new)
+		return (0);
+	while (i--)
+		new[i] = 0;
+	return (new);
+}
+
+static int	check_char(const char *set, char c)
+{
+	while (*set)
+		if (c == *set++)
+			return (1);
+	return (0);
+}
+
+static char	*strmalloc(int *tab)
+{
+	char	*new;
+
+	if (tab[1] == 0)
+		new = (char *)malloc(sizeof(char) * (tab[0]));
+	else
+		new = (char *)malloc(sizeof(char) * (tab[1] - tab[0] + 2));
+	if (!new)
+		return (0);
+	return (new);
+}
+
+/*
+	int		0	cur;
+	int		1	end;
+	int		2	new_count;
+	*/
+char	*ft_strtrim(char *s1, char const *set)
+{
+	char		*new;
+	int			tab[3];
+
+	tab[2] = 0;
+	tab[0] = 0;
+	if (!s1 || !set)
+		return (0);
+	while (check_char(set, s1[tab[0]]) && s1[tab[0]])
+		tab[0]++;
+	tab[1] = ft_strlen(s1) - 1;
+	if (s1[0] == '\0' || tab[1] + 1 == tab[0])
+		return (ft_calloc(sizeof(char), 1));
+	while (check_char(set, s1[tab[1]]) && tab[1] > 0)
+		tab[1]--;
+	new = strmalloc(tab);
+	if (!new)
+		return (NULL);
+	while (tab[0] <= tab[1])
+		new[tab[2]++] = s1[tab[0]++];
+	new[tab[2]] = 0;
+	return (free(s1), new);
+}
+// ^ Trim
 int cube_filler2(char *buf, t_parse *cube)
 {
     char	*tmp;
@@ -298,18 +374,20 @@ int cube_filler2(char *buf, t_parse *cube)
 	if (!tmp)
 		return (1);
     if (!strncmp("NO ", buf, 3) && !cube->NO)
-        cube->NO = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+        cube->NO = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("WE ", buf, 3) && !cube->WE)
-        cube->WE = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+        cube->WE = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("SO ", buf, 3) && !cube->SO)
-        cube->SO = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+        cube->SO = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("EA ", buf, 3) && !cube->EA)
-        cube->EA = ft_substr(buf, settings_split(buf), tmp - buf - 3);
+        cube->EA = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("F ", buf, 2) && !cube->F)
         cube->F = function(buf);
     else if (!strncmp("C ", buf, 2) && !cube->C)
         cube->C = function(buf);
     else
+        return (free(buf), 1);
+	if(cube->C == -1 || cube->F == -1)
         return (free(buf), 1);
     return (free(buf), 0);
 }
@@ -354,9 +432,9 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 
 int	checksides(t_parse *parse, int i, int j)
 {
-	if (!i || i == parse->length)
+	if (!i || i + 1 == parse->length)
 		return (1);
-	if (!j || j == parse->width)
+	if (!j || j + 1 == parse->width)
 		return (1);
 	if (parse->map[i -1][j] == -1)
 		return (1);
@@ -550,9 +628,18 @@ int main(int ac, char **av)
     cube = cubeinit();
     if(!cube || cube_filler(fd, cube))
         return (parse_error(cube));
-	printf("NO:%s, SO%s, EA%s, WE%s\n", cube->NO, cube->SO, cube->EA, cube->WE);
+	printf("NO:%s:, SO:%s:, EA:%s:, WE:%s:\n", cube->NO, cube->SO, cube->EA, cube->WE);
 	printf("F %d:%d:%d C %d:%d:%d \n", (cube->F >> 16) & 0xFF, (cube->F >> 8) & 0xFF, cube->F & 0xFF, cube->C >> 16 & 255, cube->C >> 8 & 255, cube->C & 255);
+	// if(map_check(cube->map)) // La jallais rajouter le check pour la MAP 
 	parse_error(cube);
+	// Il marche pas alors
+
+	//Jai add une ligne pour check pour le F et C 
+	//
+
+
+
+	// parse_error(cube);
     // null_cube(&cube);
     return (0);
 }
