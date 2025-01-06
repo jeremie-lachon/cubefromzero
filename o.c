@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "get_next_line.h"
+#include "gnl/get_next_line.h"
 // settings check 0
 // map      check 1
 
@@ -245,6 +245,9 @@ int skip(char *s, int *i, int check)
 	int com;
 
 	com = 0;
+
+	while (ft_strchr(" \t\v\f\r", s[*i]))
+		(*i)++;
 	if (check)
 		while (s[*i] <= '9' && s[*i] >= '0')
 			(*i)++;
@@ -262,19 +265,18 @@ int function(char *s)
     int i;
     int ret;
     int tmp;
-
     ret = 0;
     i = 2;
-    if (!skip(s, &i, 0) || !s[i])
+    if (skip(s, &i, 0) || !s[i])
         return (-1);
-    tmp = atoi(s + i);
+	tmp = atoi(s + i);
     if (tmp < 0 || tmp > 255)
         return (-1);
     ret = tmp << 16;
     if(skip(s, &i, 1) != 1 || !s[i])
         return (-1);
     tmp = atoi(s + i);
-    if (tmp < 0 || tmp > 255)
+    if (tmp < 0 || tmp > 	255)
         return (-1);
     ret |= tmp << 8;
     if(skip(s, &i, 1) != 1 || !s[i])
@@ -367,7 +369,7 @@ int	checksides(t_parse *parse, int i, int j)
 	return (0);
 }
 
-int	printmap(t_parse *parse)
+void	printmap(t_parse *parse)
 {
 	int	i;
 	int	j;
@@ -549,7 +551,7 @@ int main(int ac, char **av)
     if(!cube || cube_filler(fd, cube))
         return (parse_error(cube));
 	printf("NO:%s, SO%s, EA%s, WE%s\n", cube->NO, cube->SO, cube->EA, cube->WE);
-	printf("F %d:%d:%d C %d:%d:%d \n", cube->F >> 16, cube->F >> 8 & 255, cube->F & 255, cube->C >> 16, cube->C >> 8 & 255, cube->C & 255);
+	printf("F %d:%d:%d C %d:%d:%d \n", (cube->F >> 16) & 0xFF, (cube->F >> 8) & 0xFF, cube->F & 0xFF, cube->C >> 16 & 255, cube->C >> 8 & 255, cube->C & 255);
 	parse_error(cube);
     // null_cube(&cube);
     return (0);
