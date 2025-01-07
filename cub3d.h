@@ -2,11 +2,11 @@
 
 # define CUB3D_H
 
-// # include "minilibx-linux/mlx.h"
+# include "minilibx-linux/mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
-// # include <X11/X.h>
-// # include <X11/keysym.h>
+# include <X11/X.h>
+# include <X11/keysym.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <stdlib.h>
@@ -28,6 +28,14 @@
 # define CELL_SIZE 1
 # define EPSILON 1e-6
 # define LARGE_NUMBER 1e6
+
+enum cardinal
+{
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST
+};
 
 typedef struct s_img_data
 {
@@ -62,7 +70,7 @@ typedef struct s_data
 typedef struct s_ray
 {
     int index;
-    float ray_angle;
+    float tetta;
     float distance;
     int flag;
     double h_x;
@@ -86,12 +94,10 @@ typedef struct s_player
 typedef struct s_cube
 {
     int     fd;
-    char    **av; //utile ?
     void    *mlx_ptr;
     void    *win_ptr;
     bool    inputs[128];
-    int     text_count;
-    int     color_count;
+    int     NSWE;
     t_img_data  img;
     t_data      data;
     t_player    player;

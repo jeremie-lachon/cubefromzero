@@ -630,15 +630,7 @@ int main(int ac, char **av)
         return (parse_error(cube));
 	printf("NO:%s:, SO:%s:, EA:%s:, WE:%s:\n", cube->NO, cube->SO, cube->EA, cube->WE);
 	printf("F %d:%d:%d C %d:%d:%d \n", (cube->F >> 16) & 0xFF, (cube->F >> 8) & 0xFF, cube->F & 0xFF, cube->C >> 16 & 255, cube->C >> 8 & 255, cube->C & 255);
-	// if(map_check(cube->map)) // La jallais rajouter le check pour la MAP 
 	parse_error(cube);
-	// Il marche pas alors
-
-	//Jai add une ligne pour check pour le F et C 
-	//
-
-
-
 	// parse_error(cube);
     // null_cube(&cube);
     return (0);

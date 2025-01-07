@@ -341,13 +341,7 @@ void moving(t_cube *cube)
         move_player(cube, angle_fix(cube->player.angle + (PI / 2.0)));
 }
 
-int loop_render(t_cube *cube)
-{
-	render(cube);
-    mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
-	moving(cube);
-    return (0);
-}
+
 
 int key_release(int keysym, t_cube* cube)
 {
@@ -359,19 +353,27 @@ int key_release(int keysym, t_cube* cube)
 		cube->inputs[127] = 0;
 	return (0);
 }
+ */
+
+int loop_render(t_cube *cube)
+{
+	raycasting(cube);
+    mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
+	// moving(cube);
+    return (0);
+}
 
 int game(t_cube *cube)
 {
 	init_mlx(cube);
 
-	mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
-    mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
+	// mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
+    // mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
 	// mlx_hook(cube->win_ptr, 17, 0, &escape, cube);
 	mlx_loop_hook(cube->mlx_ptr, &loop_render, cube);
 	mlx_loop(cube->mlx_ptr);
 	return (0);
 }
- */
 int main(void)
 {
     t_cube cube;
@@ -379,7 +381,7 @@ int main(void)
     cube = (t_cube){0};
    	map_filler(&cube.data);
 	player_filler(&cube);
-	// game(&cube);
+	game(&cube);
     raycasting(&cube);
     return (0);
 }
