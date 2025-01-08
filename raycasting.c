@@ -126,13 +126,61 @@ float fix_angle(float angle)
     return (angle);
 }
 
+void display_pix(t_img_data *img, int x, int y, int color)
+{
+    char *dest;
+
+    dest = img->adress + (y * img->size + x  * (img->bpp / 8));
+    *(unsigned int *)dest = color;
+}
+
+void ft_putpixel(int ray, int i, t_cube *cube, int color)
+{
+    if(ray < 0 || ray >= WIN_W || i > WIN_H || i < 0)
+        return ;
+    display_pix(&cube->img, ray, i, color);
+    
+}
+
+void draw_wall(float top_pixel, t_cube *cube, float bot)
+{
+	int i;
+	int k;
+	float l;
+	unsigned int *adress;
+	t_img_data texture;
+	
+	texture = cube->texture[cube->NSWE];
+	adress = cube->texture[cube->NSWE].adress;
+	i = 0;
+	k = (int)cube->ray.index;
+	l = top_pixel;
+	while(i < WIN_H)
+	{
+		l += bot;
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(l)]);
+		i++;	
+	}
+}
+
+void draw_other(float top, float wall, t_cube *cube)
+{
+	int i;
+
+	i = 0;
+	while(i < top)
+	{
+
+	}
+	
+}
+
 void wall_display(t_cube *cube, float dist)
 {
 	static float tetta;
 	float wall_h;
 	float top_pixel;
 	float pixel;
-	float scale;
 
 	if(!tetta)
 		tetta = tanf(FOV_H * PI / 360) * 2;
@@ -142,13 +190,15 @@ void wall_display(t_cube *cube, float dist)
 	{
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
+		draw_other(top_pixel, wall_h, cube);
 	}
 	else
 	{	
-		true_pixel = (texture.pixel_h * wall_h) / WIN_H;
+		top_pixel = (cube->texture[cube->NSWE].pix_h * wall_h) / WIN_H;
 		wall_h = (1 - wall_h) / 2;
-		top_pixel = wall_h / pixel;
-			
+		draw_wall(top_pixel, cube, wall_h / pixel);
+		// top pixel cest le haut du mur qu'on voit
+		// wall_h cest la taille du mur 
 	}
 }
 
@@ -166,10 +216,10 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 		y = cube->ray.h_y;
 		if (angle > 0.5 && angle < 1.5)
 		{
-			texture = west;
+			cube->NSWE = WEST;
 		}
 		else
-			texture = east;
+			cube->NSWE = EAST;
 		dist = dist_y;
 	}
 	else
@@ -179,10 +229,10 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 		y = cube->ray.v_y;
 		if (angle > 1)
 		{
-			texture = north;
+			cube->NSWE = NORTH;
 		}	
 		else
-			texture = south;
+			cube->NSWE = SOUTH;
 	}
 	wall_display(cube, dist); 
 
@@ -201,9 +251,8 @@ void raycasting(t_cube *cube)
         pov_h = (float)FOV_W / (float)WIN_W;
 		pov_h = pov_h / 180;
 	}
-	i = -1;
     angle = fix_angle(cube->player.angle - (FOV_W / 360));
-    while(++i < WIN_W)
+    while(cube->ray.index < WIN_W)
     {
         if (angle > 1)
 		{
@@ -221,5 +270,6 @@ void raycasting(t_cube *cube)
 		}
         angle = fix_angle(angle + pov_h);
         wall_check(find_x_ray(cube, angle,fixed_angle), find_y_ray(cube, angle,fixed_angle), cube, angle);
-    }
+		cube->ray.index++;
+	}
 }

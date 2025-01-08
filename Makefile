@@ -33,7 +33,7 @@ all: $(NAME)
 
 clean:
 #	$(MAKE) -C $(PRINTF_DIR) clean
-	rm -f $(OBJ)
+	rm -f $(OBJ) $(DEP)
 
 fclean: clean
 #	$(MAKE) -C $(PRINTF_DIR) fclean
