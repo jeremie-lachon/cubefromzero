@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/07 23:28:45 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/08 19:48:57 by jla-chon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,29 @@ float fix_angle(float angle)
 void wall_display(t_cube *cube, float dist)
 {
 	static float tetta;
+	float wall_h;
+	float top_pixel;
+	float pixel;
+	float scale;
 
 	if(!tetta)
-		tetta = tanf(FOV_H * PI / 180);
+		tetta = tanf(FOV_H * PI / 360) * 2;
+	wall_h = dist * tetta;
+	pixel = wall_h / WIN_H;
+	if(wall_h > 1)
+	{
+		wall_h = (wall_h - 1) / 2;
+		top_pixel = wall_h / pixel;
+	}
+	else
+	{	
+		true_pixel = (texture.pixel_h * wall_h) / WIN_H;
+		wall_h = (1 - wall_h) / 2;
+		top_pixel = wall_h / pixel;
+			
+	}
 }
+
 void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 {
 	int	texture;
@@ -203,11 +222,4 @@ void raycasting(t_cube *cube)
         angle = fix_angle(angle + pov_h);
         wall_check(find_x_ray(cube, angle,fixed_angle), find_y_ray(cube, angle,fixed_angle), cube, angle);
     }
-Okey donc if dist_x cest north south et dist_y cest east_wst ?
-
-ok donc une fois dedans 
-
-faudra quon les departage....
-
-
 }

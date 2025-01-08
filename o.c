@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/08 01:56:23 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/08 17:53:50 by jla-chon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -477,13 +477,13 @@ int	checksides(t_parse *parse, int i, int j)
 		return (1);
 	if (!j || j + 1 == parse->width)
 		return (1);
-	if (parse->map[i -1][j] == -1)
+	if (parse->map[i -1][j] == OUT)
 		return (1);
-	if (parse->map[i][j - 1] == -1)
+	if (parse->map[i][j - 1] == OUT)
 		return (1);
-	if (parse->map[i][j + 1] == -1)
+	if (parse->map[i][j + 1] == OUT)
 		return (1);
-	if (parse->map[i + 1][j] == -1)
+	if (parse->map[i + 1][j] == OUT)
 		return (1);
 	return (0);
 }
@@ -498,10 +498,7 @@ void	printmap(t_parse *parse)
 		j = 0;
 		while (j < parse->width)
 		{
-			if (parse->map[i][j] == -1)
-				printf("2");
-			else
-				printf("%d", parse->map[i][j]);
+			printf("%d", parse->map[i][j]);
 			j++;
 		}
 		printf("\n");
@@ -693,18 +690,12 @@ void	freetexts(t_parse *parse, t_cube *cube, int i)
 	int	j;
 
 	j = 0;
-	free(parse->textures[NO]);
-	free(parse->textures[EA]);
-	free(parse->textures[WE]);
-	free(parse->textures[SO]);
-	free(parse->textures[DO]);
-	free(parse->textures[SP]);
-	parse->textures[NO] = 0;
-	parse->textures[EA] = 0;
-	parse->textures[WE] = 0;
-	parse->textures[SO] = 0;
-	parse->textures[DO] = 0;
-	parse->textures[SP] = 0;
+	while (j < 6)
+	{
+		free(parse->textures[j]);
+		parse->textures[j++] = 0;
+	}
+	j = 0;
 	while (j < i)
 		mlx_destroy_image(0, &cube->texture[j++]);
 }
@@ -723,13 +714,11 @@ int	fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 	cube->texture[EA].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[EA], &cube->texture[EA].pix_w, &cube->texture[EA].pix_h);
 	if (!cube->textures[EA])
 		return (freetexts(parse, cube, 3), 1);
-	if (!cube->texture[NO] || !cube->texture[WE] || !cube->texture[SO] || !cube->texture[EA])
-		return (freetexts(parse, cube, 3), 1);
 	if (parse->textures[DO])
 		cube->texture[DO].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[DO], &cube->texture[DO].pix_w, &cube->texture[DO].pix_h);
 	if (parse->textures[DO] && !cube->texture[DO])
 		return (freetexts(parse, cube, 4), 1);
-	return (freetexts(parse, cube, 0), 0);	
+	return (freetexts(parse, cube, 0), 0);
 }
 
 t_cube	*parse_to_cube(t_parse *parse)
