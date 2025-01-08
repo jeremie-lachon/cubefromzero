@@ -46,7 +46,6 @@ typedef struct s_img_data
     int     endl;
     int     pix_w;
     int     pix_h;
-
 }   t_img_data;
 
 typedef struct s_data
