@@ -11,13 +11,15 @@ int map_filler(t_data *data)
   	
     data->map[5] = strdup("111111111111111111111111");
     data->map[4] = strdup("100000000000000000000001");
-    data->map[3] = strdup("100000000000000000000001");
-    data->map[2] = strdup("100000000000000000000001");
-    data->map[1] = strdup("100000000111111000000001");
+    data->map[3] = strdup("111111111111110000000001");
+    data->map[2] = strdup("111111111111110000000001");
+    data->map[1] = strdup("100000000000000000000001");
 	data->map[0] = strdup("111111111111111111111111");
-    data->pos_x = 1;
+    data->pos_x = 22;
     data->pos_y = 4;
-	data->facing = 'N';
+	data->facing = 'W';
+	data->FC[0] = 0x00FF3330;
+	data->FC[1] = 0x00ffadae;
     return (0);
 }
 

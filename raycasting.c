@@ -129,7 +129,7 @@ float fix_angle(float angle)
 void display_pix(t_img_data *img, int x, int y, int color)
 {
     char *dest;
-
+	// printf("JE RENTRE LA\n");
     dest = img->adress + (y * img->size + x  * (img->bpp / 8));
     *(unsigned int *)dest = color;
 }
@@ -149,9 +149,11 @@ void draw_wall(float top_pixel, t_cube *cube, float bot)
 	float l;
 	unsigned int *adress;
 	t_img_data texture;
-	
+	// printf("je rentre ici \n");
+	// exit(2);
 	texture = cube->texture[cube->NSWE];
 	adress = cube->texture[cube->NSWE].adress;
+	
 	i = 0;
 	k = (int)cube->ray.index;
 	l = top_pixel;
@@ -165,14 +167,19 @@ void draw_wall(float top_pixel, t_cube *cube, float bot)
 
 void draw_other(float top, float wall, t_cube *cube)
 {
-	int i;
-
-	i = 0;
-	while(i < top)
+    int i;
+    i = 0;
+    while(i < wall)
 	{
-
+        ft_putpixel(cube->ray.index, i, cube, cube->data.FC[0]);
+		i++;
 	}
-	
+	i = WIN_H - top;
+	while(i < WIN_H)
+	{
+        ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1]);
+		i++;
+	}
 }
 
 void wall_display(t_cube *cube, float dist)
@@ -181,6 +188,7 @@ void wall_display(t_cube *cube, float dist)
 	float wall_h;
 	float top_pixel;
 	float pixel;
+	// printf("im in wall display\n");
 
 	if(!tetta)
 		tetta = tanf(FOV_H * PI / 360) * 2;
@@ -196,6 +204,7 @@ void wall_display(t_cube *cube, float dist)
 	{	
 		top_pixel = (cube->texture[cube->NSWE].pix_h * wall_h) / WIN_H;
 		wall_h = (1 - wall_h) / 2;
+		// printf("HELLO\n");
 		draw_wall(top_pixel, cube, wall_h / pixel);
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
@@ -208,6 +217,7 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 	float dist;
     float x;
     float y;
+	// printf("im in wall check\n");
 	if (dist_x == -1  && dist_y == -1)
 		printf("ERRRRRR\n");
 	if (dist_x == -1.0 || (dist_y < dist_x && dist_y != -1.0))
@@ -236,7 +246,7 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 	}
 	wall_display(cube, dist); 
 
-    printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
+    // printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
 }
 
 void raycasting(t_cube *cube)
@@ -272,4 +282,7 @@ void raycasting(t_cube *cube)
         wall_check(find_x_ray(cube, angle,fixed_angle), find_y_ray(cube, angle,fixed_angle), cube, angle);
 		cube->ray.index++;
 	}
+    mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
+	// printf("ICI %d %d\n", cube->ray.index, WIN_W);
+	// exit(6);
 }

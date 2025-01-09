@@ -20,7 +20,7 @@
 # define MAX_VIEW_DISTANCE 50
 # define WIN_W 1200
 # define WIN_H 800
-# define FOV_W 210.0
+# define FOV_W 100.0
 # define FOV_H 150.0
 # define ROTATION_SPEED .006
 # define PLAYER_SPEED 40
@@ -57,6 +57,7 @@ typedef struct s_data
     int     map_w;
     int     map_h;
     char    facing;
+    unsigned int FC[2];
 }   t_data;
 
 /*  
