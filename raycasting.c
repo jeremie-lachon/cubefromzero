@@ -142,7 +142,7 @@ void ft_putpixel(int ray, int i, t_cube *cube, int color)
     
 }
 
-void draw_wall(float top_pixel, t_cube *cube, float bot)
+void draw_wall(float top_pixel, t_cube *cube, float bot, int entry)
 {
 	int i;
 	int k;
@@ -153,28 +153,35 @@ void draw_wall(float top_pixel, t_cube *cube, float bot)
 	// exit(2);
 	texture = cube->texture[cube->NSWE];
 	adress = cube->texture[cube->NSWE].adress;
-	
+	char *a = "abc";
 	i = 0;
 	k = (int)cube->ray.index;
 	l = top_pixel;
-	while(i < WIN_H)
+	while(i < 600)
 	{
+		
 		l += bot;
+		printf("ENTRY :%d: ,I :%d: , l :%f:, k :%d:\n", entry, i, l, k);
 		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(l)]);
 		i++;	
 	}
 }
 
+
 void draw_other(float top, float wall, t_cube *cube)
 {
     int i;
     i = 0;
-    while(i < wall)
+    while(i < top)
 	{
         ft_putpixel(cube->ray.index, i, cube, cube->data.FC[0]);
 		i++;
 	}
-	i = WIN_H - top;
+	while(i < WIN_H - top)
+	{
+        ft_putpixel(cube->ray.index, i, cube, 0x00456465);
+		i++;
+	}
 	while(i < WIN_H)
 	{
         ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1]);
@@ -199,13 +206,14 @@ void wall_display(t_cube *cube, float dist)
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
 		draw_other(top_pixel, wall_h, cube);
+		// draw_wall(top_pixel, cube, WIN_H - top_pixel, 0);
 	}
 	else
 	{	
 		top_pixel = (cube->texture[cube->NSWE].pix_h * wall_h) / WIN_H;
 		wall_h = (1 - wall_h) / 2;
+		draw_wall(top_pixel, cube, wall_h / pixel, 1);
 		// printf("HELLO\n");
-		draw_wall(top_pixel, cube, wall_h / pixel);
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
 	}
