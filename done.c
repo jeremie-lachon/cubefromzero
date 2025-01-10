@@ -63,16 +63,35 @@ int init_mlx(t_cube *cube)
 												&cube->img.size, 
 												&cube->img.endl);
 	// protection
-    cube->texture[0].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/west.xpm", &cube->texture[0].pix_w, &cube->texture[0].pix_h);  //west
-    cube->texture[1].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/east.xpm", &cube->texture[1].pix_w, &cube->texture[1].pix_h);   //east                          
-    cube->texture[2].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/1000x1600.xpm", &cube->texture[2].pix_w, &cube->texture[2].pix_h);   // nord                          
-    cube->texture[3].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/mnt/nfs/homes/dakojic/NEW_CUBE/texture/1000_1600.xpm", &cube->texture[3].pix_w, &cube->texture[3].pix_h);          // sud
+    cube->texture[EAST].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/home/dakojic/code/NEW_CUBE/texture/e.xpm", &cube->texture[EAST].pix_w, &cube->texture[EAST].pix_h);  //west
+    if(!cube->texture[EAST].img_ptr)
+	{
+		printf("cube->texture[EAST].img_ptr bug\n");
+		exit(1);
+	}
+	cube->texture[SOUTH].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/home/dakojic/code/NEW_CUBE/texture/s.xpm", &cube->texture[SOUTH].pix_w, &cube->texture[SOUTH].pix_h);   //east                          
+    if(!cube->texture[SOUTH].img_ptr)
+	{
+		printf("cube->texture[SOUTH].img_ptr bug\n");
+		exit(1);
+	}
+	cube->texture[NORTH].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/home/dakojic/code/NEW_CUBE/texture/n.xpm", &cube->texture[NORTH].pix_w, &cube->texture[NORTH].pix_h);   // nord                          
+    if(!cube->texture[NORTH].img_ptr)
+	{
+		printf("cube->texture[2].img_ptr bug\n");
+		exit(1);
+	}
+	cube->texture[WEST].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "/home/dakojic/code/NEW_CUBE/texture/w.xpm", &cube->texture[WEST].pix_w, &cube->texture[WEST].pix_h);          // sud
+    if(!cube->texture[WEST].img_ptr)
+	{
+		printf("cube->texture[WEST].img_ptr bug\n");
+		exit(1);
+	}
 
-
-    cube->texture[0].adress = mlx_get_data_addr(cube->texture[0].img_ptr, &cube->texture[0].bpp, &cube->texture[0].size, &cube->texture[0].endl);
-    cube->texture[1].adress = mlx_get_data_addr(cube->texture[1].img_ptr, &cube->texture[1].bpp, &cube->texture[1].size, &cube->texture[1].endl);
-    cube->texture[2].adress = mlx_get_data_addr(cube->texture[2].img_ptr, &cube->texture[2].bpp, &cube->texture[2].size, &cube->texture[2].endl);
-    cube->texture[3].adress = mlx_get_data_addr(cube->texture[3].img_ptr, &cube->texture[3].bpp, &cube->texture[3].size, &cube->texture[3].endl);
+    cube->texture[EAST].adress = mlx_get_data_addr(cube->texture[EAST].img_ptr, &cube->texture[EAST].bpp, &cube->texture[EAST].size, &cube->texture[EAST].endl);
+    cube->texture[WEST].adress = mlx_get_data_addr(cube->texture[WEST].img_ptr, &cube->texture[WEST].bpp, &cube->texture[WEST].size, &cube->texture[WEST].endl);
+    cube->texture[NORTH].adress = mlx_get_data_addr(cube->texture[NORTH].img_ptr, &cube->texture[NORTH].bpp, &cube->texture[NORTH].size, &cube->texture[NORTH].endl);
+    cube->texture[SOUTH].adress = mlx_get_data_addr(cube->texture[SOUTH].img_ptr, &cube->texture[SOUTH].bpp, &cube->texture[SOUTH].size, &cube->texture[SOUTH].endl);
     cube->win_ptr = mlx_new_window(cube->mlx_ptr, WIN_W, WIN_H, "Cub3d");
 	// protection
 	return (0);

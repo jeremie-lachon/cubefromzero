@@ -142,7 +142,7 @@ void ft_putpixel(int ray, int i, t_cube *cube, int color)
     
 }
 
-void draw_wall(float top_pixel, t_cube *cube, float bot, int entry)
+void draw_wall(float top_pixel, t_cube *cube, float bot)
 {
 	int i;
 	int k;
@@ -153,16 +153,24 @@ void draw_wall(float top_pixel, t_cube *cube, float bot, int entry)
 	// exit(2);
 	texture = cube->texture[cube->NSWE];
 	adress = cube->texture[cube->NSWE].adress;
-	char *a = "abc";
 	i = 0;
 	k = (int)cube->ray.index;
 	l = top_pixel;
-	while(i < 600)
+	i = ceil(top_pixel);
+	while(i < bot)
 	{
-		
+
+		// Issue vient de ray.index
+
 		l += bot;
-		printf("ENTRY :%d: ,I :%d: , l :%f:, k :%d:\n", entry, i, l, k);
-		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(l)]);
+		printf("IMG INFOS :\nSize :%d: endl :%d: pix_w :%d: pix_h :%d:\n", texture.size, texture.endl, texture.pix_w, texture.pix_h);
+		printf("Ray :%d: ,I :%d: , l :%f:, k :%d:, top_pixel :%f: bot :%f:\n", cube->ray.index, i, l, k, top_pixel, bot);
+
+		/* Jai swith  (int)floor(l) en  (int)floor(i)
+			Et ca marche. Le issue est que "l" ne sert plus a rien ??? Whats going on, HEWO?
+			Anyway ca render au moins donc tant mieux
+		*/
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(i)]);
 		i++;	
 	}
 }
@@ -205,14 +213,15 @@ void wall_display(t_cube *cube, float dist)
 	{
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
+		printf("top pixel :%f:\n", top_pixel);
 		draw_other(top_pixel, wall_h, cube);
-		// draw_wall(top_pixel, cube, WIN_H - top_pixel, 0);
+		draw_wall(top_pixel, cube, WIN_H - top_pixel);
 	}
 	else
 	{	
 		top_pixel = (cube->texture[cube->NSWE].pix_h * wall_h) / WIN_H;
 		wall_h = (1 - wall_h) / 2;
-		draw_wall(top_pixel, cube, wall_h / pixel, 1);
+		draw_wall(top_pixel, cube, wall_h / pixel);
 		// printf("HELLO\n");
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
@@ -266,18 +275,20 @@ void raycasting(t_cube *cube)
 
     if(!pov_h)
 	{
-        pov_h = (float)FOV_W / (float)WIN_W;
-		pov_h = pov_h / 180;
+        pov_h = FOV_W / WIN_W;
+		pov_h = pov_h / 180.F;
 	}
-    angle = fix_angle(cube->player.angle - (FOV_W / 360));
-    while(cube->ray.index < WIN_W)
+    angle = fix_angle(cube->player.angle - (FOV_W / 360.F));
+	cube->ray.index = 0;
+	// Ca marche jusque < 612
+    while(cube->ray.index < 1000)
     {
         if (angle > 1)
 		{
 			if (angle < 1.5)
-				fixed_angle = tanf((angle - 1) * -PI);
+				fixed_angle = tanf((angle - 1.F) * -PI);
 			else
-				fixed_angle = tanf((2 - angle) * PI);
+				fixed_angle = tanf((2.F - angle) * PI);
 		}
 		else
 		{

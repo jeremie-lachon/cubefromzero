@@ -16,15 +16,15 @@ int player_filler(t_cube *cube)
 {
 
 	if(cube->data.facing == 'N')
-        cube->player.angle = 0.5;
+        cube->player.angle = 0.50F;
 	if(cube->data.facing == 'S')
-        cube->player.angle = 1.5;
+        cube->player.angle = 1.50F;
 	if(cube->data.facing == 'E')
-        cube->player.angle = 1;
+        cube->player.angle = 1.0F;
 	if(cube->data.facing == 'W')
-        cube->player.angle = 0;
-	cube->player.x = cube->data.pos_x + (float)0.5;
-	cube->player.y = cube->data.pos_y + (float)0.5;
+        cube->player.angle = 0.0F;
+	cube->player.x = cube->data.pos_x + 0.5F;
+	cube->player.y = cube->data.pos_y + 0.5F;
 	return (0);
 }
 
