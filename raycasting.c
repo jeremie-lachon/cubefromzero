@@ -163,14 +163,14 @@ void draw_wall(float top_pixel, t_cube *cube, float bot)
 		// Issue vient de ray.index
 
 		l += bot;
-		printf("IMG INFOS :\nSize :%d: endl :%d: pix_w :%d: pix_h :%d:\n", texture.size, texture.endl, texture.pix_w, texture.pix_h);
-		printf("Ray :%d: ,I :%d: , l :%f:, k :%d:, top_pixel :%f: bot :%f:\n", cube->ray.index, i, l, k, top_pixel, bot);
-
 		/* Jai swith  (int)floor(l) en  (int)floor(i)
 			Et ca marche. Le issue est que "l" ne sert plus a rien ??? Whats going on, HEWO?
 			Anyway ca render au moins donc tant mieux
+			(int)floor(l /  top_pixel) marche aussi
+
+			Blessed be I, but i aint the smarted of the lords creations
 		*/
-		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(i)]);
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)]);
 		i++;	
 	}
 }
