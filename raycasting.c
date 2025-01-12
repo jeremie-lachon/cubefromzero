@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/12 03:14:17 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/12 06:20:38 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,7 +259,7 @@ void wall_display(t_cube *cube, float dist, float offset)
 	}
 }
 
-void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
+void wall_check(float dist_x, float dist_y, t_cube *cube, float angle, float cosangled)
 {
 	// int	texture;
 	float dist;
@@ -286,14 +286,15 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 			cube->NSWE = SOUTH;
 	}
 	// printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
-	wall_display(cube, dist, offset);
+	wall_display(cube, dist * cosangled, offset);
 }
 
 void raycasting(t_cube *cube)
 {
-    float fixed_angle;
+    float fixed_angle[2];
     // int i;
     static float pov_h;
+	float	tmp;
     float angle;
 
     if(!pov_h)
@@ -303,25 +304,27 @@ void raycasting(t_cube *cube)
 	}
     angle = fix_angle(cube->player.angle - (FOV_W / 360.F));
 	cube->ray.index = 0;
+	tmp = FOV_W / 360;
 	// Ca marche jusque < 612
     while(cube->ray.index < WIN_W)
     {
         if (angle > 1)
 		{
 			if (angle < 1.5)
-				fixed_angle = tanf((angle - 1.F) * -PI);
+				fixed_angle[0] = tanf((angle - 1.F) * -PI);
 			else
-				fixed_angle = tanf((2.F - angle) * PI);
+				fixed_angle[0] = tanf((2.F - angle) * PI);
 		}
 		else
 		{
 			if (angle > 0.5)
-				fixed_angle = tanf((1 - angle) * PI);
+				fixed_angle[0] = tanf((1 - angle) * PI);
 			else
-				fixed_angle = tanf(angle * -PI);
+				fixed_angle[0] = tanf(angle * -PI);
 		}
-        angle = fix_angle(angle + pov_h);
-        wall_check(find_x_ray(cube, angle,fixed_angle), find_y_ray(cube, angle,fixed_angle), cube, angle);
+		fixed_angle[1] = cosf(fix_angle(cube->ray.index * pov_h - tmp) * PI);
+		angle = fix_angle(angle + pov_h);
+        wall_check(find_x_ray(cube, angle,fixed_angle[0]), find_y_ray(cube, angle,fixed_angle[0]), cube, angle, fixed_angle[1]);
 		cube->ray.index++;
 	}
     mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);

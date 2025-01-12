@@ -17,7 +17,7 @@ int map_filler(t_data *data)
 	data->map[0] = strdup("111111111111111111111111");
     data->pos_x = 22;
     data->pos_y = 4;
-	data->facing = 'W';
+	data->facing = 'E';
 	data->FC[0] = 0x00FF3330;
 	data->FC[1] = 0x00ffadae;
     return (0);
