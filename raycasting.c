@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/08 19:48:57 by jla-chon         ###   ########.fr       */
+/*   Updated: 2025/01/12 03:14:17 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ int check_wall(float y, float x, t_cube *cube)
 	return (1);
 }
 
-float find_y_ray(t_cube *cube, float angle, float fixed_angle)
+float	find_y_ray(t_cube *cube, float angle, float fixed_angle)
 {
-	float   delta;
-	float   move_x;
-	float   wall_y;
+	float	delta;
+	float	move_x;
+	float	wall_y;
 	int		check;
 
 	delta = cube->player.y - fixed_angle * cube->player.x;
@@ -76,11 +76,11 @@ float find_y_ray(t_cube *cube, float angle, float fixed_angle)
 	return (sqrt(powf(wall_y - cube->player.y, 2) + powf(move_x - cube->player.x, 2)));    
 }
 
-float find_x_ray(t_cube *cube, float angle, float fixed_angle)
+float	find_x_ray(t_cube *cube, float angle, float fixed_angle)
 {
-    float   delta;
-    float   move_y;
-    float   wall_x;
+	float	delta;
+	float	move_y;
+	float	wall_x;
 	int		check;
 
 	delta = cube->player.x - cube->player.y / fixed_angle;
@@ -97,52 +97,57 @@ float find_x_ray(t_cube *cube, float angle, float fixed_angle)
 		}
 	}
 	else
-    {
-        move_y = ceilf(cube->player.y);
-        wall_x = delta + move_y / fixed_angle; 
+	{
+		move_y = ceilf(cube->player.y);
+		wall_x = delta + move_y / fixed_angle; 
 		check = check_wall(move_y, wall_x, cube);
 		while (check == 1)
-        {
-            move_y += 1.0;
-            wall_x = delta + move_y / fixed_angle; 
+		{
+			move_y += 1.0;
+			wall_x = delta + move_y / fixed_angle; 
 			check = check_wall(move_y, wall_x, cube);
-        }
-    }
+		}
+	}
 	if (check == -1)
 		return (-1.0);
-    cube->ray.v_y = move_y;
+	cube->ray.v_y = move_y;
 	if (angle > 1)
 		cube->ray.v_y -= 1;
-    cube->ray.v_x = wall_x;
-    return (sqrt(powf(wall_x - cube->player.x, 2) + powf(move_y - cube->player.y, 2)));    
+	cube->ray.v_x = wall_x;
+	return (sqrt(powf(wall_x - cube->player.x, 2) + powf(move_y - cube->player.y, 2)));
 }
 
-float fix_angle(float angle)
+float	fix_angle(float angle)
 {
-    while (angle > 2)
-        angle -= 2;
-    while (angle < 0)
-        angle += 2;
-    return (angle);
+	while (angle > 2)
+		angle -= 2;
+	while (angle < 0)
+		angle += 2;
+	return (angle);
 }
 
 void display_pix(t_img_data *img, int x, int y, int color)
 {
-    char *dest;
+	char *dest;
 	// printf("JE RENTRE LA\n");
-    dest = img->adress + (y * img->size + x  * (img->bpp / 8));
-    *(unsigned int *)dest = color;
+	dest = img->adress + (y * img->size + x  * (img->bpp / 8));
+	*(unsigned int *)dest = color;
 }
 
 void ft_putpixel(int ray, int i, t_cube *cube, int color)
 {
-    if(ray < 0 || ray >= WIN_W || i > WIN_H || i < 0)
-        return ;
+	if (ray < 0 || ray >= WIN_W || i > WIN_H || i < 0)
+		return ;
+	// if (cube->ray.index > 600)
+	// {
+		// printf("index %d ray %d i %d ", cube->ray.index, ray, i);
+		// printf("color %d:%d:%d \n", (color >> 16) & 0xFF, (color >> 8) & 0xFF);
+	// }
     display_pix(&cube->img, ray, i, color);
     
 }
 
-void draw_wall(float top_pixel, t_cube *cube, float bot)
+void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
 {
 	int i;
 	int k;
@@ -152,9 +157,9 @@ void draw_wall(float top_pixel, t_cube *cube, float bot)
 	// printf("je rentre ici \n");
 	// exit(2);
 	texture = cube->texture[cube->NSWE];
-	adress = cube->texture[cube->NSWE].adress;
+	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	i = 0;
-	k = (int)cube->ray.index;
+	k = (int)floor(offset * texture.pix_w);
 	l = top_pixel;
 	i = ceil(top_pixel);
 	while(i < bot)
@@ -170,39 +175,66 @@ void draw_wall(float top_pixel, t_cube *cube, float bot)
 
 			Blessed be I, but i aint the smarted of the lords creations
 		*/
-		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)]);
-		i++;	
+		// int pre;
+		// pre = adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)];
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l / top_pixel / i) + k]);
+		// if (pre != adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)])
+		// {
+		// 	printf("Before %d After %d\n", pre, adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)]);
+		// 	sleep(1);
+		// }
+		i++;
 	}
 }
 
-
-void draw_other(float top, float wall, t_cube *cube)
+void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 {
-    int i;
-    i = 0;
-    while(i < top)
+	int		k;
+	float	stat;
+	float	l;
+	unsigned int *adress;
+	t_img_data texture;
+	texture = cube->texture[cube->NSWE];
+	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
+	stat = texture.pix_h * pixel ;
+	k = (int)floor(offset * texture.pix_w);
+	l = 0;
+	while(l < texture.pix_h)
 	{
-        ft_putpixel(cube->ray.index, i, cube, cube->data.FC[0]);
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l) + k]);
+		l += stat;
+		i++;
+	}
+}
+
+void draw_other(float top, t_cube *cube)
+{
+	int i;
+
+	i = 0;
+	while(i < top)
+	{
+		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[0]);
 		i++;
 	}
 	while(i < WIN_H - top)
 	{
-        ft_putpixel(cube->ray.index, i, cube, 0x00456465);
+		ft_putpixel(cube->ray.index, i, cube, 16777215);
 		i++;
 	}
 	while(i < WIN_H)
 	{
-        ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1]);
+		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1]);
 		i++;
 	}
 }
 
-void wall_display(t_cube *cube, float dist)
+void wall_display(t_cube *cube, float dist, float offset)
 {
-	static float tetta;
-	float wall_h;
-	float top_pixel;
-	float pixel;
+	static float	tetta;
+	float			wall_h;
+	float			top_pixel;
+	float			pixel;
 	// printf("im in wall display\n");
 
 	if(!tetta)
@@ -213,16 +245,15 @@ void wall_display(t_cube *cube, float dist)
 	{
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
-		printf("top pixel :%f:\n", top_pixel);
-		draw_other(top_pixel, wall_h, cube);
-		draw_wall(top_pixel, cube, WIN_H - top_pixel);
+		printf("top pixel :%f: of ray %d with offset %f \n", top_pixel, cube->ray.index, offset);
+		draw_other(top_pixel, cube);
+		draw_wall_other(cube, pixel, offset, top_pixel);
 	}
 	else
-	{	
+	{
 		top_pixel = (cube->texture[cube->NSWE].pix_h * wall_h) / WIN_H;
 		wall_h = (1 - wall_h) / 2;
-		draw_wall(top_pixel, cube, wall_h / pixel);
-		// printf("HELLO\n");
+		draw_wall(top_pixel, cube, wall_h / pixel, offset);
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
 	}
@@ -230,21 +261,17 @@ void wall_display(t_cube *cube, float dist)
 
 void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 {
-	int	texture;
+	// int	texture;
 	float dist;
-    float x;
-    float y;
+    float offset;
 	// printf("im in wall check\n");
 	if (dist_x == -1  && dist_y == -1)
 		printf("ERRRRRR\n");
 	if (dist_x == -1.0 || (dist_y < dist_x && dist_y != -1.0))
 	{
-		x = cube->ray.h_x;
-		y = cube->ray.h_y;
+		offset = cube->ray.h_y - floorf(cube->ray.h_y);
 		if (angle > 0.5 && angle < 1.5)
-		{
 			cube->NSWE = WEST;
-		}
 		else
 			cube->NSWE = EAST;
 		dist = dist_y;
@@ -252,24 +279,20 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle)
 	else
 	{
 		dist = dist_x;
-		x = cube->ray.v_x;
-		y = cube->ray.v_y;
+		offset = cube->ray.v_x - floorf(cube->ray.v_x);
 		if (angle > 1)
-		{
 			cube->NSWE = NORTH;
-		}	
 		else
 			cube->NSWE = SOUTH;
 	}
-	wall_display(cube, dist); 
-
-    // printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
+	// printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
+	wall_display(cube, dist, offset);
 }
 
 void raycasting(t_cube *cube)
 {
     float fixed_angle;
-    int i;
+    // int i;
     static float pov_h;
     float angle;
 
@@ -281,7 +304,7 @@ void raycasting(t_cube *cube)
     angle = fix_angle(cube->player.angle - (FOV_W / 360.F));
 	cube->ray.index = 0;
 	// Ca marche jusque < 612
-    while(cube->ray.index < 1000)
+    while(cube->ray.index < WIN_W)
     {
         if (angle > 1)
 		{
@@ -304,4 +327,5 @@ void raycasting(t_cube *cube)
     mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
 	// printf("ICI %d %d\n", cube->ray.index, WIN_W);
 	// exit(6);
+	// sleep(100);
 }

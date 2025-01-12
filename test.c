@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/04 20:00:38 by jla-chon         ###   ########.fr       */
+/*   Updated: 2025/01/12 02:40:42 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,7 +366,6 @@ int loop_render(t_cube *cube)
 int game(t_cube *cube)
 {
 	init_mlx(cube);
-
 	// mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
     // mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
 	// mlx_hook(cube->win_ptr, 17, 0, &escape, cube);
@@ -382,6 +381,6 @@ int main(void)
    	map_filler(&cube.data);
 	player_filler(&cube);
 	game(&cube);
-    raycasting(&cube);
+    // raycasting(&cube);
     return (0);
 }
