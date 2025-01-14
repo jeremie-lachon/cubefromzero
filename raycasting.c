@@ -187,6 +187,87 @@ void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
 	}
 }
 
+void	move_player(t_cube *cube, float angle)
+{
+	float new_x;
+	float new_y;
+	float fixed_angle[2];
+    // int i;
+    static float pov_h;
+	float	tmp;
+    float aangle;
+	if(angle < 0)
+		angle *= -1;
+	printf("Angle inside :%f:\n", angle);
+    if(!pov_h)
+	{
+        pov_h = FOV_W / WIN_W;
+		pov_h = pov_h / 180.F;
+	}
+    aangle = fix_angle(angle - (FOV_W / 360.F));
+	printf("Aangle :%f:\n", aangle);
+	cube->ray.index = 0;
+	tmp = FOV_W / 360;
+	if (aangle > 1)
+	{
+		if (aangle < 1.5)
+			fixed_angle[0] = tanf((aangle - 1.F) * -PI);
+		else
+			fixed_angle[0] = tanf((2.F - aangle) * PI);
+	}
+	else
+	{
+		if (aangle > 0.5)
+			fixed_angle[0] = tanf((1 - aangle) * PI);
+		else
+			fixed_angle[0] = tanf(aangle * -PI);
+	}
+	fixed_angle[1] = cosf(fix_angle(cube->ray.index * pov_h - tmp) * PI);
+	aangle = fix_angle(aangle + pov_h);
+	new_x = find_x_ray(cube, angle,fixed_angle[0]);
+	new_y = find_y_ray(cube, angle,fixed_angle[0]);
+	printf("Avant :%f: :%f:\n", cube->player.x, cube->player.y);
+	cube->player.x -= ceil(new_x);
+	cube->player.y -= ceil(new_y);
+	if(cube->player.y > cube->data.map_h)
+		cube->player.y = cube->data.map_h - 1;
+	if(cube->player.x > cube->data.map_w)
+		cube->player.y = cube->data.map_w - 1;
+	printf("Apres :%f: :%f:\n", cube->player.x, cube->player.y);
+	// exit(5);
+	
+}
+// 	fixed_angle = fmod(angle * PI, 2 * PI);
+// 	if (fixed_angle < 0) {
+// 		fixed_angle += 2 * PI;
+// }
+
+// 	new_x = (int)((cube->player.x + cos(fixed_angle)));
+// 	new_y = (int)((cube->player.y + sin(fixed_angle)));
+// 	check_x = (int)new_x;
+
+// 	printf("Avant X :%f:  Y :%f: angle :%f:\n", cube->player.x, cube->player.y, angle);
+	
+//     if(check_x > cube->data.map_h)
+// 	{
+//         check_x = cube->data.map_h;
+// 	}
+// 	check_y = (int)new_y;
+// 	if(check_y > cube->data.map_w)
+//     {
+// 	    check_y = cube->data.map_w;
+// 	}
+// 	if (cube->data.map[check_y][check_x] != '1')
+//     {
+//         if(cube->data.map[check_y][(int)cube->player.x] != '1' ||
+//           cube->data.map[(int)cube->player.y][check_x] != '1')
+//             {
+//                 cube->player.x = new_x;
+//                 cube->player.y = new_y;
+//             }
+// 		printf("Apres X :%f:  Y :%f:\n", cube->player.x, cube->player.y);
+//     }
+
 void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 {
 	int		k;
@@ -245,7 +326,7 @@ void wall_display(t_cube *cube, float dist, float offset)
 	{
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
-		printf("top pixel :%f: of ray %d with offset %f \n", top_pixel, cube->ray.index, offset);
+		// printf("top pixel :%f: of ray %d with offset %f \n", top_pixel, cube->ray.index, offset);
 		draw_other(top_pixel, cube);
 		draw_wall_other(cube, pixel, offset, top_pixel);
 	}
@@ -293,41 +374,47 @@ void raycasting(t_cube *cube)
 {
     float fixed_angle[2];
     // int i;
-    static float pov_h;
 	float	tmp;
     float angle;
+    float half_width;
+    float adjacent;
 
-    if(!pov_h)
-	{
-        pov_h = FOV_W / WIN_W;
-		pov_h = pov_h / 180.F;
-	}
-    angle = fix_angle(cube->player.angle - (FOV_W / 360.F));
-	cube->ray.index = 0;
-	tmp = FOV_W / 360;
-	// Ca marche jusque < 612
+    tmp = FOV_W / 360;
+    angle = fix_angle(cube->player.angle - tmp);
+    half_width = WIN_W / 2;
+    adjacent = half_width / tanf(tmp * PI);
     while(cube->ray.index < WIN_W)
     {
+        float aux_var;
+        if (cube->ray.index < WIN_W / 2)
+        {
+            aux_var = atanf((half_width - (float)cube->ray.index) / adjacent);
+            angle = tmp * PI - aux_var;
+            angle = fix_angle(cube->player.angle - tmp +  angle / PI);
+        }
+        else
+        {
+            aux_var = atanf(((float)cube->ray.index - half_width) / adjacent);
+            angle = fix_angle(cube->player.angle + aux_var / PI);
+        }
+        fixed_angle[1] = cosf(aux_var);
         if (angle > 1)
-		{
-			if (angle < 1.5)
-				fixed_angle[0] = tanf((angle - 1.F) * -PI);
-			else
-				fixed_angle[0] = tanf((2.F - angle) * PI);
-		}
-		else
-		{
-			if (angle > 0.5)
-				fixed_angle[0] = tanf((1 - angle) * PI);
-			else
-				fixed_angle[0] = tanf(angle * -PI);
-		}
-		fixed_angle[1] = cosf(fix_angle(cube->ray.index * pov_h - tmp) * PI);
-		angle = fix_angle(angle + pov_h);
+        {
+            if (angle < 1.5)
+                fixed_angle[0] = tanf((angle - 1.F) * -PI);
+            else
+                fixed_angle[0] = tanf((2.F - angle) * PI);
+        }
+        else
+        {
+            if (angle > 0.5)
+                fixed_angle[0] = tanf((1 - angle) * PI);
+            else
+                fixed_angle[0] = tanf(angle * -PI);
+        }
         wall_check(find_x_ray(cube, angle,fixed_angle[0]), find_y_ray(cube, angle,fixed_angle[0]), cube, angle, fixed_angle[1]);
-		cube->ray.index++;
-	}
-    mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
+        cube->ray.index++;
+    }
 	// printf("ICI %d %d\n", cube->ray.index, WIN_W);
 	// exit(6);
 	// sleep(100);

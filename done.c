@@ -17,7 +17,7 @@ int map_filler(t_data *data)
 	data->map[0] = strdup("111111111111111111111111");
     data->pos_x = 22;
     data->pos_y = 4;
-	data->facing = 'E';
+	data->facing = 'W';
 	data->FC[0] = 0x00FF3330;
 	data->FC[1] = 0x00ffadae;
     return (0);
@@ -43,12 +43,31 @@ int key_press(int keysym, t_cube *cube)
 {
 	if (keysym == XK_Escape)
 		escape(cube);
+	if(keysym == XK_w)
+	{
+		printf("Angle before :%f:\n", cube->player.angle);
+		move_player(cube, cube->player.angle);
+	}
+	if(keysym == XK_s)
+	{
+		printf("Angle before :%f:\n", cube->player.angle);
+		move_player(cube, cube->player.angle + 1);
+	}
+	if(keysym == XK_a)
+	{
+		printf("Angle before :%f:\n", cube->player.angle);
+		move_player(cube, cube->player.angle - 0.5);
+	}
+	if(keysym == XK_d)
+		move_player(cube, cube->player.angle + 0.5);
 	// if (keysym >= 32 && keysym < 126)
 	// 	cube->inputs[keysym] = 1;
 	// if (keysym == XK_Right)
 	// 	cube->inputs[126] = 1;
-	// if (keysym == XK_Left)
-	// 	cube->inputs[127] = 1;
+	if (keysym == XK_Left)
+		cube->player.angle += ROTATION_SPEED;
+	if (keysym == XK_Right)
+		cube->player.angle -= ROTATION_SPEED;
 	return (0);
 }
 

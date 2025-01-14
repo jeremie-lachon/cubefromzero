@@ -366,7 +366,7 @@ int loop_render(t_cube *cube)
 int game(t_cube *cube)
 {
 	init_mlx(cube);
-	// mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
+	mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
     // mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
 	// mlx_hook(cube->win_ptr, 17, 0, &escape, cube);
 	mlx_loop_hook(cube->mlx_ptr, &loop_render, cube);
