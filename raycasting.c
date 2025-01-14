@@ -373,28 +373,21 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle, float cos
 void raycasting(t_cube *cube)
 {
     float fixed_angle[2];
-    // int i;
-	float	tmp;
     float angle;
-    float half_width;
-    float adjacent;
 
-    tmp = FOV_W / 360;
-    angle = fix_angle(cube->player.angle - tmp);
-    half_width = WIN_W / 2;
-    adjacent = half_width / tanf(tmp * PI);
+    angle = fix_angle(cube->player.angle - FOV_DEGREE);
     while(cube->ray.index < WIN_W)
     {
         float aux_var;
-        if (cube->ray.index < WIN_W / 2)
+        if (cube->ray.index < HALF_WIDTH)
         {
-            aux_var = atanf((half_width - (float)cube->ray.index) / adjacent);
-            angle = tmp * PI - aux_var;
-            angle = fix_angle(cube->player.angle - tmp +  angle / PI);
+            aux_var = atanf((HALF_WIDTH - (float)cube->ray.index) / ADJACENT);
+            angle = FOV_DEGREE * PI - aux_var;
+            angle = fix_angle(cube->player.angle - FOV_DEGREE +  angle / PI);
         }
         else
         {
-            aux_var = atanf(((float)cube->ray.index - half_width) / adjacent);
+            aux_var = atanf(((float)cube->ray.index - HALF_WIDTH) / ADJACENT);
             angle = fix_angle(cube->player.angle + aux_var / PI);
         }
         fixed_angle[1] = cosf(aux_var);
@@ -415,7 +408,4 @@ void raycasting(t_cube *cube)
         wall_check(find_x_ray(cube, angle,fixed_angle[0]), find_y_ray(cube, angle,fixed_angle[0]), cube, angle, fixed_angle[1]);
         cube->ray.index++;
     }
-	// printf("ICI %d %d\n", cube->ray.index, WIN_W);
-	// exit(6);
-	// sleep(100);
 }

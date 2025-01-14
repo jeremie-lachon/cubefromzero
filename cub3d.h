@@ -28,6 +28,9 @@
 # define CELL_SIZE 1
 # define EPSILON 1e-6
 # define LARGE_NUMBER 1e6
+# define FOV_DEGREE (FOV_W / 360.F)
+# define HALF_WIDTH (WIN_W / 2)
+# define ADJACENT (HALF_WIDTH / tanf(FOV_DEGREE * PI))
 
 enum cardinal
 {
@@ -111,5 +114,7 @@ int	escape(t_cube *cube);
 int key_press(int keysym, t_cube *cube);
 int init_mlx(t_cube *cube);
 void raycasting(t_cube *cube);
+void	move_player(t_cube *cube, float angle);
+
 
 #endif
