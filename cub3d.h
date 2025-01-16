@@ -105,6 +105,8 @@ typedef struct s_cube
     t_data      data;
     t_player    player;
     t_ray       ray;
+	t_img_data	image1;
+	t_img_data	image2;
     t_img_data     texture[5];
 }   t_cube;
 

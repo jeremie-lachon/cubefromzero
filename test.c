@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/12 02:40:42 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/16 16:57:47 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,6 +357,20 @@ int key_release(int keysym, t_cube* cube)
 
 int loop_render(t_cube *cube)
 {
+	static	int	i;
+
+	if (!i)
+	{
+		cube->img = cube->image1;
+		i++;
+	}
+	else
+	{
+		cube->img = cube->image2;
+		i--;
+	}
+	// printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
+	// sleep(4);
 	raycasting(cube);
     mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
 	// moving(cube);

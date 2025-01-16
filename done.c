@@ -17,7 +17,7 @@ int map_filler(t_data *data)
 	data->map[0] = strdup("111111111111111111111111");
     data->pos_x = 22;
     data->pos_y = 4;
-	data->facing = 'W';
+	data->facing = 'E';
 	data->FC[0] = 0x00FF3330;
 	data->FC[1] = 0x00ffadae;
     return (0);
@@ -43,17 +43,17 @@ int key_press(int keysym, t_cube *cube)
 {
 	if (keysym == XK_Escape)
 		escape(cube);
-	if(keysym == XK_w)
-		move_player(cube, cube->player.angle);
 	if(keysym == XK_s)
+		move_player(cube, cube->player.angle);
+	if(keysym == XK_w)
 		move_player(cube, cube->player.angle + 1);
 	if(keysym == XK_a)
 		move_player(cube, cube->player.angle - 0.5);
 	if(keysym == XK_d)
 		move_player(cube, cube->player.angle + 0.5);
-	if (keysym == XK_Left)
-		cube->player.angle += ROTATION_SPEED;
 	if (keysym == XK_Right)
+		cube->player.angle += ROTATION_SPEED;
+	if (keysym == XK_Left)
 		cube->player.angle -= ROTATION_SPEED;
 	if(cube->player.angle > 2 || cube->player.angle < 0)
 		cube->player.angle = fix_angle(cube->player.angle);
@@ -64,12 +64,19 @@ int init_mlx(t_cube *cube)
 {
 	cube->mlx_ptr = mlx_init();
 
-	cube->img.img_ptr = mlx_new_image(cube->mlx_ptr, WIN_W, WIN_H);
+	cube->image1.img_ptr = mlx_new_image(cube->mlx_ptr, WIN_W, WIN_H);
 	// protection
-	cube->img.adress = mlx_get_data_addr((cube)->img.img_ptr, 
-												&cube->img.bpp, 
-												&cube->img.size, 
-												&cube->img.endl);
+	cube->image1.adress = mlx_get_data_addr((cube)->image1.img_ptr, 
+												&cube->image1.bpp, 
+												&cube->image1.size, 
+												&cube->image1.endl);
+	// protection
+	cube->image2.img_ptr = mlx_new_image(cube->mlx_ptr, WIN_W, WIN_H);
+	// protection
+	cube->image2.adress = mlx_get_data_addr((cube)->image2.img_ptr, 
+												&cube->image2.bpp, 
+												&cube->image2.size, 
+												&cube->image2.endl);
 	// protection
     cube->texture[EAST].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/e.xpm", &cube->texture[EAST].pix_w, &cube->texture[EAST].pix_h);  //west
     if(!cube->texture[EAST].img_ptr)

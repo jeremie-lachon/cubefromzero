@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/12 06:20:38 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/16 17:08:36 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,11 @@ void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
 		*/
 		// int pre;
 		// pre = adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)];
+		if (l / top_pixel / i >= WIN_H || k >= WIN_W)
+		{
+			printf("ERROR pixel %f currentl: %f toppix: %f myI: %d with bot: %f has reached limit or %d\n", l / top_pixel / i, l, top_pixel, i, bot, k);
+			return ;
+		}
 		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l / top_pixel / i) + k]);
 		// if (pre != adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)])
 		// {
@@ -211,7 +216,7 @@ void	move_player(t_cube *cube, float angle)
                 cube->player.y = new_y;
             }
     }
-	printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
+	// printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
 
 }
 
@@ -323,6 +328,7 @@ void raycasting(t_cube *cube)
     float fixed_angle[2];
     float angle;
 
+	cube->ray.index = 0;
     angle = fix_angle(cube->player.angle - FOV_DEGREE);
     while(cube->ray.index < WIN_W)
     {
