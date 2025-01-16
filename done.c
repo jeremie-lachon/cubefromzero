@@ -45,17 +45,14 @@ int key_press(int keysym, t_cube *cube)
 		escape(cube);
 	if(keysym == XK_w)
 	{
-		printf("Angle before :%f:\n", cube->player.angle);
 		move_player(cube, cube->player.angle);
 	}
 	if(keysym == XK_s)
 	{
-		printf("Angle before :%f:\n", cube->player.angle);
 		move_player(cube, cube->player.angle + 1);
 	}
 	if(keysym == XK_a)
 	{
-		printf("Angle before :%f:\n", cube->player.angle);
 		move_player(cube, cube->player.angle - 0.5);
 	}
 	if(keysym == XK_d)

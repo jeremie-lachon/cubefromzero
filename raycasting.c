@@ -138,11 +138,6 @@ void ft_putpixel(int ray, int i, t_cube *cube, int color)
 {
 	if (ray < 0 || ray >= WIN_W || i > WIN_H || i < 0)
 		return ;
-	// if (cube->ray.index > 600)
-	// {
-		// printf("index %d ray %d i %d ", cube->ray.index, ray, i);
-		// printf("color %d:%d:%d \n", (color >> 16) & 0xFF, (color >> 8) & 0xFF);
-	// }
     display_pix(&cube->img, ray, i, color);
     
 }
@@ -154,8 +149,6 @@ void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
 	float l;
 	unsigned int *adress;
 	t_img_data texture;
-	// printf("je rentre ici \n");
-	// exit(2);
 	texture = cube->texture[cube->NSWE];
 	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	i = 0;
@@ -189,84 +182,39 @@ void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
 
 void	move_player(t_cube *cube, float angle)
 {
-	float new_x;
-	float new_y;
-	float fixed_angle[2];
-    // int i;
-    static float pov_h;
-	float	tmp;
-    float aangle;
-	if(angle < 0)
-		angle *= -1;
-	printf("Angle inside :%f:\n", angle);
-    if(!pov_h)
-	{
-        pov_h = FOV_W / WIN_W;
-		pov_h = pov_h / 180.F;
-	}
-    aangle = fix_angle(angle - (FOV_W / 360.F));
-	printf("Aangle :%f:\n", aangle);
-	cube->ray.index = 0;
-	tmp = FOV_W / 360;
-	if (aangle > 1)
-	{
-		if (aangle < 1.5)
-			fixed_angle[0] = tanf((aangle - 1.F) * -PI);
-		else
-			fixed_angle[0] = tanf((2.F - aangle) * PI);
-	}
-	else
-	{
-		if (aangle > 0.5)
-			fixed_angle[0] = tanf((1 - aangle) * PI);
-		else
-			fixed_angle[0] = tanf(aangle * -PI);
-	}
-	fixed_angle[1] = cosf(fix_angle(cube->ray.index * pov_h - tmp) * PI);
-	aangle = fix_angle(aangle + pov_h);
-	new_x = find_x_ray(cube, angle,fixed_angle[0]);
-	new_y = find_y_ray(cube, angle,fixed_angle[0]);
-	printf("Avant :%f: :%f:\n", cube->player.x, cube->player.y);
-	cube->player.x -= ceil(new_x);
-	cube->player.y -= ceil(new_y);
-	if(cube->player.y > cube->data.map_h)
-		cube->player.y = cube->data.map_h - 1;
-	if(cube->player.x > cube->data.map_w)
-		cube->player.y = cube->data.map_w - 1;
-	printf("Apres :%f: :%f:\n", cube->player.x, cube->player.y);
-	// exit(5);
-	
+	int		map_grid_y;
+	int		map_grid_x;
+	float	new_x;
+	float	new_y;
+
+	angle = angle * PI;
+	new_x = (cube->player.x + cos(angle));
+	new_y = (cube->player.y + sin(angle));
+	map_grid_x = ((int)new_x);
+    
+    if(map_grid_x > cube->data.map_w)
+    {
+        map_grid_x = cube->data.map_w;
+    }
+    map_grid_y = ((int)new_y);
+
+    if(map_grid_y > cube->data.map_h)
+    {   
+        map_grid_y = cube->data.map_h;
+    }
+	if (cube->data.map[map_grid_y][map_grid_x] != '1')
+    {
+        if(cube->data.map[map_grid_y][(int)cube->player.x] != '1' ||
+          cube->data.map[(int)cube->player.y][map_grid_x] != '1')
+            {
+                cube->player.x = new_x;
+                cube->player.y = new_y;
+            }
+    }
+	printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
+
 }
-// 	fixed_angle = fmod(angle * PI, 2 * PI);
-// 	if (fixed_angle < 0) {
-// 		fixed_angle += 2 * PI;
-// }
 
-// 	new_x = (int)((cube->player.x + cos(fixed_angle)));
-// 	new_y = (int)((cube->player.y + sin(fixed_angle)));
-// 	check_x = (int)new_x;
-
-// 	printf("Avant X :%f:  Y :%f: angle :%f:\n", cube->player.x, cube->player.y, angle);
-	
-//     if(check_x > cube->data.map_h)
-// 	{
-//         check_x = cube->data.map_h;
-// 	}
-// 	check_y = (int)new_y;
-// 	if(check_y > cube->data.map_w)
-//     {
-// 	    check_y = cube->data.map_w;
-// 	}
-// 	if (cube->data.map[check_y][check_x] != '1')
-//     {
-//         if(cube->data.map[check_y][(int)cube->player.x] != '1' ||
-//           cube->data.map[(int)cube->player.y][check_x] != '1')
-//             {
-//                 cube->player.x = new_x;
-//                 cube->player.y = new_y;
-//             }
-// 		printf("Apres X :%f:  Y :%f:\n", cube->player.x, cube->player.y);
-//     }
 
 void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 {
