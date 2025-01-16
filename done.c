@@ -44,27 +44,19 @@ int key_press(int keysym, t_cube *cube)
 	if (keysym == XK_Escape)
 		escape(cube);
 	if(keysym == XK_w)
-	{
 		move_player(cube, cube->player.angle);
-	}
 	if(keysym == XK_s)
-	{
 		move_player(cube, cube->player.angle + 1);
-	}
 	if(keysym == XK_a)
-	{
 		move_player(cube, cube->player.angle - 0.5);
-	}
 	if(keysym == XK_d)
 		move_player(cube, cube->player.angle + 0.5);
-	// if (keysym >= 32 && keysym < 126)
-	// 	cube->inputs[keysym] = 1;
-	// if (keysym == XK_Right)
-	// 	cube->inputs[126] = 1;
 	if (keysym == XK_Left)
 		cube->player.angle += ROTATION_SPEED;
 	if (keysym == XK_Right)
 		cube->player.angle -= ROTATION_SPEED;
+	if(cube->player.angle > 2 || cube->player.angle < 0)
+		cube->player.angle = fix_angle(cube->player.angle);
 	return (0);
 }
 

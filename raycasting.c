@@ -188,8 +188,8 @@ void	move_player(t_cube *cube, float angle)
 	float	new_y;
 
 	angle = angle * PI;
-	new_x = (cube->player.x + cos(angle));
-	new_y = (cube->player.y + sin(angle));
+	new_x = (cube->player.x + (cos(angle) / 3));
+	new_y = (cube->player.y + (sin(angle) / 3));
 	map_grid_x = ((int)new_x);
     
     if(map_grid_x > cube->data.map_w)

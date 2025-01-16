@@ -115,6 +115,6 @@ int key_press(int keysym, t_cube *cube);
 int init_mlx(t_cube *cube);
 void raycasting(t_cube *cube);
 void	move_player(t_cube *cube, float angle);
-
+float	fix_angle(float angle);
 
 #endif
