@@ -41,22 +41,45 @@ int	escape(t_cube *cube)
 
 int key_press(int keysym, t_cube *cube)
 {
+	float angle;
+	int check;
+
+	angle = cube->player.angle;
+	check = 0;
 	if (keysym == XK_Escape)
 		escape(cube);
-	if(keysym == XK_s)
-		move_player(cube, cube->player.angle);
 	if(keysym == XK_w)
-		move_player(cube, cube->player.angle + 1);
-	if(keysym == XK_a)
-		move_player(cube, cube->player.angle - 0.5);
+	{
+		angle += 1;
+		check = 1;
+	}	if(keysym == XK_s)
+	{
+		check = 1;
+	}
 	if(keysym == XK_d)
-		move_player(cube, cube->player.angle + 0.5);
+	{
+		angle -= 0.5;
+		check = 1;
+	}
+	if(keysym == XK_a)
+	{	angle += 0.5;	
+			check = 1;
+	}
+	// if(keysym == XK_s)
+	// 	move_player(cube, cube->player.angle);
+	// if(keysym == XK_w)
+	// 	move_player(cube, cube->player.angle + 1);
+	// if(keysym == XK_a)
+	// 	move_player(cube, cube->player.angle - 0.5);
+	// if(keysym == XK_d)
+	// 	move_player(cube, cube->player.angle + 0.5);
 	if (keysym == XK_Right)
 		cube->player.angle += ROTATION_SPEED;
 	if (keysym == XK_Left)
 		cube->player.angle -= ROTATION_SPEED;
 	if(cube->player.angle > 2 || cube->player.angle < 0)
 		cube->player.angle = fix_angle(cube->player.angle);
+	if(check)move_player(cube, angle);
 	return (0);
 }
 

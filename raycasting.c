@@ -172,7 +172,7 @@ void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
 		// pre = adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)];
 		if (l / top_pixel / i >= WIN_H || k >= WIN_W)
 		{
-			printf("ERROR pixel %f currentl: %f toppix: %f myI: %d with bot: %f has reached limit or %d\n", l / top_pixel / i, l, top_pixel, i, bot, k);
+			// printf("ERROR pixel %f currentl: %f toppix: %f myI: %d with bot: %f has reached limit or %d\n", l / top_pixel / i, l, top_pixel, i, bot, k);
 			return ;
 		}
 		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l / top_pixel / i) + k]);
@@ -193,8 +193,8 @@ void	move_player(t_cube *cube, float angle)
 	float	new_y;
 
 	angle = angle * PI;
-	new_x = (cube->player.x + (cos(angle) / 3));
-	new_y = (cube->player.y + (sin(angle) / 3));
+	new_x = (cube->player.x + (cos(angle) / 5) );
+	new_y = (cube->player.y - (sin(angle) / 5));
 	map_grid_x = ((int)new_x);
     
     if(map_grid_x > cube->data.map_w)
@@ -216,7 +216,7 @@ void	move_player(t_cube *cube, float angle)
                 cube->player.y = new_y;
             }
     }
-	// printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
+	printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
 
 }
 
