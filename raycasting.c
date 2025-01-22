@@ -180,8 +180,8 @@ void	move_player(t_cube *cube, float angle)
 	float	new_y;
 
 	angle = angle * PI;
-	new_x = (cube->player.x + (cos(angle) / 5) );
-	new_y = (cube->player.y - (sin(angle) / 5));
+	new_x = (cube->player.x + (cos(angle) / 10) );
+	new_y = (cube->player.y - (sin(angle) / 10));
 	map_grid_x = ((int)new_x);
     
     if(map_grid_x > cube->data.map_w)
@@ -196,14 +196,13 @@ void	move_player(t_cube *cube, float angle)
     }
 	if (cube->data.map[map_grid_y][map_grid_x] != '1')
     {
-        if(cube->data.map[map_grid_y][(int)cube->player.x] != '1' ||
+        if(cube->data.map[map_grid_y][(int)cube->player.x] != '1' &&
           cube->data.map[(int)cube->player.y][map_grid_x] != '1')
             {
                 cube->player.x = new_x;
                 cube->player.y = new_y;
             }
     }
-	printf("X :%f: Y :%f: Angle :%f:\n", cube->player.x, cube->player.y, cube->player.angle);
 
 }
 
