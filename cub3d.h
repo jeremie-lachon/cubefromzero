@@ -40,6 +40,17 @@ enum cardinal
     WEST
 };
 
+enum move
+{
+    KEY_W,
+    KEY_S,
+    KEY_A,
+    KEY_D,
+    KEY_LEFT,
+    KEY_RIGHT,
+
+
+};
 typedef struct s_img_data
 {
     void    *img_ptr;
@@ -99,7 +110,7 @@ typedef struct s_cube
     int     fd;
     void    *mlx_ptr;
     void    *win_ptr;
-    bool    inputs[128];
+    bool    input[6];
     int     NSWE;
     t_img_data  img;
     t_data      data;
@@ -118,5 +129,6 @@ int init_mlx(t_cube *cube);
 void raycasting(t_cube *cube);
 void	move_player(t_cube *cube, float angle);
 float	fix_angle(float angle);
-
+void moving (t_cube *cube);
+int key_release(int keysym, t_cube *cube);
 #endif

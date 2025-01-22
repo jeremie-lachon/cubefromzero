@@ -10,10 +10,10 @@ int map_filler(t_data *data)
     data->map_w = 25;
   	
     data->map[5] = strdup("111111111111111111111111");
-    data->map[4] = strdup("100000000000000000000001");
-    data->map[3] = strdup("111111111111110000000001");
-    data->map[2] = strdup("111111111111110000000001");
-    data->map[1] = strdup("100000000000000000000001");
+    data->map[4] = strdup("100000000000000000010001");
+    data->map[3] = strdup("111111111111110000010001");
+    data->map[2] = strdup("111111111111110000010001");
+    data->map[1] = strdup("100000000000000000010001");
 	data->map[0] = strdup("111111111111111111111111");
     data->pos_x = 22;
     data->pos_y = 4;
@@ -41,45 +41,54 @@ int	escape(t_cube *cube)
 
 int key_press(int keysym, t_cube *cube)
 {
-	float angle;
-	int check;
 
-	angle = cube->player.angle;
-	check = 0;
-	if (keysym == XK_Escape)
-		escape(cube);
+	// cube->input[0] W
+	// cube->input[1] S
+	// cube->input[2] A
+	// cube->input[3] D
+	// cube->input[4] LEFT
+	// cube->input[5] RIGHT
+
+	// if (keysym == XK_Escape)
+	// 	escape(cube);
 	if(keysym == XK_w)
-	{
-		angle += 1;
-		check = 1;
-	}	if(keysym == XK_s)
-	{
-		check = 1;
+	{	
+		cube->input[KEY_W] = 1;
 	}
+	if(keysym == XK_s)
+		cube->input[KEY_S] = 1;
 	if(keysym == XK_d)
-	{
-		angle -= 0.5;
-		check = 1;
-	}
+		cube->input[KEY_A] = 1;
 	if(keysym == XK_a)
-	{	angle += 0.5;	
-			check = 1;
-	}
-	// if(keysym == XK_s)
-	// 	move_player(cube, cube->player.angle);
-	// if(keysym == XK_w)
-	// 	move_player(cube, cube->player.angle + 1);
-	// if(keysym == XK_a)
-	// 	move_player(cube, cube->player.angle - 0.5);
-	// if(keysym == XK_d)
-	// 	move_player(cube, cube->player.angle + 0.5);
+		cube->input[KEY_D] = 1;
 	if (keysym == XK_Right)
-		cube->player.angle += ROTATION_SPEED;
+		cube->input[KEY_LEFT] = 1;
 	if (keysym == XK_Left)
-		cube->player.angle -= ROTATION_SPEED;
-	if(cube->player.angle > 2 || cube->player.angle < 0)
-		cube->player.angle = fix_angle(cube->player.angle);
-	if(check)move_player(cube, angle);
+		cube->input[KEY_RIGHT] = 1;
+
+	// if(cube->player.angle > 2 || cube->player.angle < 0)
+	// 	cube->player.angle = fix_angle(cube->player.angle);
+	return (0);
+}
+
+int key_release(int keysym, t_cube *cube)
+{
+
+	if(keysym == XK_w)
+		cube->input[KEY_W] = 0;
+	if(keysym == XK_s)
+		cube->input[KEY_S] = 0;
+	if(keysym == XK_d)
+		cube->input[KEY_A] = 0;
+	if(keysym == XK_a)
+		cube->input[KEY_D] = 0;
+	if (keysym == XK_Right)
+		cube->input[KEY_LEFT] = 0;
+	if (keysym == XK_Left)
+		cube->input[KEY_RIGHT] = 0;
+
+	// if(cube->player.angle > 2 || cube->player.angle < 0)
+	// 	cube->player.angle = fix_angle(cube->player.angle);
 	return (0);
 }
 

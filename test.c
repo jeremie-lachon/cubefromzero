@@ -373,6 +373,7 @@ int loop_render(t_cube *cube)
 	// sleep(4);
 	raycasting(cube);
     mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
+    moving(cube);
 	// moving(cube);
     return (0);
 }
@@ -381,7 +382,7 @@ int game(t_cube *cube)
 {
 	init_mlx(cube);
 	mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
-    // mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
+    mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
 	// mlx_hook(cube->win_ptr, 17, 0, &escape, cube);
 	mlx_loop_hook(cube->mlx_ptr, &loop_render, cube);
 	mlx_loop(cube->mlx_ptr);

@@ -172,6 +172,59 @@ void draw_wall(float top_pixel, t_cube *cube, float offset)
 
 }
 
+// {
+//     rotate_player(cube, cube->inputs[126] - cube->inputs[127]);
+//     if(cube->inputs[119]) //w
+//         move_player(cube, angle_fix(cube->player.angle));
+//     if(cube->inputs[115]) //s
+//         move_player(cube, angle_fix(cube->player.angle + PI));
+//     if(cube->inputs[97]) //d
+//         move_player(cube, angle_fix(cube->player.angle - (PI / 2.0)));
+//     if(cube->inputs[100]) //a
+//         move_player(cube, angle_fix(cube->player.angle + (PI / 2.0)));
+// }
+
+/*	if(keysym == XK_w)
+	{
+		angle += 1;
+		check = 1;
+	}	if(keysym == XK_s)
+	{
+		check = 1;
+	}
+	if(keysym == XK_d)
+	{
+		angle -= 0.5;
+		check = 1;
+	}
+	if(keysym == XK_a)
+	{	angle += 0.5;	
+			check = 1;
+	}*/
+
+float added_angle(t_cube *cube)
+{
+	int hor;
+	int ver;
+
+	hor = 0;
+	ver = 0;
+	if(cube->input[KEY_W])
+		ver++;
+	if(cube->input[KEY_S])
+		ver--;
+	if(cube->input[KEY_A])
+		hor--;
+	if(cube->input[KEY_D])
+		hor++;
+	if(!hor && !ver)
+		return (-1);
+	if(hor && ver)
+		return((ver + 2) * hor * 0.25);
+	return (hor * 0.5 + (ver + 1) / 2); 
+}
+
+
 void	move_player(t_cube *cube, float angle)
 {
 	int		map_grid_y;
@@ -180,8 +233,8 @@ void	move_player(t_cube *cube, float angle)
 	float	new_y;
 
 	angle = angle * PI;
-	new_x = (cube->player.x + (cos(angle) / 10) );
-	new_y = (cube->player.y - (sin(angle) / 10));
+	new_x = (cube->player.x + (cos(angle)/50));
+	new_y = (cube->player.y - (sin(angle)/50	));
 	map_grid_x = ((int)new_x);
     
     if(map_grid_x > cube->data.map_w)
@@ -194,18 +247,57 @@ void	move_player(t_cube *cube, float angle)
     {   
         map_grid_y = cube->data.map_h;
     }
-	if (cube->data.map[map_grid_y][map_grid_x] != '1')
-    {
-        if(cube->data.map[map_grid_y][(int)cube->player.x] != '1' &&
-          cube->data.map[(int)cube->player.y][map_grid_x] != '1')
-            {
-                cube->player.x = new_x;
-                cube->player.y = new_y;
-            }
-    }
+	if(cube->data.map[map_grid_y][(int)cube->player.x] == '1')
+	{
+		if(map_grid_y == cube->player.y)
+			;
+		else if(map_grid_y < cube->player.y)
+			cube->player.y = map_grid_y + 1.01;
+		else
+			cube->player.y = map_grid_y - 0.01;
+	}
+	else
+		cube->player.y = new_y;
+
+	if(cube->data.map[(int)cube->player.y][map_grid_x] == '1')
+	{
+		if(map_grid_x == cube->player.x)
+			;
+		else if(map_grid_x < cube->player.x)
+			cube->player.x = map_grid_x + 1.01;
+		else
+			cube->player.x = map_grid_x - 0.01;
+	}
+	else
+		cube->player.x = new_x;
+
+	// if (cube->data.map[map_grid_y][map_grid_x] != '1')
+    // {
+    //     if(cube->data.map[map_grid_y][(int)cube->player.x] != '1' &&
+    //       cube->data.map[(int)cube->player.y][map_grid_x] != '1')
+    //         {
+    //             cube->player.x = new_x;
+    //             cube->player.y = new_y;
+    //         }
+    // }
 
 }
 
+void moving (t_cube *cube)
+{
+	float angle;
+
+	if (cube->input[KEY_LEFT])
+		cube->player.angle += ROTATION_SPEED;
+	if (cube->input[KEY_RIGHT])
+		cube->player.angle -= ROTATION_SPEED;
+	angle = added_angle(cube);
+	if(angle != -1)
+	{
+		printf("Before move %f\n", angle + cube->player.angle);
+		move_player(cube, fix_angle(angle + cube->player.angle));	
+	}
+}
 
 void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 {
