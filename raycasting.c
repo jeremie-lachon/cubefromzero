@@ -142,47 +142,34 @@ void ft_putpixel(int ray, int i, t_cube *cube, int color)
     
 }
 
-void draw_wall(float top_pixel, t_cube *cube, float bot, float offset)
+void draw_wall(float top_pixel, t_cube *cube, float offset)
 {
 	int i;
 	int k;
 	float l;
+	float scale;
 	unsigned int *adress;
 	t_img_data texture;
 	texture = cube->texture[cube->NSWE];
 	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	i = 0;
-	k = (int)floor(offset * texture.pix_w);
-	l = top_pixel;
-	i = ceil(top_pixel);
-	while(i < bot)
+	k = (int)(offset * texture.pix_w);
+	// top_pixel = 1 - top_pixel;
+	l = top_pixel * texture.pix_h;
+	//(1 - 2 *x) / win_h
+	// exit(1);
+	scale = ((1 - 2 * top_pixel) / WIN_H) * texture.pix_h;
+	while(i < WIN_H)
 	{
+		// printf("Scale %f - top_pixel : %f \n", scale, top_pixel);
 
-		// Issue vient de ray.index
-
-		l += bot;
-		/* Jai swith  (int)floor(l) en  (int)floor(i)
-			Et ca marche. Le issue est que "l" ne sert plus a rien ??? Whats going on, HEWO?
-			Anyway ca render au moins donc tant mieux
-			(int)floor(l /  top_pixel) marche aussi
-
-			Blessed be I, but i aint the smarted of the lords creations
-		*/
-		// int pre;
-		// pre = adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)];
-		if (l / top_pixel / i >= WIN_H || k >= WIN_W)
-		{
-			// printf("ERROR pixel %f currentl: %f toppix: %f myI: %d with bot: %f has reached limit or %d\n", l / top_pixel / i, l, top_pixel, i, bot, k);
-			return ;
-		}
-		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l / top_pixel / i) + k]);
-		// if (pre != adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)])
-		// {
-		// 	printf("Before %d After %d\n", pre, adress[texture.pix_w  * k + (int)floor(l / top_pixel / i)]);
-		// 	sleep(1);
-		// }
+		// l += bot;
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)(l)  + k]);
+		l += scale;
 		i++;
 	}
+	//exit(1);
+
 }
 
 void	move_player(t_cube *cube, float angle)
@@ -285,13 +272,15 @@ void wall_display(t_cube *cube, float dist, float offset)
 	}
 	else
 	{
-		top_pixel = (cube->texture[cube->NSWE].pix_h * wall_h) / WIN_H;
+
+		top_pixel = WIN_H / (cube->texture[cube->NSWE].pix_h * wall_h);
 		wall_h = (1 - wall_h) / 2;
-		draw_wall(top_pixel, cube, wall_h / pixel, offset);
+		draw_wall(wall_h, cube, offset);
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
 	}
 }
+
 
 void wall_check(float dist_x, float dist_y, t_cube *cube, float angle, float cosangled)
 {
