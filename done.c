@@ -25,6 +25,7 @@ int map_filler(t_data *data)
 
 int	escape(t_cube *cube)
 {
+	printf("CUIS LA\n");
 	int i;
 	i = -1;
 		//cube->win_ptr vide ????
@@ -49,8 +50,8 @@ int key_press(int keysym, t_cube *cube)
 	// cube->input[4] LEFT
 	// cube->input[5] RIGHT
 
-	// if (keysym == XK_Escape)
-	// 	escape(cube);
+	if (keysym == XK_Escape)
+		escape(cube);
 	if(keysym == XK_w)
 	{	
 		cube->input[KEY_W] = 1;
