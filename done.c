@@ -10,10 +10,10 @@ int map_filler(t_data *data)
     data->map_w = 25;
   	
     data->map[5] = strdup("111111111111111111111111");
-    data->map[4] = strdup("100000000000000000010001");
-    data->map[3] = strdup("111111111111110000010001");
-    data->map[2] = strdup("111111111111110000010001");
-    data->map[1] = strdup("100000000000000000010001");
+    data->map[4] = strdup("100000000000000000000001");
+    data->map[3] = strdup("111111111111110000000001");
+    data->map[2] = strdup("111111111111110000000001");
+    data->map[1] = strdup("100000000000000000000001");
 	data->map[0] = strdup("111111111111111111111111");
     data->pos_x = 22;
     data->pos_y = 4;

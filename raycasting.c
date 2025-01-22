@@ -399,6 +399,8 @@ void wall_check(float dist_x, float dist_y, t_cube *cube, float angle, float cos
 		else
 			cube->NSWE = SOUTH;
 	}
+	if(cube->NSWE == WEST || cube->NSWE == NORTH)
+		offset = 1 - offset;
 	// printf("angle %f dist_X :%f: dist_Y :%f: X1 :%f: Y1 :%f:\n", angle, dist_x, dist_y, x, y);
 	wall_display(cube, dist * cosangled, offset);
 }
