@@ -354,7 +354,26 @@ int key_release(int keysym, t_cube* cube)
 	return (0);
 }
  */
-
+// int mouse(int x, int y, t_cube *cube)
+// {
+//     cube->y = y;
+//     cube->x = x;
+//     return 0;
+// }
+void mouse_rotation(t_cube *cube)
+{
+    if(cube->mouse_x > HALF_WIDTH + 100)
+        cube->player.angle += ROTATION_SPEED * 1.1;
+    if(cube->mouse_x < HALF_WIDTH - 100)
+        cube->player.angle -= ROTATION_SPEED * 1.1;
+        // cube->oldmouse_x = cube->mouse_x;
+    printf("%d %d", HALF_WIDTH + 100, HALF_WIDTH - 100);
+        // mlx_mouse_move(cube->mlx_ptr, cube->win_ptr, HALF_WIDTH, 1);
+        // Test ou a chaque fois on reset la pos de la souris au milieu, ca lag et c'est moins fluide nivea
+        // gameplay je trouve, du coup l'option d'une zone tampon au milieu est plus "correcte"
+    printf("Y %i\n", cube->mouse_y);
+    printf("X %i\n", cube->mouse_x);
+}
 int loop_render(t_cube *cube)
 {
 	static	int	i;
@@ -373,7 +392,15 @@ int loop_render(t_cube *cube)
 	// sleep(4);
 	raycasting(cube);
     mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
+    // mlx_mouse_hide(cube->mlx_ptr, cube->win_ptr);
     moving(cube);
+    cube->oldmouse_x = cube->mouse_x;
+    mlx_mouse_get_pos(cube->mlx_ptr, cube->win_ptr, &cube->mouse_x, &cube->mouse_y);
+    // if(cube->mouse_x)
+    // {
+    mouse_rotation(cube);
+
+
 	// moving(cube);
     return (0);
 }
@@ -384,7 +411,9 @@ int game(t_cube *cube)
 	mlx_hook(cube->win_ptr, KeyPress, KeyPressMask, &key_press, cube);
     mlx_hook(cube->win_ptr, KeyRelease, KeyReleaseMask, &key_release, cube);
 	mlx_hook(cube->win_ptr, 17, 0, &escape, cube);
+    mlx_mouse_hide(cube->mlx_ptr, cube->win_ptr);
 	mlx_loop_hook(cube->mlx_ptr, &loop_render, cube);
+
 	mlx_loop(cube->mlx_ptr);
 	return (0);
 }

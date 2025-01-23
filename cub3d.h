@@ -116,6 +116,10 @@ typedef struct s_cube
     t_data      data;
     t_player    player;
     t_ray       ray;
+    int         mouse_x;
+    int         mouse_y;
+    int         oldmouse_x;
+    int         oldmouse_y;
 	t_img_data	image1;
 	t_img_data	image2;
     t_img_data     texture[5];
