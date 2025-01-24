@@ -111,6 +111,13 @@ int init_mlx(t_cube *cube)
 												&cube->image2.size, 
 												&cube->image2.endl);
 	// protection
+	cube->minimap.img_ptr = mlx_new_image(cube->mlx_ptr, MAP_W, MAP_H);
+	// protection
+	cube->minimap.adress = mlx_get_data_addr((cube)->minimap.img_ptr, 
+												&cube->minimap.bpp, 
+												&cube->minimap.size, 
+												&cube->minimap.endl);
+
     cube->texture[EAST].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/e.xpm", &cube->texture[EAST].pix_w, &cube->texture[EAST].pix_h);  //west
     if(!cube->texture[EAST].img_ptr)
 	{

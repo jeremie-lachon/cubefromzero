@@ -12,7 +12,7 @@ GNL_DIR = -I$(UTILS_DIR)gnl/
 
 # CFLAGS += $(MLX_INCLUDE) $(GNL_DIR)
 
-SRC = test.c done.c raycasting.c
+SRC = main.c done.c raycasting.c
 
 #DEP = $(SRC:.c=.d)
 OBJ = $(SRC:.c=.o)

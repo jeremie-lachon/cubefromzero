@@ -138,8 +138,7 @@ void ft_putpixel(int ray, int i, t_cube *cube, int color)
 {
 	if (ray < 0 || ray >= WIN_W || i > WIN_H || i < 0)
 		return ;
-    display_pix(&cube->img, ray, i, color);
-    
+    display_pix(&cube->img, ray, i, color);    
 }
 
 void draw_wall(float top_pixel, t_cube *cube, float offset)
@@ -152,12 +151,20 @@ void draw_wall(float top_pixel, t_cube *cube, float offset)
 	t_img_data texture;
 	texture = cube->texture[cube->NSWE];
 	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
-	i = 0;
+	if(cube->ray.index < MAP_W)
+		i = MAP_H;
+	else 
+		i = 0;
 	k = (int)(offset * texture.pix_w);
 	// top_pixel = 1 - top_pixel;
+	
 	l = top_pixel * texture.pix_h;
+	printf("L Before: %f\n", l);
+	if(cube->ray.index < MAP_W)
+		l += MAP_H;
 	//(1 - 2 *x) / win_h
 	// exit(1);
+	printf("L after : %f toppixel %f\n", l, top_pixel);
 	scale = ((1 - 2 * top_pixel) / WIN_H) * texture.pix_h;
 	while(i < WIN_H)
 	{
@@ -171,36 +178,6 @@ void draw_wall(float top_pixel, t_cube *cube, float offset)
 	//exit(1);
 
 }
-
-// {
-//     rotate_player(cube, cube->inputs[126] - cube->inputs[127]);
-//     if(cube->inputs[119]) //w
-//         move_player(cube, angle_fix(cube->player.angle));
-//     if(cube->inputs[115]) //s
-//         move_player(cube, angle_fix(cube->player.angle + PI));
-//     if(cube->inputs[97]) //d
-//         move_player(cube, angle_fix(cube->player.angle - (PI / 2.0)));
-//     if(cube->inputs[100]) //a
-//         move_player(cube, angle_fix(cube->player.angle + (PI / 2.0)));
-// }
-
-/*	if(keysym == XK_w)
-	{
-		angle += 1;
-		check = 1;
-	}	if(keysym == XK_s)
-	{
-		check = 1;
-	}
-	if(keysym == XK_d)
-	{
-		angle -= 0.5;
-		check = 1;
-	}
-	if(keysym == XK_a)
-	{	angle += 0.5;	
-			check = 1;
-	}*/
 
 float added_angle(t_cube *cube)
 {
@@ -299,31 +276,15 @@ void moving (t_cube *cube)
 	}
 }
 
-void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
-{
-	int		k;
-	float	stat;
-	float	l;
-	unsigned int *adress;
-	t_img_data texture;
-	texture = cube->texture[cube->NSWE];
-	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
-	stat = texture.pix_h * pixel ;
-	k = (int)floor(offset * texture.pix_w);
-	l = 0;
-	while(l < texture.pix_h)
-	{
-		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l) + k]);
-		l += stat;
-		i++;
-	}
-}
 
 void draw_other(float top, t_cube *cube)
 {
 	int i;
 
-	i = 0;
+	if(cube->ray.index < MAP_W)
+		i = MAP_H;
+	else 
+		i = 0;
 	while(i < top)
 	{
 		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[0]);
@@ -337,6 +298,29 @@ void draw_other(float top, t_cube *cube)
 	while(i < WIN_H)
 	{
 		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1]);
+		i++;
+	}
+}
+
+void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
+{
+	int		k;
+	float	stat;
+	float	l;
+	unsigned int *adress;
+	t_img_data texture;
+	texture = cube->texture[cube->NSWE];
+	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
+	stat = texture.pix_h * pixel ;
+	k = (int)floor(offset * texture.pix_w);
+	if(cube->ray.index < MAP_W)
+		l = MAP_W;
+	else
+		l = 0;
+	while(l < texture.pix_h)
+	{
+		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l) + k]);
+		l += stat;
 		i++;
 	}
 }
@@ -357,8 +341,11 @@ void wall_display(t_cube *cube, float dist, float offset)
 	{
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
+		if(top_pixel < MAP_H && cube->ray.index < MAP_W)
+			top_pixel = MAP_H;
 		// printf("top pixel :%f: of ray %d with offset %f \n", top_pixel, cube->ray.index, offset);
 		draw_other(top_pixel, cube);
+
 		draw_wall_other(cube, pixel, offset, top_pixel);
 	}
 	else
@@ -444,4 +431,5 @@ void raycasting(t_cube *cube)
         wall_check(find_x_ray(cube, angle,fixed_angle[0]), find_y_ray(cube, angle,fixed_angle[0]), cube, angle, fixed_angle[1]);
         cube->ray.index++;
     }
+
 }

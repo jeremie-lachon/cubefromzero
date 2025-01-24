@@ -31,6 +31,8 @@
 # define FOV_DEGREE (FOV_W / 360.F)
 # define HALF_WIDTH (WIN_W / 2)
 # define ADJACENT (HALF_WIDTH / tanf(FOV_DEGREE * PI))
+# define MAP_W 150
+# define MAP_H 150
 
 enum cardinal
 {
@@ -48,8 +50,6 @@ enum move
     KEY_D,
     KEY_LEFT,
     KEY_RIGHT,
-
-
 };
 typedef struct s_img_data
 {
@@ -118,10 +118,9 @@ typedef struct s_cube
     t_ray       ray;
     int         mouse_x;
     int         mouse_y;
-    int         oldmouse_x;
-    int         oldmouse_y;
 	t_img_data	image1;
 	t_img_data	image2;
+	t_img_data	minimap;
     t_img_data     texture[5];
 }   t_cube;
 
@@ -135,4 +134,6 @@ void	move_player(t_cube *cube, float angle);
 float	fix_angle(float angle);
 void moving (t_cube *cube);
 int key_release(int keysym, t_cube *cube);
+void display_pix(t_img_data *img, int x, int y, int color);
+void ft_putpixel(int ray, int i, t_cube *cube, int color);
 #endif
