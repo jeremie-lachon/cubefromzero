@@ -31,8 +31,8 @@
 # define FOV_DEGREE (FOV_W / 360.F)
 # define HALF_WIDTH (WIN_W / 2)
 # define ADJACENT (HALF_WIDTH / tanf(FOV_DEGREE * PI))
-# define MAP_W 150
-# define MAP_H 150
+# define MAP_W 250
+# define MAP_H 250
 
 enum cardinal
 {
