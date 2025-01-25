@@ -320,6 +320,21 @@ void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 	}
 }
 
+// void draw_map(t_cube *cube)
+// {
+// 	int i;
+// 	int sizeh;
+// 	int sizew;
+
+// 	sizeh = MAP_H / cube->data.map_h;
+// 	sizew = MAP_W / cube->data.map_w;
+// 	i = 0;
+// 	while(i < MAP_H)
+// 	{
+// 		ft_putpixel(cube->ray.index, i, cube, 0x0);
+// 		i++;
+// 	}
+// }
 void wall_display(t_cube *cube, float dist, float offset)
 {
 	static float	tetta;
@@ -356,7 +371,17 @@ void wall_display(t_cube *cube, float dist, float offset)
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
 	}
-	if(cube->ray.index < MAP_W)
+/*
+    MAP_w / map_w
+    map_h;
+
+	1111111111111111
+	1000000000000001
+	1000000000000001
+	1000000000000001
+	1111111111111111
+
+*/	if(cube->ray.index < MAP_W)
 	{
 		int i = 0;
 		while(i < MAP_H)
