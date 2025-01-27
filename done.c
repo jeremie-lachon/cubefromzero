@@ -7,7 +7,7 @@ int map_filler(t_data *data)
         return (-1);
 
     data->map_h = 6;
-    data->map_w = 25;
+    data->map_w = 24;
   	
     data->map[5] = strdup("111111111111111111111111");
     data->map[4] = strdup("100000000000000000000001");
@@ -112,7 +112,7 @@ int init_mlx(t_cube *cube)
 												&cube->image2.size, 
 												&cube->image2.endl);
 	// protection
-	cube->minimap.img_ptr = mlx_new_image(cube->mlx_ptr, MAP_W, MAP_H);
+	cube->minimap.img_ptr = mlx_new_image(cube->mlx_ptr, cube->minimap_w, cube->minimap_h);
 	// protection
 	cube->minimap.adress = mlx_get_data_addr((cube)->minimap.img_ptr, 
 												&cube->minimap.bpp, 
@@ -149,7 +149,24 @@ int init_mlx(t_cube *cube)
     cube->texture[NORTH].adress = mlx_get_data_addr(cube->texture[NORTH].img_ptr, &cube->texture[NORTH].bpp, &cube->texture[NORTH].size, &cube->texture[NORTH].endl);
     cube->texture[SOUTH].adress = mlx_get_data_addr(cube->texture[SOUTH].img_ptr, &cube->texture[SOUTH].bpp, &cube->texture[SOUTH].size, &cube->texture[SOUTH].endl);
     cube->win_ptr = mlx_new_window(cube->mlx_ptr, WIN_W, WIN_H, "Cub3d");
-
+	int h, w;
+	if(cube->data.map_w > cube->data.map_h)
+	{
+		h = 20;
+		w = 10;
+	}	
+	else if(cube->data.map_w < cube->data.map_h)
+	{
+		w = 20;
+		h = 10;
+	}	
+	else
+	{
+		w = 20;
+		h = 10;
+	}
+	cube->minimap_w = (cube->data.map_w) * w;
+	cube->minimap_h = cube->data.map_h * h;
 	// protection
 	return (0);
 }

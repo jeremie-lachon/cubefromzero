@@ -20,7 +20,7 @@
 # define MAX_VIEW_DISTANCE 50
 # define WIN_W 1200
 # define WIN_H 800
-# define FOV_W 80.F
+# define FOV_W 90.F
 # define FOV_H 100.F
 # define ROTATION_SPEED .006
 # define PLAYER_SPEED 40
@@ -31,8 +31,8 @@
 # define FOV_DEGREE (FOV_W / 360.F)
 # define HALF_WIDTH (WIN_W / 2)
 # define ADJACENT (HALF_WIDTH / tanf(FOV_DEGREE * PI))
-# define MAP_W 250
-# define MAP_H 250
+# define MAP_W 190
+# define MAP_H 90
 
 enum cardinal
 {
@@ -117,6 +117,8 @@ typedef struct s_cube
 	t_img_data	image2;
 	t_img_data	minimap;
     t_img_data     texture[5];
+    int minimap_w;
+    int minimap_h;
 }   t_cube;
 
 
