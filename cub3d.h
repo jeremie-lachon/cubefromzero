@@ -50,6 +50,8 @@ enum move
     KEY_D,
     KEY_LEFT,
     KEY_RIGHT,
+    MOUSE_LEFT,
+    MOUSE_RIGHT
 };
 typedef struct s_img_data
 {
@@ -74,13 +76,6 @@ typedef struct s_data
     unsigned int FC[2];
 }   t_data;
 
-/*  
-    X    Y
-    (1, 0)      E
-    (-1, 0)     W
-    (0, 1)      N
-    (0, -1)     S
-*/
 typedef struct s_ray
 {
     int index;
@@ -110,7 +105,7 @@ typedef struct s_cube
     int     fd;
     void    *mlx_ptr;
     void    *win_ptr;
-    bool    input[6];
+    bool    input[8];
     int     NSWE;
     t_img_data  img;
     t_data      data;

@@ -49,7 +49,6 @@ int key_press(int keysym, t_cube *cube)
 	// cube->input[3] D
 	// cube->input[4] LEFT
 	// cube->input[5] RIGHT
-
 	if (keysym == XK_Escape)
 		escape(cube);
 	if(keysym == XK_w)
@@ -75,6 +74,8 @@ int key_press(int keysym, t_cube *cube)
 int key_release(int keysym, t_cube *cube)
 {
 
+	if(keysym == 3)
+		cube->input[MOUSE_LEFT] = 0;
 	if(keysym == XK_w)
 		cube->input[KEY_W] = 0;
 	if(keysym == XK_s)

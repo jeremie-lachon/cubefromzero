@@ -259,9 +259,9 @@ void moving (t_cube *cube)
 {
 	float angle;
 
-	if (cube->input[KEY_LEFT])
+	if (cube->input[KEY_LEFT] || cube->input[MOUSE_LEFT])
 		cube->player.angle += ROTATION_SPEED;
-	if (cube->input[KEY_RIGHT])
+	if (cube->input[KEY_RIGHT] || cube->input[MOUSE_RIGHT])
 		cube->player.angle -= ROTATION_SPEED;
 	angle = added_angle(cube);
 	if(angle != -1)
@@ -285,11 +285,6 @@ void draw_other(float top, t_cube *cube)
 		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[0]);
 		i++;
 	}
-	// while(i < WIN_H - top)
-	// {
-	// 	ft_putpixel(cube->ray.index, i, cube, 16777215);
-	// 	i++;
-	// }
 	while(i < WIN_H)
 	{
 		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1]);
@@ -308,10 +303,7 @@ void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 	adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	stat = texture.pix_h * pixel ;
 	k = (int)floor(offset * texture.pix_w);
-	// if(cube->ray.index < MAP_W)
-		// l = MAP_H / 10;
-	// else
-		l = 0;
+	l = 0;
 	while(l < texture.pix_h)
 	{
 		ft_putpixel(cube->ray.index, i, cube, adress[texture.pix_w  * (int)floor(l) + k]);
@@ -320,21 +312,22 @@ void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 	}
 }
 
-// void draw_map(t_cube *cube)
-// {
-// 	int i;
-// 	int sizeh;
-// 	int sizew;
+void draw_map(t_cube *cube)
+{
+	int i;
+	// int sizeh;
+	// int sizew;
 
-// 	sizeh = MAP_H / cube->data.map_h;
-// 	sizew = MAP_W / cube->data.map_w;
-// 	i = 0;
-// 	while(i < MAP_H)
-// 	{
-// 		ft_putpixel(cube->ray.index, i, cube, 0x0);
-// 		i++;
-// 	}
-// }
+	// sizeh = MAP_H / cube->data.map_h;
+	// sizew = MAP_W / cube->data.map_w;
+	i = 0;
+	while(i < MAP_H)
+	{
+		ft_putpixel(cube->ray.index, i, cube, 0x1e17fb);
+		i++;
+	}
+}
+
 void wall_display(t_cube *cube, float dist, float offset)
 {
 	static float	tetta;
