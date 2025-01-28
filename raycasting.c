@@ -328,6 +328,30 @@ void draw_map(t_cube *cube)
 	}
 }
 
+void givemeplayer(t_cube *cube, int size_w, int size_h)
+{
+	int i = -4;
+	int y;
+	while(i != 4)
+	{
+		y = -4;
+		while(y != 4)
+		{
+			display_pix(&cube->img, (cube->player.x * size_w) + i, (cube->player.y * size_h) + y, 0x0); 
+			y++;
+		}
+		// display_pix(&cube->img, (cube->player.x * size_w) + 1, (cube->player.y * size_h) + 1, 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w) - 1, (cube->player.y * size_h) - 1, 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w) + 1, (cube->player.y * size_h) + 1, 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w) - 1, (cube->player.y * size_h) - 1, 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w) + i, (cube->player.y * size_h), 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w) - i, (cube->player.y * size_h), 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w), (cube->player.y * size_h) - i, 0x0); 
+		// display_pix(&cube->img, (cube->player.x * size_w), (cube->player.y * size_h) + i, 0x0); 
+		i++;
+	}
+		display_pix(&cube->img, (cube->player.x * size_w), (cube->player.y* size_h), 0x0); 
+}
 void wall_display(t_cube *cube, float dist, float offset)
 {
 	static float	tetta;
@@ -364,19 +388,6 @@ void wall_display(t_cube *cube, float dist, float offset)
 		// top pixel cest le haut du mur qu'on voit
 		// wall_h cest la taille du mur 
 	}
-/*
-    MAP_w / map_w
-    map_h;
-
-	1111111111111111
-	1000000000000001
-	1000000000000001
-	1000000000000001
-	1111111111111111
-
-*/
-	printf("minimap_w %d\n", cube->minimap_w);
-	// exit(1);
 	if(cube->ray.index < cube->minimap_w)
 	{
 		int size_w = cube->minimap_w / cube->data.map_w;
@@ -388,21 +399,18 @@ void wall_display(t_cube *cube, float dist, float offset)
 
 		while(i < cube->minimap_h)
 		{
-			//printf("Map_H :%d: I :%d: Y :%d: i mod size_h :%d:\n", cube->minimap_h, i, pos_y, i % size_h);
-			// printf("X :%d: Y :%d:\n", pos_x, pos_y);
 			if(cube->data.map[pos_y][pos_x] == '1')
 				ft_putpixel(cube->ray.index, i, cube, 0x1e17fb);
 			else if(cube->data.map[pos_y][pos_x] == '0')
-				ft_putpixel(cube->ray.index, i, cube, 0xff102c);
+				ft_putpixel(cube->ray.index, i, cube, 0xffffff);
 			else
-			{
-				printf("Cest :%c:\n", cube->data.map[pos_y][pos_x]);
-				ft_putpixel(cube->ray.index, i, cube, 0x0);
-			}
+				ft_putpixel(cube->ray.index, i, cube, 0xffffff);
 			i++;
 			if(i % size_h == 0 && pos_y < cube->data.map_h - 1)
 				pos_y++;
 		}
+		givemeplayer(cube, size_w, size_h);
+		// printf("x %f y %f\n", (cube->player.x * size_w), (cube->player.y* size_h));
 	}
 }
 
