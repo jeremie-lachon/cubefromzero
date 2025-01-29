@@ -17,6 +17,7 @@
 # include <stdbool.h>
 # include <math.h>
 # include <float.h>
+#include <sys/time.h>
 # define MAX_VIEW_DISTANCE 50
 # define WIN_W 1200
 # define WIN_H 800
@@ -119,6 +120,8 @@ typedef struct s_cube
     t_img_data     texture[5];
     int minimap_w;
     int minimap_h;
+    struct timeval time;
+    int frame;
 }   t_cube;
 
 

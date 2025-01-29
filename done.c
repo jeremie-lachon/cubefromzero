@@ -93,16 +93,17 @@ int key_release(int keysym, t_cube *cube)
 		cube->input[KEY_LEFT] = 0;
 	if (keysym == XK_Left)
 		cube->input[KEY_RIGHT] = 0;
-
-	// if(cube->player.angle > 2 || cube->player.angle < 0)
-	// 	cube->player.angle = fix_angle(cube->player.angle);
 	return (0);
 }
 
 int init_mlx(t_cube *cube)
 {
 	cube->mlx_ptr = mlx_init();
-
+	if(!cube->mlx_ptr)
+	{
+		printf("bug cube->mlx_ptr\n");
+		exit(4);
+	}
 	cube->image1.img_ptr = mlx_new_image(cube->mlx_ptr, WIN_W, WIN_H);
 	// protection
 	cube->image1.adress = mlx_get_data_addr((cube)->image1.img_ptr, 
