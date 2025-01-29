@@ -35,12 +35,17 @@
 # define MAP_W 190
 # define MAP_H 90
 
-enum cardinal
+enum texture
 {
+    FROID1,
+    FROID2,
+    FROID3,
+    FROID4,
     NORTH,
     SOUTH,
     EAST,
-    WEST
+    WEST,
+
 };
 
 enum move
@@ -117,7 +122,7 @@ typedef struct s_cube
 	t_img_data	image1;
 	t_img_data	image2;
 	t_img_data	minimap;
-    t_img_data     texture[5];
+    t_img_data     texture[9];
     int minimap_w;
     int minimap_h;
     struct timeval time;

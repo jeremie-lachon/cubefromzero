@@ -141,6 +141,18 @@ void ft_putpixel(int ray, int i, t_cube *cube, int color)
     display_pix(&cube->img, ray, i, color);    
 }
 
+t_img_data get_texture(t_cube *cube)
+{
+	if(cube->frame == 0)
+		return (cube->texture[FROID1]);
+	if(cube->frame == 1)
+		return (cube->texture[FROID2]);
+	if(cube->frame== 2)
+		return (cube->texture[FROID3]);
+	return (cube->texture[FROID4]);
+
+
+}
 void draw_wall(float top_pixel, t_cube *cube, float offset)
 {
 	int i;
@@ -149,14 +161,14 @@ void draw_wall(float top_pixel, t_cube *cube, float offset)
 	float scale;
 	unsigned int *adress;
 	t_img_data texture;
-	if(cube->NSWE != 0)
+	if(cube->NSWE != NORTH)
 	{
 		texture = cube->texture[cube->NSWE];
 		adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	}
 	else
 	{
-		texture = cube->texture[cube->frame];
+		texture = get_texture(cube);
 		adress = (unsigned int *)cube->texture[cube->frame].adress;
 	}
 	i = 0;
@@ -296,20 +308,7 @@ void draw_other(float top, t_cube *cube)
 		i++;
 	}
 }
-t_img_data get_texture(t_cube *cube, int side)
-{
-	if(side != 0)
-		return (cube->texture[cube->NSWE]);
 
-	if(cube->frame  < 2)
-		return (cube->texture[0]);
-	// if(cube->frame == 1)
-		// return (cube->texture[1]);
-	// if(cube->frame== 2)
-		// return (cube->texture[2]);
-	return (cube->texture[2]);
-
-}
 void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 {
 	int		k;
@@ -317,17 +316,16 @@ void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 	float	l;
 	unsigned int *adress;
 	t_img_data texture;
-	if(cube->NSWE != 0)
+	if(cube->NSWE != 4)
 	{
 		texture = cube->texture[cube->NSWE];
 		adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	}
 	else
 	{
-		texture = cube->texture[cube->frame];
+		texture = get_texture(cube);
 		adress = (unsigned int *)cube->texture[cube->frame].adress;
 	}
-	// texture = get_texture(cube, cube->NSWE);
 	stat = texture.pix_h * pixel ;
 	k = (int)floor(offset * texture.pix_w);
 	l = 0;
@@ -387,31 +385,32 @@ void wall_display(t_cube *cube, float dist, float offset)
 	{
 		wall_h = (wall_h - 1) / 2;
 		top_pixel = wall_h / pixel;
-		// if(top_pixel < cube->minimap_h && cube->ray.index < cube->minimap_w)
-		// 	top_pixel += cube->minimap_h;
-		// printf("top pixel :%f: of ray %d with offset %f \n", top_pixel, cube->ray.index, offset);
 		draw_other(top_pixel, cube);
-
 		draw_wall_other(cube, pixel, offset, top_pixel);
 	}
 	else
 	{
-		if(cube->ray.index < cube->minimap_w)
-			top_pixel = (WIN_H - cube->minimap_h) / (cube->texture[cube->NSWE].pix_h * wall_h);
+		if(cube->NSWE != NORTH)
+		{
+			if(cube->ray.index < cube->minimap_w)
+				top_pixel = (WIN_H - cube->minimap_h) / (cube->texture[cube->NSWE].pix_h * wall_h);
+			else
+				top_pixel = WIN_H / (cube->texture[cube->NSWE].pix_h * wall_h);
+		}
 		else
-			top_pixel = WIN_H / (cube->texture[cube->NSWE].pix_h * wall_h);
-		// if(top_pixel < cube->minimap_h && cube->ray.index < cube->minimap_w)
-		// 	top_pixel += cube->minimaph;
+		{
+			if(cube->ray.index < cube->minimap_w)
+				top_pixel = (WIN_H - cube->minimap_h) / (cube->texture[cube->frame].pix_h * wall_h);
+			else
+				top_pixel = WIN_H / (cube->texture[cube->frame].pix_h * wall_h);
+		}
 		wall_h = (1 - wall_h) / 2;
 		draw_wall(wall_h, cube, offset);
-		// top pixel cest le haut du mur qu'on voit
-		// wall_h cest la taille du mur 
 	}
 	if(cube->ray.index < cube->minimap_w)
 	{
 		int size_w = cube->minimap_w / cube->data.map_w;
 		int size_h = cube->minimap_h / cube->data.map_h;
-		// printf("La taille dune case en H :%i: W :%i:\n", size_h, size_w);
 		int i = 0;
 		int pos_y = 0;
 		int pos_x = cube->ray.index / size_w;
