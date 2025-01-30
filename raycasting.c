@@ -149,10 +149,17 @@ t_img_data get_texture(t_cube *cube)
 		return (cube->texture[FROID2]);
 	if(cube->frame== 2)
 		return (cube->texture[FROID3]);
-	return (cube->texture[FROID4]);
+	return (cube->texture[FROID2]);
 
 
 }
+
+int movement_on(t_cube *cube)
+{
+	return(cube->input[0] + cube->input[1] + cube->input[2] + cube->input[3]);
+}
+
+
 void draw_wall(float top_pixel, t_cube *cube, float offset)
 {
 	int i;
@@ -161,14 +168,17 @@ void draw_wall(float top_pixel, t_cube *cube, float offset)
 	float scale;
 	unsigned int *adress;
 	t_img_data texture;
-	if(cube->NSWE != NORTH)
+	if(cube->NSWE != 4)
 	{
 		texture = cube->texture[cube->NSWE];
 		adress = (unsigned int *)cube->texture[cube->NSWE].adress;
 	}
 	else
 	{
-		texture = get_texture(cube);
+		if(movement_on(cube))
+			texture = cube->texture[FROID4];
+		else
+			texture = cube->texture[FROID1];
 		adress = (unsigned int *)cube->texture[cube->frame].adress;
 	}
 	i = 0;
@@ -323,8 +333,17 @@ void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 	}
 	else
 	{
-		texture = get_texture(cube);
-		adress = (unsigned int *)cube->texture[cube->frame].adress;
+		if(movement_on(cube))
+		{
+			texture = cube->texture[FROID4];
+			adress = (unsigned int *)cube->texture[FROID4].adress;
+
+		}
+		else
+		{	
+			texture = cube->texture[FROID1];
+			adress = (unsigned int *)cube->texture[FROID1].adress;
+		}
 	}
 	stat = texture.pix_h * pixel ;
 	k = (int)floor(offset * texture.pix_w);
@@ -340,11 +359,6 @@ void draw_wall_other(t_cube *cube, float pixel, float offset, int i)
 void draw_map(t_cube *cube)
 {
 	int i;
-	// int sizeh;
-	// int sizew;
-
-	// sizeh = cube->minimap_h / cube->data.map_h;
-	// sizew = cube->minimap_w / cube->data.map_w;
 	i = 0;
 	while(i < cube->minimap_h)
 	{

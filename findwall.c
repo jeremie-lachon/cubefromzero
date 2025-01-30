@@ -24,8 +24,6 @@ static int player_filler(t_cube *cube)
         cube->player.angle = 0;
 	if(cube->data.facing == 'W')
         cube->player.angle = 1;
-	// cube->player.fov_rad = FOV;
-	// fov_rad = cube->player.fov_rad;
 	cube->player.x = cube->data.pos_x * CELL_SIZE + CELL_SIZE / 2;
 	cube->player.y = cube->data.pos_y * CELL_SIZE + CELL_SIZE / 2;
 	return (0);

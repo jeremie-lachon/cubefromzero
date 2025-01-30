@@ -33,7 +33,6 @@ int	escape(t_cube *cube)
 	printf("CUIS LA\n");
 	int i;
 	i = -1;
-		//cube->win_ptr vide ????
 	mlx_destroy_window(cube->mlx_ptr, cube->win_ptr);
 	mlx_destroy_image(cube->mlx_ptr, cube->img.img_ptr);
 	mlx_destroy_display(cube->mlx_ptr);
@@ -48,12 +47,6 @@ int	escape(t_cube *cube)
 int key_press(int keysym, t_cube *cube)
 {
 
-	// cube->input[0] W
-	// cube->input[1] S
-	// cube->input[2] A
-	// cube->input[3] D
-	// cube->input[4] LEFT
-	// cube->input[5] RIGHT
 	if (keysym == XK_Escape)
 		escape(cube);
 	if(keysym == XK_w)
@@ -154,27 +147,27 @@ int init_mlx(t_cube *cube)
 		printf("cube->texture[WEST].img_ptr bug\n");
 		exit(1);
 	}
-	cube->texture[FROID1].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_1.xpm", &cube->texture[FROID1].pix_w, &cube->texture[FROID1].pix_h);
+	cube->texture[FROID1].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_2.xpm", &cube->texture[FROID1].pix_w, &cube->texture[FROID1].pix_h);
     if(!cube->texture[FROID1].img_ptr)
 	{
 		printf("cube->texture[FROID1].img_ptr bug\n");
 		exit(1);
 	}
-		cube->texture[FROID2].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_2.xpm", &cube->texture[FROID2].pix_w, &cube->texture[FROID2].pix_h);
+		cube->texture[FROID2].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_3.xpm", &cube->texture[FROID2].pix_w, &cube->texture[FROID2].pix_h);
     if(!cube->texture[FROID2].img_ptr)
 	{
 		printf("cube->texture[FROID2].img_ptr bug\n");
 		exit(1);
 	}
 
-	cube->texture[FROID3].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_3.xpm", &cube->texture[FROID3].pix_w, &cube->texture[FROID3].pix_h);
+	cube->texture[FROID3].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_1.xpm", &cube->texture[FROID3].pix_w, &cube->texture[FROID3].pix_h);
     if(!cube->texture[FROID3].img_ptr)
 	{
 		printf("cube->texture[FROID3].img_ptr bug\n");
 		exit(1);
 	}
 
-	cube->texture[FROID4].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_4.xpm", &cube->texture[FROID4].pix_w, &cube->texture[FROID4].pix_h);
+	cube->texture[FROID4].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/froid_3.xpm", &cube->texture[FROID4].pix_w, &cube->texture[FROID4].pix_h);
     if(!cube->texture[FROID4].img_ptr)
 	{
 		printf("cube->texture[FROID4].img_ptr bug\n");
