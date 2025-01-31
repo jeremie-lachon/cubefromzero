@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/08 17:53:50 by jla-chon         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:32:41 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // #include "cube.h"
+#include "cub3d.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -740,16 +741,71 @@ t_cube	*parse_to_cube(t_parse *parse)
 	return (cube);
 }
 
+/*
+typedef struct s_cube
+{
+    int     fd;
+    void    *mlx_ptr;
+    void    *win_ptr;
+    bool    input[8];
+    int     NSWE;
+    t_img_data  img;
+    t_data      data;
+    t_player    player;
+    t_ray       ray;
+    int         mouse_x;
+    int         mouse_y;
+	t_img_data	image1;
+	t_img_data	image2;
+	t_img_data	minimap;
+    t_img_data     texture[9];
+    int minimap_w;
+    int minimap_h;
+    struct timeval time;
+    int frame;
+}   t_cube;
+*/
+
+typedef struct s_mlx
+{
+	void	*mlx;
+	void	*win;
+	t_img_data	*img1;
+	t_img_data	*img2;
+	t_img_data	*image;
+	t_img_data	*minimap;
+}	t_mlx;
+
+
+int	ft_mlx_start(t_mlx **mlx_address)
+{
+	t_mlx	*mlx;
+
+	mlx = ft_calloc(sizeof(t_mlx), 1);
+	if (!mlx)
+		return (1);
+	mlx->mlx = mlx_init();
+	mlx->win = mlx_new_window(mlx->mlx, WIN_W, WIN_H, "cube");
+	mlx->img1-> = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
+	mlx->img1->img_ptr = mlx_get_data_addr(mlx->img1, &mlx->img1->bpp, &mlx->img1->)
+	mlx->img2-> = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
+	return (0);
+}
+
 int main(int ac, char **av)
 {
     t_parse *parse;
     t_cube	*cube;
+	t_mlx	*mlx;
 	int fd;
-
+	
     if(ac != 2)
         return (perror("Wrong number of arguments.\n"), 1);
     if(cub_check(av[1]))
         return (perror("Map is not using .cub extension.\n"), 1);
+	mlx = 0;
+	if (!ft_mlx_start(&mlx))
+		return (perror(0), 1);
     fd = open(av[1], O_RDONLY);
     if (fd == -1)
         return (perror("Open"), 1);

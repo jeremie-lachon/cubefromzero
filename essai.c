@@ -1,17 +1,23 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include "cub3d.h"
 
-int main()
+typedef struct oo
 {
-    struct timeval tv;
-
-    time_t curtime;
-    while(1)
-    {
-        gettimeofday(&tv, NULL);
-        printf("Time %ld\n", tv.tv_sec % 5);
-        sleep(1);
-    }
-    return 0;
+    void *ptr;
+    void *win;
+} t_o;
+int main(void)
+{
+    // t_cube *cube;
+    t_o *o;
+    o = malloc(sizeof(t_o));
+    // cube = calloc(1 , sizeof(t_cube));
+    // cube = (t_cube){0};
+    o->ptr = mlx_init();
+    // printf("Size %ld\n", sizeof(o->ptr));
+    printf("HEHE\n");
+       o->win = mlx_new_window(o->ptr, WIN_W, WIN_H, "Cub3d");
+    exit(1);
 }

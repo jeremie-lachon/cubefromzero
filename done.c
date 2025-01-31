@@ -32,13 +32,13 @@ int	escape(t_cube *cube)
 {
 	int i;
 
-	i = -1;
+	i = 0;
 	mlx_destroy_window(cube->mlx_ptr, cube->win_ptr);
 	mlx_destroy_image(cube->mlx_ptr, cube->img.img_ptr);
 	mlx_destroy_display(cube->mlx_ptr);
 	free(cube->mlx_ptr);
-	while(cube->data.map[++i])
-		free(cube->data.map[i]);
+	while(i < cube->data.map_h)
+		free(cube->data.map[i++]);
 	printf("HELLO\n");
 	free(cube->data.map);
 	exit(0);
@@ -107,18 +107,6 @@ int init_mlx(t_cube *cube)
 												&cube->image2.size, 
 												&cube->image2.endl);
 	// protection
-	cube->minimap.img_ptr = mlx_new_image(cube->mlx_ptr, cube->minimap_w, cube->minimap_h);
-	if(!cube->minimap.img_ptr)
-	{
-		printf("cube->minimap.img_ptr failed\n");
-		exit(1);
-	}
-	// protection
-	cube->minimap.adress = mlx_get_data_addr((cube)->minimap.img_ptr, 
-												&cube->minimap.bpp, 
-												&cube->minimap.size, 
-												&cube->minimap.endl);
-
     cube->texture[EAST].img_ptr = mlx_xpm_file_to_image(cube->mlx_ptr, "./texture/e.xpm", &cube->texture[EAST].pix_w, &cube->texture[EAST].pix_h);  //west
     if(!cube->texture[EAST].img_ptr)
 	{
@@ -169,17 +157,17 @@ int init_mlx(t_cube *cube)
 		printf("cube->texture[FROID4].img_ptr bug\n");
 		exit(1);
 	}
-
     cube->texture[FROID1].adress = mlx_get_data_addr(cube->texture[FROID1].img_ptr, &cube->texture[FROID1].bpp, &cube->texture[FROID1].size, &cube->texture[FROID1].endl);
     cube->texture[FROID2].adress = mlx_get_data_addr(cube->texture[FROID2].img_ptr, &cube->texture[FROID2].bpp, &cube->texture[FROID2].size, &cube->texture[FROID2].endl);
     cube->texture[FROID3].adress = mlx_get_data_addr(cube->texture[FROID3].img_ptr, &cube->texture[FROID3].bpp, &cube->texture[FROID3].size, &cube->texture[FROID3].endl);
     cube->texture[FROID4].adress = mlx_get_data_addr(cube->texture[FROID4].img_ptr, &cube->texture[FROID4].bpp, &cube->texture[FROID4].size, &cube->texture[FROID4].endl);
-
     cube->texture[EAST].adress = mlx_get_data_addr(cube->texture[EAST].img_ptr, &cube->texture[EAST].bpp, &cube->texture[EAST].size, &cube->texture[EAST].endl);
     cube->texture[WEST].adress = mlx_get_data_addr(cube->texture[WEST].img_ptr, &cube->texture[WEST].bpp, &cube->texture[WEST].size, &cube->texture[WEST].endl);
     cube->texture[NORTH].adress = mlx_get_data_addr(cube->texture[NORTH].img_ptr, &cube->texture[NORTH].bpp, &cube->texture[NORTH].size, &cube->texture[NORTH].endl);
     cube->texture[SOUTH].adress = mlx_get_data_addr(cube->texture[SOUTH].img_ptr, &cube->texture[SOUTH].bpp, &cube->texture[SOUTH].size, &cube->texture[SOUTH].endl);
-    cube->win_ptr = mlx_new_window(cube->mlx_ptr, WIN_W, WIN_H, "Cub3d");
+    
+	cube->win_ptr = mlx_new_window(cube->mlx_ptr, WIN_W, WIN_H, "Cub3d");
+	
 	int h, w;
 	// Partie size map
 	if(cube->data.map_w > cube->data.map_h)
