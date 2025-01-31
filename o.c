@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/31 16:32:41 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/31 19:13:16 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,40 @@ typedef struct s_img_data
     int     pix_h;
 }   t_img_data;
 
+typedef struct s_mlx
+{
+	void	*mlx;
+	void	*win;
+	t_img_data	*img1;
+	t_img_data	*img2;
+	t_img_data	*image;
+}	t_mlx;
+
+typedef struct s_data
+{
+    int    **map;
+    int     map_w;
+    int     map_h;
+    unsigned int FC[2];
+}   t_data;
+
 typedef struct s_cube
 {
-	int **map;
-	int	width;
-	int	height;
-	float	player[3];
+	bool    	input[8];
+    int     	mouse_x;
+    int			mouse_y;
+    int 		frame;
+    int     	NSWE;
+    t_ray		ray;
+	t_data		*data;
+	int			minimap_w;
+	int			minimap_h;
+	float		player[3];
 	t_img_data	texture[5];
-	int	nsprite;
+	int			nsprite;
 	t_img_data	*sprite;
-	
+	t_mlx		*mlx;
 }	t_cube;
-
 
 int	listfree(t_list *list)
 {
@@ -744,38 +766,19 @@ t_cube	*parse_to_cube(t_parse *parse)
 /*
 typedef struct s_cube
 {
-    int     fd;
-    void    *mlx_ptr;
-    void    *win_ptr;
-    bool    input[8];
-    int     NSWE;
-    t_img_data  img;
+
+
     t_data      data;
     t_player    player;
-    t_ray       ray;
-    int         mouse_x;
-    int         mouse_y;
+    t_img_data  img;
 	t_img_data	image1;
 	t_img_data	image2;
 	t_img_data	minimap;
     t_img_data     texture[9];
     int minimap_w;
     int minimap_h;
-    struct timeval time;
-    int frame;
 }   t_cube;
 */
-
-typedef struct s_mlx
-{
-	void	*mlx;
-	void	*win;
-	t_img_data	*img1;
-	t_img_data	*img2;
-	t_img_data	*image;
-	t_img_data	*minimap;
-}	t_mlx;
-
 
 int	ft_mlx_start(t_mlx **mlx_address)
 {

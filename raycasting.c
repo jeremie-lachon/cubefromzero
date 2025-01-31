@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/16 17:08:36 by snek             ###   ########.fr       */
+/*   Updated: 2025/01/31 19:04:36 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ float	find_x_ray(t_cube *cube, float angle, float fixed_angle)
 	if(angle > 1)
 	{
 		move_y = floorf(cube->player.y);
-		wall_x = delta + move_y / fixed_angle;  
+		wall_x = delta + move_y / fixed_angle;
 		check = check_wall(move_y - 1, wall_x, cube);
 		while (check == 1)
 		{

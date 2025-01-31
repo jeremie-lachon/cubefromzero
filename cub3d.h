@@ -92,6 +92,7 @@ typedef struct s_ray
     double h_y;
     double v_x;
     double v_y;
+    t_img_data  *texture;
 } t_ray;
 
 typedef struct s_player
