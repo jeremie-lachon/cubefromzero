@@ -57,7 +57,7 @@ void draw_map_line(t_cube *cube, int x)
     y = 0;
     while(y < cube->minimap_h)
     {   
-        ft_putpixel(x, y, cube, 0xea0000);
+        ft_putpixel(x, y, cube, 0xea0000, 0);
         y++;
     }
 }
@@ -91,14 +91,8 @@ int loop_render(t_cube *cube)
 	cube->frame = cube->time.tv_sec % 4;
 	raycasting(cube);
     mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->img.img_ptr, 0, 0);
-    // mlx_mouse_hide(cube->mlx_ptr, cube->win_ptr);
     moving(cube);
     mouse_rotation(cube);
-    // draw_minimap(cube);
-    // mlx_put_image_to_window(cube->mlx_ptr, cube->win_ptr, cube->minimap.img_ptr, 100, 100);
-
-
-	// moving(cube);
     return (0);
 }
 
@@ -115,12 +109,12 @@ int game(t_cube *cube)
 }
 int main(void)
 {
-    t_cube cube;
+    t_cube *cube;
 
-    cube = (t_cube){0};
-   	map_filler(&cube.data);
-	player_filler(&cube);
-	game(&cube);
-    // raycasting(&cube);
+    cube = calloc(1 , sizeof(t_cube));
+    // cube = (t_cube){0};
+   	map_filler(&cube->data);
+	player_filler(cube);
+	game(cube);
     return (0);
 }

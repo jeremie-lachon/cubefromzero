@@ -30,16 +30,16 @@ int map_filler(t_data *data)
 
 int	escape(t_cube *cube)
 {
-	printf("CUIS LA\n");
 	int i;
+
 	i = -1;
 	mlx_destroy_window(cube->mlx_ptr, cube->win_ptr);
 	mlx_destroy_image(cube->mlx_ptr, cube->img.img_ptr);
 	mlx_destroy_display(cube->mlx_ptr);
 	free(cube->mlx_ptr);
-	
 	while(cube->data.map[++i])
 		free(cube->data.map[i]);
+	printf("HELLO\n");
 	free(cube->data.map);
 	exit(0);
 }
@@ -63,15 +63,11 @@ int key_press(int keysym, t_cube *cube)
 		cube->input[KEY_LEFT] = 1;
 	if (keysym == XK_Left)
 		cube->input[KEY_RIGHT] = 1;
-
-	// if(cube->player.angle > 2 || cube->player.angle < 0)
-	// 	cube->player.angle = fix_angle(cube->player.angle);
 	return (0);
 }
 
 int key_release(int keysym, t_cube *cube)
 {
-
 	if(keysym == 3)
 		cube->input[MOUSE_LEFT] = 0;
 	if(keysym == XK_w)
@@ -185,6 +181,7 @@ int init_mlx(t_cube *cube)
     cube->texture[SOUTH].adress = mlx_get_data_addr(cube->texture[SOUTH].img_ptr, &cube->texture[SOUTH].bpp, &cube->texture[SOUTH].size, &cube->texture[SOUTH].endl);
     cube->win_ptr = mlx_new_window(cube->mlx_ptr, WIN_W, WIN_H, "Cub3d");
 	int h, w;
+	// Partie size map
 	if(cube->data.map_w > cube->data.map_h)
 	{
 		h = 20;

@@ -140,5 +140,6 @@ float	fix_angle(float angle);
 void moving (t_cube *cube);
 int key_release(int keysym, t_cube *cube);
 void display_pix(t_img_data *img, int x, int y, int color);
-void ft_putpixel(int ray, int i, t_cube *cube, int color);
+void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag);
+void	*ft_calloc(size_t nmemb, size_t size);
 #endif
