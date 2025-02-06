@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/31 19:13:16 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/06 17:09:31 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,99 +16,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "gnl/get_next_line.h"
 // settings check 0
 // map      check 1
-
-enum
-{
-	PLAYER_X,
-	PLAYER_Y,
-	ANGLE,
-	PLAYER_COUNT
-};
-
-enum
-{
-	SPACE,
-	WALL,
-	OUT,
-	DOOR,
-	SPRITE
-}
-
-enum
-{
-	NO,
-	WE,
-	SO,
-	EA,
-	DO,
-	SP
-}
-
-typedef struct s_list
-{
-	struct s_list *next;
-	void *data;
-}	t_list;
-
-typedef struct s_parse
-{
-	char	**textures;
-	int		F;
-	int		C;
-	float	player[4];
-	int		**map;
-	int		width;
-	int		height;
-}	t_parse;
-
-typedef struct s_img_data
-{
-    void    *img_ptr;
-    char    *adress;
-    int     bpp;
-    int     size;
-    int     endl;
-    int     pix_w;
-    int     pix_h;
-}   t_img_data;
-
-typedef struct s_mlx
-{
-	void	*mlx;
-	void	*win;
-	t_img_data	*img1;
-	t_img_data	*img2;
-	t_img_data	*image;
-}	t_mlx;
-
-typedef struct s_data
-{
-    int    **map;
-    int     map_w;
-    int     map_h;
-    unsigned int FC[2];
-}   t_data;
-
-typedef struct s_cube
-{
-	bool    	input[8];
-    int     	mouse_x;
-    int			mouse_y;
-    int 		frame;
-    int     	NSWE;
-    t_ray		ray;
-	t_data		*data;
-	int			minimap_w;
-	int			minimap_h;
-	float		player[3];
-	t_img_data	texture[5];
-	int			nsprite;
-	t_img_data	*sprite;
-	t_mlx		*mlx;
-}	t_cube;
 
 int	listfree(t_list *list)
 {
@@ -211,7 +120,7 @@ int	parsefree(t_parse *parse)
 	i = 0;
 	while (i < 6)
 		free(parse->textures[i++]);
-	free(parse->textures)
+	free(parse->textures);
 	free(parse);
 	return (0);
 }
@@ -258,11 +167,12 @@ char	*ft_substr(char const *s, int start, int len)
 	int	i;
 	int	j;
 	char	*copy;
-    if(start < 0)
-        return (0);
-	if (start > strlen(s))
+
+	if (start < 0)
+		return (0);
+	if (start > (int)strlen(s))
 		return (calloc(1, 1));
-	if (len + start <= strlen(s))
+	if (len + start <= (int)strlen(s))
 		copy = (char *)malloc(sizeof(char) * (len + 1));
 	else
 		copy = (char *)malloc(sizeof(char) * (strlen(s + start) + 1));
@@ -302,7 +212,6 @@ int skip(char *s, int *i, int check)
 	int com;
 
 	com = 0;
-
 	while (ft_strchr(" \t\v\f\r", s[*i]))
 		(*i)++;
 	if (check)
@@ -319,30 +228,30 @@ int skip(char *s, int *i, int check)
 
 int function(char *s)
 {
-    int i;
-    int ret;
-    int tmp;
-    ret = 0;
-    i = 1;
-    if (skip(s, &i, 0) || !s[i])
-        return (-1);
+	int i;
+	int ret;
+	int tmp;
+	ret = 0;
+	i = 1;
+	if (skip(s, &i, 0) || !s[i])
+		return (-1);
 	tmp = atoi(s + i);
-    if (tmp < 0 || tmp > 255)
-        return (-1);
-    ret = tmp << 16;
-    if(skip(s, &i, 1) != 1 || !s[i])
-        return (-1);
-    tmp = atoi(s + i);
-    if (tmp < 0 || tmp > 	255)
-        return (-1);
-    ret |= tmp << 8;
-    if(skip(s, &i, 1) != 1 || !s[i])
-        return (-1);
-    tmp = atoi(s + i);
-    if (tmp < 0 || tmp > 255)
-        return (-1);
-    ret |= tmp;
-    return (ret);
+	if (tmp < 0 || tmp > 255)
+		return (-1);
+	ret = tmp << 16;
+	if(skip(s, &i, 1) != 1 || !s[i])
+		return (-1);
+	tmp = atoi(s + i);
+	if (tmp < 0 || tmp > 	255)
+		return (-1);
+	ret |= tmp << 8;
+	if(skip(s, &i, 1) != 1 || !s[i])
+		return (-1);
+	tmp = atoi(s + i);
+	if (tmp < 0 || tmp > 255)
+		return (-1);
+	ret |= tmp;
+	return (ret);
 }
 // Trim
 
@@ -421,31 +330,33 @@ char	*ft_strtrim(char *s1, char const *set)
 	return (free(s1), new);
 }
 // ^ Trim
-int cube_filler2(char *buf, t_parse *cube)
+int parse_filler2(char *buf, t_parse *cube)
 {
-    char	*tmp;
+	char	*tmp;
 
-    if (!buf)
-        return (1);
+	if (!buf)
+		return (1);
+	if (*buf == '\n')
+		return (free(buf), 0);
 	tmp = ft_strchr(buf, '\n');
 	if (!tmp)
 		return (1);
     if (!strncmp("NO ", buf, 3) && !cube->textures[NO])
-        cube->NO = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+        cube->textures[NO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("WE ", buf, 3) && !cube->textures[WE])
-        cube->WE = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+        cube->textures[WE] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("SO ", buf, 3) && !cube->textures[SO])
-        cube->SO = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+        cube->textures[SO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
-        cube->EA = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else if (!strncmp("F ", buf, 2) && !cube->F)
+        cube->textures[EA] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+    else if (!strncmp("F ", buf, 2) && cube->F == -1)
         cube->F = function(buf);
-    else if (!strncmp("C ", buf, 2) && !cube->C)
+    else if (!strncmp("C ", buf, 2) && cube->C == -1)
         cube->C = function(buf);
     else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
-        cube->WE = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+        cube->textures[DO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
-        cube->WE = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+        cube->textures[SP] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
     else
         return (2);
     return (free(buf), 0);
@@ -471,8 +382,8 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 		else if (strchr("NSEW", str[j]))
 		{
 			parse->map[i][j] = SPACE;
+			parse->player[PLAYER_Y] = i + 0.5;
 			parse->player[PLAYER_X] = j + 0.5;
-			parse->player[PLAYER_Y] = j + 0.5;
 			if (str[j] == 'N')
 				parse->player[ANGLE] = 0.5;
 			else if (str[j] == 'E')
@@ -581,7 +492,7 @@ int	checkmap(t_parse *parse)
 		j = 0;
 		while (j < parse->width)
 		{
-			if (parse->map[i][j] == 0)
+			if (parse->map[i][j] == SPACE || parse->map[i][j] == DOOR)
 				if (checksides(parse, i, j))
 					return (1);
 			j++;
@@ -627,6 +538,48 @@ char	*remove_end(char *str)
 	return (tmp);
 }
 
+int	ft_clear_display(t_mlx *mlx)
+{
+	mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr);
+	mlx_destroy_image(mlx->mlx, mlx->img2->img_ptr);
+	mlx_destroy_window(mlx->mlx, mlx->win);
+	mlx_destroy_display(mlx->mlx);
+	free(mlx->img1);
+	free(mlx->img2);
+	free(mlx->mlx);
+	free(mlx);
+	return (0);
+}
+
+int	free_cube(t_cube *cube)
+{
+	int	i;
+
+	i = 0;
+	if (!cube)
+		return (0);
+	while (i < 5)
+	{
+		if (cube->texture[i] && cube->texture[i]->img_ptr)
+			mlx_destroy_image(cube->mlx->mlx, cube->texture[i]->img_ptr);
+		free(cube->texture[i++]);
+	}
+	while (cube->sprite && cube->nsprite-- > 0)
+	{
+		if (cube->sprite[cube->nsprite] && cube->sprite[cube->nsprite]->img_ptr)
+			mlx_destroy_image(cube->mlx->mlx, cube->sprite[cube->nsprite]->img_ptr);
+		free(cube->sprite[cube->nsprite]);
+	}
+	free(cube->sprite);
+	i = 0;
+	while (i < cube->data.map_h)
+		free(cube->data.map[i++]);
+	free(cube->data.map);
+	ft_clear_display(cube->mlx);
+	free(cube);
+	return (0);
+}
+
 int	mapper(int fd, t_parse *parse, char *str)
 {
 	t_list	*list;
@@ -655,17 +608,17 @@ int	mapper(int fd, t_parse *parse, char *str)
 	return (free(str), 0);
 }
 
-int cube_filler(int fd, t_parse *cube)
+int parse_filler(int fd, t_parse *cube)
 {
     char *buff;
     int check;
 
 	buff = custom_read(fd, 0);
-	check = cube_filler2(buff, cube);
+	check = parse_filler2(buff, cube);
 	while (!check)
 	{
 		buff = custom_read(fd, 1);
-		check = cube_filler2(buff, cube);
+		check = parse_filler2(buff, cube);
 	}
 	if (check == 1)
 		return (gnlfree(fd), 1);
@@ -693,7 +646,7 @@ int	cub_check(char *str)
 	return (0);
 }
 
-t_parse	*cubeinit(void)
+t_parse	*parseinit(void)
 {
 	t_parse	*parse;
 
@@ -702,126 +655,314 @@ t_parse	*cubeinit(void)
 		return (0);
 	parse->textures = calloc(sizeof(char *), 6);
 	if (!parse->textures)
-		return (free(parse), 0);
+		return (free(parse), NULL);
 	parse->C = -1;
 	parse->F = -1;
 	return (parse);
 }
 
-void	freetexts(t_parse *parse, t_cube *cube, int i)
+void	freetexts(t_cube *cube)
 {
 	int	j;
 
 	j = 0;
 	while (j < 6)
 	{
-		free(parse->textures[j]);
-		parse->textures[j++] = 0;
+		if (j < 5 && cube->texture[j]->img_ptr)
+			mlx_destroy_image(cube->mlx->mlx, cube->texture[j]->img_ptr);
+		free(cube->texture[j]);
+		
+		cube->texture[j++] = 0;
 	}
-	j = 0;
-	while (j < i)
-		mlx_destroy_image(0, &cube->texture[j++]);
+}
+
+static int	imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse)
+{
+	cube->texture[num]->img_ptr = mlx_xpm_file_to_image(mlx->mlx, parse->textures[num], &cube->texture[num]->pix_w, &cube->texture[num]->pix_h);
+	if (!cube->texture[num]->img_ptr)
+		return (freetexts(cube), 1);
+	cube->texture[num]->adress = mlx_get_data_addr(cube->texture[num]->img_ptr, &cube->texture[num]->bpp, &cube->texture[num]->size, &cube->texture[num]->endl);
+	if (!cube->texture[num]->adress)
+		return (freetexts(cube), 1);
+	return (0);
 }
 
 int	fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 {
-	cube->texture[NO].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[NO], &cube->texture[NO].pix_w, &cube->texture[NO].pix_h);
-	if (!cube->texture[NO])
-		return (freetexts(parse, cube, 0), 1);
-	cube->texture[WE].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[WE], &cube->texture[WE].pix_w, &cube->texture[WE].pix_h);
-	if (!cube->texture[WE])
-		return (freetexts(parse, cube, 1), 1);
-	cube->texture[SO].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[SO], &cube->texture[SO].pix_w, &cube->texture[SO].pix_h);
-	if (!cube->texture[SO])
-		return (freetexts(parse, cube, 2), 1);
-	cube->texture[EA].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[EA], &cube->texture[EA].pix_w, &cube->texture[EA].pix_h);
-	if (!cube->textures[EA])
-		return (freetexts(parse, cube, 3), 1);
-	if (parse->textures[DO])
-		cube->texture[DO].img_ptr = mlx_xpm_file_to_image(mlx->mlx_ptr, parse->textures[DO], &cube->texture[DO].pix_w, &cube->texture[DO].pix_h);
-	if (parse->textures[DO] && !cube->texture[DO])
-		return (freetexts(parse, cube, 4), 1);
-	return (freetexts(parse, cube, 0), 0);
+	if (imgstruct(cube, NO, mlx, parse))
+		return (1);
+	if (imgstruct(cube, WE, mlx, parse))
+		return (1);
+	if (imgstruct(cube, SO, mlx, parse))
+		return (1);
+	if (imgstruct(cube, EA, mlx, parse))
+		return (1);
+	if (parse->textures[DO] && imgstruct(cube, DO, mlx, parse))
+		return (1);
+	return (0);
 }
 
-t_cube	*parse_to_cube(t_parse *parse)
+static void	freesprite(t_img_data **sprite, int n, t_mlx *mlx)
+{
+	int	j;
+
+	if (!sprite)
+		return ;
+	j = 0;
+	while (j < n)
+	{
+		if (sprite[j])
+			mlx_destroy_image(mlx->mlx, sprite[j++]->img_ptr);
+	}
+}
+
+int	fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx)
+{
+	int	n;
+	char	**all;
+
+	if (!parse->textures[SP])
+		return (0);
+	all = ft_split(parse->textures[SP], ' ');
+	if (!all)
+		return (1);
+	n = 0;
+	while (all[n])
+		n++;
+	cube->sprite = ft_calloc(n, sizeof(t_img_data *));
+	if (!cube->sprite)
+		return (ft_freesplit(all, n), 1);
+	cube->nsprite = n;
+	n = 0;
+	while (n < cube->nsprite)
+	{
+		cube->sprite[n] = ft_calloc(sizeof(t_img_data), 1);
+		if (!cube->sprite[n])
+			return (freesprite(cube->sprite, n, mlx), ft_freesplit(all, n), 1);
+		cube->sprite[n]->img_ptr = mlx_xpm_file_to_image(mlx->mlx, all[n], &cube->sprite[n]->pix_w, &cube->sprite[n]->pix_h);
+		if (!cube->sprite[n]->img_ptr)
+			return (freesprite(cube->sprite, n, mlx), ft_freesplit(all, n), 1);
+		cube->sprite[n]->adress = mlx_get_data_addr(cube->sprite[n]->img_ptr, &cube->sprite[n]->bpp, &cube->sprite[n]->size, &cube->sprite[n]->endl);
+		if (!cube->sprite[n]->adress)
+			return (freesprite(cube->sprite, n, mlx), ft_freesplit(all, n), 1);
+		n++;
+	}
+	return (ft_freesplit(all, n), 0);
+}
+
+static void	freecubetext(t_cube *cube)
+{
+	int	i;
+
+	i = 0;
+	while (i < 5)
+	{
+		free(cube->texture[i]);
+		cube->texture[i++] = 0;
+	}
+}
+
+static t_cube	*ft_cube_init(void)
 {
 	t_cube	*cube;
+	int		i;
 
-	cube = calloc(sizeof(t_cube), 1);
+	i = 0;
+	cube = ft_calloc(sizeof(t_cube), 1);
 	if (!cube)
-		return (write(2, "Error\n", 6), parsefree(parse), 0);
-	cube->map = parse->map;
-	cube->height = parse->height;
-	cube->width = parse->width;
-	cube->player[PLAYER_X] = parse->player[PLAYER_X];
-	cube->player[PLAYER_Y] = parse->player[PLAYER_Y];
-	cube->player[ANGLE] = parse->player[ANGLE];
-	if (fillsides(cube, parse))
-		return (free(cube), parsefree(parse), 0);
-	// fill sprite image
+		return (0);
+	while (i < 5)
+	{
+		cube->texture[i] = ft_calloc(sizeof(t_img_data), 1);
+		if (!cube->texture[i++])
+			return (freecubetext(cube), free(cube), NULL);
+	}
 	return (cube);
 }
 
-/*
-typedef struct s_cube
+t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx)
 {
+	t_cube	*cube;
 
+	cube = ft_cube_init();
+	if (!cube)
+		return (perror("Error\n"), parsefree(parse), ft_clear_display(mlx), NULL);
+	cube->mlx = mlx;
+	cube->data.map = parse->map;
+	parse->map = 0;
+	cube->data.map_w = parse->width;
+	cube->data.map_h = parse->height;
+	cube->data.FC[0] = parse->F;
+	cube->data.FC[1] = parse->C;
+	cube->player[PLAYER_X] = parse->player[PLAYER_X];
+	cube->player[PLAYER_Y] = parse->player[PLAYER_Y];
+	cube->player[ANGLE] = parse->player[ANGLE];
+	if (fillsides(cube, parse, cube->mlx))
+		return (perror("Error\n"), free_cube(cube), parsefree(parse), NULL);
+	if (fillsprite(parse, cube, cube->mlx))
+		return (freetexts(cube), perror("Error\n"), free_cube(cube), parsefree(parse), NULL);
+	return (parsefree(parse), cube);
+}
 
-    t_data      data;
-    t_player    player;
-    t_img_data  img;
-	t_img_data	image1;
-	t_img_data	image2;
-	t_img_data	minimap;
-    t_img_data     texture[9];
-    int minimap_w;
-    int minimap_h;
-}   t_cube;
-*/
-
-int	ft_mlx_start(t_mlx **mlx_address)
+static t_mlx	*ft_mlx_init(void)
 {
 	t_mlx	*mlx;
 
 	mlx = ft_calloc(sizeof(t_mlx), 1);
 	if (!mlx)
+		return (NULL);
+	mlx->img1 = ft_calloc(sizeof(t_img_data), 1);
+	if (!mlx->img1)
+		return (free(mlx), NULL);
+	mlx->img2 = ft_calloc(sizeof(t_img_data), 1);
+	if (!mlx->img2)
+		return (free(mlx->img1), free(mlx), NULL);
+	return (mlx);
+}
+
+int	ft_mlx_start(t_mlx **mlx_address)
+{
+	t_mlx	*mlx;
+
+	mlx = ft_mlx_init();
+	if (!mlx)
 		return (1);
 	mlx->mlx = mlx_init();
+	if (!mlx->mlx)
+		return (1);
 	mlx->win = mlx_new_window(mlx->mlx, WIN_W, WIN_H, "cube");
-	mlx->img1-> = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
-	mlx->img1->img_ptr = mlx_get_data_addr(mlx->img1, &mlx->img1->bpp, &mlx->img1->)
-	mlx->img2-> = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
+	if (!mlx->win)
+		return (mlx_destroy_display(mlx->mlx), 1);
+	mlx->img1->img_ptr = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
+	if (!mlx->img1)
+		return (mlx_destroy_window(mlx->mlx, mlx->win), mlx_destroy_display(mlx->mlx), 1);
+	mlx->img1->adress = mlx_get_data_addr(mlx->img1->img_ptr, &mlx->img1->bpp, &mlx->img1->size, &mlx->img1->endl);
+	mlx->img2->img_ptr = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
+	if (!mlx->img2)
+		return (mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr), mlx_destroy_window(mlx->mlx, mlx->win), mlx_destroy_display(mlx->mlx), 1);
+	mlx->img2->adress = mlx_get_data_addr(mlx->img2->img_ptr, &mlx->img2->bpp, &mlx->img2->size, &mlx->img2->endl);
+	*mlx_address = mlx;
 	return (0);
+}
+
+void mouse_rotation(t_cube *cube)
+{
+    mlx_mouse_get_pos(cube->mlx->mlx, cube->mlx->win, &cube->mouse_x, &cube->mouse_y);
+    if(cube->mouse_x < 0 || cube->mouse_x > WIN_W || cube->mouse_y < 0 || cube->mouse_y > WIN_H)
+        cube->mouse_x = HALF_WIDTH;
+    if(cube->mouse_x > HALF_WIDTH + 150)
+        cube->input[MOUSE_LEFT] = 1;
+    else
+        cube->input[MOUSE_LEFT] = 0;
+    if(cube->mouse_x < HALF_WIDTH - 150)
+        cube->input[MOUSE_RIGHT] = 1;
+    else
+        cube->input[MOUSE_RIGHT] = 0;
+}
+
+void draw_map_line(t_cube *cube, int x)
+{
+    int y;
+
+    y = 0;
+    while(y < cube->minimap_h)
+    {   
+        ft_putpixel(x, y, cube, 0xea0000, 0);
+        y++;
+    }
+}
+void draw_minimap(t_cube *cube)
+{
+    int i;
+
+    i = 0;
+    while(i < cube->minimap_w)
+    {
+        draw_map_line(cube, i);
+        i++;
+    }
+}
+
+int loop_render(t_cube *cube)
+{
+	static	int	i;
+	struct timeval	time;
+
+	if (!i)
+	{
+		cube->mlx->image = cube->mlx->img1;
+		i++;
+	}
+	else
+	{
+		cube->mlx->image = cube->mlx->img2;
+		i--;
+	}
+	gettimeofday(&time, NULL);
+	cube->frame = time.tv_sec % 4;
+	cube->player[ANGLE] = fix_angle(cube->player[ANGLE]);
+	printf("angle %f; x %f; y %f;\n", cube->player[ANGLE], cube->player[PLAYER_X], cube->player[PLAYER_Y]);
+	raycasting(cube);
+    mlx_put_image_to_window(cube->mlx->mlx, cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
+    moving(cube);
+    mouse_rotation(cube);
+    return (0);
 }
 
 int main(int ac, char **av)
 {
-    t_parse *parse;
-    t_cube	*cube;
+	t_parse *parse;
+	t_cube	*cube;
 	t_mlx	*mlx;
 	int fd;
-	
+
     if(ac != 2)
-        return (perror("Wrong number of arguments.\n"), 1);
-    if(cub_check(av[1]))
-        return (perror("Map is not using .cub extension.\n"), 1);
+		return (write(1, "Error\nWrong number of arguments.\n", 33), 1);
+	if(cub_check(av[1]))
+		return (write(1, "Error\nMap is not using .cub extension.\n", 39), 1);
+	fd = open(av[1], O_RDONLY);
+	if (fd == -1)
+		return (perror("Error\n"), 1);
+	parse = parseinit();
+	if(!parse || parse_filler(fd, parse))
+		return (perror("Error\n"), parsefree(parse), 1);
 	mlx = 0;
-	if (!ft_mlx_start(&mlx))
-		return (perror(0), 1);
-    fd = open(av[1], O_RDONLY);
-    if (fd == -1)
-        return (perror("Open"), 1);
-    parse = cubeinit();
-    if(!parse || cube_filler(fd, parse))
-        return (write(2, "Error\n", 6), parsefree(parse), 1);
-	printf("NO:%s:, SO:%s:, EA:%s:, WE:%s:\n", parse->textures[NO], parse->textures[SO], parse->textures[EA], parse->textures[WE]);
-	printf("F %d:%d:%d C %d:%d:%d \n", (parse->F >> 16) & 0xFF, (parse->F >> 8) & 0xFF, parse->F & 0xFF, parse->C >> 16 & 255, parse->C >> 8 & 255, parse->C & 255);
-	cube = parse_to_cube(parse);
+	if (ft_mlx_start(&mlx))
+		return (perror("Error\n"), free(mlx), parsefree(parse), 1);
+	cube = parse_to_cube(parse, mlx);
 	if (!cube)
 		return (1);
-	cube_error(cube);
-	// parse_error(cube);
-    // null_cube(&cube);
+	
+	
+	int h, w;
+	// Partie size map
+	if(cube->data.map_w > cube->data.map_h)
+	{
+		h = 20;
+		w = 10;
+	}	
+	else if(cube->data.map_w < cube->data.map_h)
+	{
+		w = 20;
+		h = 10;
+	}	
+	else
+	{
+		w = 20;
+		h = 10;
+	}
+	cube->minimap_w = (cube->data.map_w) * w;
+	cube->minimap_h = cube->data.map_h * h;
+
+	mlx_hook(cube->mlx->win, KeyPress, KeyPressMask, &key_press, cube);
+    mlx_hook(cube->mlx->win, KeyRelease, KeyReleaseMask, &key_release, cube);
+	mlx_hook(cube->mlx->win, 17, 0, &escape, cube);
+	mlx_loop_hook(cube->mlx->mlx, &loop_render, cube);
+
+	mlx_loop(cube->mlx->mlx);
+
+	// printf("NO:%s:, SO:%s:, EA:%s:, WE:%s:\n", parse->textures[NO], parse->textures[SO], parse->textures[EA], parse->textures[WE]);
+	// printf("F %d:%d:%d C %d:%d:%d \n", (parse->F >> 16) & 0xFF, (parse->F >> 8) & 0xFF, parse->F & 0xFF, parse->C >> 16 & 255, parse->C >> 8 & 255, parse->C & 255);
+	free_cube(cube);
     return (0);
 }
