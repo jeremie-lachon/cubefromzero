@@ -205,7 +205,7 @@ typedef struct s_cube
 //     int frame;
 // }   t_cube;
 
-
+void *ft_calloc(size_t nmemb, size_t size);
 int map_filler(t_data *data);
 int	escape(t_cube *cube);
 int key_press(int keysym, t_cube *cube);
@@ -217,7 +217,6 @@ void moving (t_cube *cube);
 int key_release(int keysym, t_cube *cube);
 void display_pix(t_img_data *img, int x, int y, int color);
 void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag);
-void	*ft_calloc(size_t nmemb, size_t size);
 
 // Structs
 
@@ -227,6 +226,14 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
 size_t	ft_strlen(const char *str);
+
+char *custom_read(int fd, int check);
+char *ft_strchr(const char *s, int c);
+char *ft_substr(char const *s, int start, int len);
+int settings_split(char *str);
+int skip(char *s, int *i, int check);
+char	*ft_strtrim(char *s1, char *set);
+
 
 // Angle tools
 float added_angle(t_cube *cube);

@@ -4,8 +4,8 @@ WE    ./texture/west.xpm
 EA         ./texture/east.xpm      
 DO ./texture/west.xpm
 
-F                       255,255,255          
-C                                     0,0, 0      
+F                       1,2,3           
+C                                     150,5,                       255      
 
 
 SP ./texture/west.xpm ./texture/east.xpm ./texture/south.xpm  ./texture/north.xpm    
@@ -15,23 +15,11 @@ SP ./texture/west.xpm ./texture/east.xpm ./texture/south.xpm  ./texture/north.xp
 
 
 
-11100001111
+111111111111111111111111
 100110010111111111111
 1111110100P00000000011
 100000000000111111111
 10000DS00111111111111
-100000000000000111111 
- 1111111111111111   1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
- 1
+100000000000000111111
+1111111D1111111111111
+       

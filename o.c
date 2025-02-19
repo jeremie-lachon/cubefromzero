@@ -6,119 +6,15 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 17:06:22 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/19 19:38:59 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "cube.h"
-#include "cub3d.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-// settings check 0
-// map      check 1
-
-char *custom_read(int fd, int check)
-{
-	char *buf;
-
-	while (1)
-	{
-		buf = get_next_line(fd);
-		if (!buf || check)
-			return (buf);
-		if (*buf != '\n')
-			return (buf);
-		free(buf);
-	}
-}
-
-char *ft_strchr(const char *s, int c)
-{
-	char *ptr;
-	int i;
-
-	i = 0;
-	c = c % 256;
-	while (s[i] != '\0')
-	{
-		if (s[i] == c)
-		{
-			ptr = (char *)s + i;
-			return ((char *)ptr);
-		}
-		i++;
-	}
-	if (s[i] == c)
-		return ((char *)s + i);
-	ptr = 0;
-	return (ptr);
-}
-
-char *ft_substr(char const *s, int start, int len)
-{
-	int i;
-	int j;
-	char *copy;
-
-	if (start < 0)
-		return (0);
-	if (start > (int)strlen(s))
-		return (calloc(1, 1));
-	if (len + start <= (int)strlen(s))
-		copy = (char *)malloc(sizeof(char) * (len + 1));
-	else
-		copy = (char *)malloc(sizeof(char) * (strlen(s + start) + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (s[i])
-	{
-		if (i >= start && j < len)
-		{
-			copy[j] = s[i];
-			j++;
-		}
-		i++;
-	}
-	copy[j] = 0;
-	return (copy);
-}
-
-int settings_split(char *str)
-{
-	int i;
-	i = 2;
-
-	while (str[i])
-	{
-		if (!ft_strchr(" \t\v\f\r", str[i]))
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int skip(char *s, int *i, int check)
-{
-	int com;
-
-	com = 0;
-	while (ft_strchr(" \t\v\f\r", s[*i]))
-		(*i)++;
-	if (check)
-		while (s[*i] <= '9' && s[*i] >= '0')
-			(*i)++;
-	while (ft_strchr(" \t\v\f\r,", s[*i]))
-	{
-		if (s[*i] == ',')
-			com++;
-		(*i)++;
-	}
-	return (com);
-}
+#include "cub3d.h"
 
 int function(char *s)
 {
@@ -147,84 +43,6 @@ int function(char *s)
 	ret |= tmp;
 	return (ret);
 }
-// Trim
-
-void *ft_calloc(size_t nmemb, size_t size)
-{
-	size_t i;
-	unsigned char *new;
-
-	i = nmemb * size;
-	if (i == 0)
-	{
-		new = malloc(0);
-		if (!new)
-			return (0);
-		*new = 0;
-		return (new);
-	}
-	if (i < nmemb || i < size)
-		return (0);
-	new = malloc(i);
-	if (!new)
-		return (0);
-	while (i--)
-		new[i] = 0;
-	return (new);
-}
-
-static int check_char(const char *set, char c)
-{
-	while (*set)
-		if (c == *set++)
-			return (1);
-	return (0);
-}
-
-static char *strmalloc(int *tab)
-{
-	char *new;
-
-	if (tab[1] == 0)
-		new = (char *)malloc(sizeof(char) * (tab[0]));
-	else
-		new = (char *)malloc(sizeof(char) * (tab[1] - tab[0] + 2));
-	if (!new)
-		return (0);
-	return (new);
-}
-
-/*
-	int		0	cur;
-	int		1	end;
-	int		2	new_count;
-	*/
-char *ft_strtrim(char *s1, char const *set)
-{
-	char *new;
-	int tab[3];
-
-	tab[2] = 0;
-	tab[0] = 0;
-	if (!s1 || !set)
-		return (0);
-	while (check_char(set, s1[tab[0]]) && s1[tab[0]])
-		tab[0]++;
-	tab[1] = ft_strlen(s1) - 1;
-	if (s1[0] == '\0' || tab[1] + 1 == tab[0])
-		return (ft_calloc(sizeof(char), 1));
-	while (check_char(set, s1[tab[1]]) && tab[1] > 0)
-		tab[1]--;
-	new = strmalloc(tab);
-	if (!new)
-		return (NULL);
-	while (tab[0] <= tab[1])
-		new[tab[2]++] = s1[tab[0]++];
-	new[tab[2]] = 0;
-	return (free(s1), new);
-}
-// ^ Trim
-
 int parse_filler2(char *buf, t_parse *cube)
 {
 	char *tmp;
@@ -661,6 +479,7 @@ t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
 	parse->map = 0;
 	cube->data.map_w = parse->width;
 	cube->data.map_h = parse->height;
+	printf("parse->height %d\n", parse->height);
 	cube->data.FC[0] = parse->F;
 	cube->data.FC[1] = parse->C;
 	cube->player[PLAYER_X] = parse->player[PLAYER_X];

@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:01:45 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 13:09:25 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/19 17:34:52 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ int parsefree(t_parse *parse)
 	if (parse->map)
 	{
 		while (i < parse->height)
-			free(parse->map[i++]);
+		{
+			free(parse->map[i]);
+			i++;
+		}
 		free(parse->map);
 	}
 	i = 0;
