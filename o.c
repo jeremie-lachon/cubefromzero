@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 19:38:59 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/19 23:03:04 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,13 @@ int fillmap(t_list *node, t_parse *parse, int i)
 		else if (strchr("NSEW", str[j]))
 			NSEW(i, j, str, parse);
 		else if (str[j] == ' ')
-			parse->map[i][j] = -1;
+			parse->map[i][j] = OUT;
 		else
 			return (1);
 		j++;
 	}
 	while (j < parse->width)
-		parse->map[i][j++] = -1;
+		parse->map[i][j++] = OUT;
 	return (0);
 }
 
