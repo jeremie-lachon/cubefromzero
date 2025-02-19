@@ -4,8 +4,8 @@ WE    ./texture/west.xpm
 EA         ./texture/east.xpm      
 DO ./texture/west.xpm
 
-F                       1,2,3           
-C                                     0,5,                       255      
+F                       255,255,255          
+C                                     0,0, 0      
 
 
 SP ./texture/west.xpm ./texture/east.xpm ./texture/south.xpm  ./texture/north.xpm    

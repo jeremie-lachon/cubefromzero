@@ -211,7 +211,7 @@ int	escape(t_cube *cube);
 int key_press(int keysym, t_cube *cube);
 int init_mlx(t_cube *cube);
 void raycasting(t_cube *cube);
-void	move_player(t_cube *cube, float angle);
+// void	move_player(t_cube *cube, float angle);
 float	fix_angle(float angle);
 void moving (t_cube *cube);
 int key_release(int keysym, t_cube *cube);
@@ -227,6 +227,11 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
 size_t	ft_strlen(const char *str);
+
+// Angle tools
+float added_angle(t_cube *cube);
+float	fix_angle(float angle);
+
 
 // Frees
 int intfree(int **array, int i);
@@ -245,7 +250,14 @@ int maxsize(t_list *list);
 void display_pix(t_img_data *img, int x, int y, int color);
 void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag);
 void draw_wall(float top_pixel, t_cube *cube, float offset);
+void draw_wall_other(t_cube *cube, float pixel, float offset, int i);
+void draw_other(float top, t_cube *cube);
+void wall_display(t_cube *cube, float dist, float offset);
 
+//Raycasting
+void    wall_check(float distxy[2], t_cube *cube, float angle, float cosangled);
+int check_wall(float y, float x, t_cube *cube);
+int	check_door(int x, int y, t_cube *cube);
 float	find_x_ray(t_cube *cube, float angle, float fixed_angle);
 float	find_y_ray(t_cube *cube, float angle, float fixed_angle);
 int check_wall(float y, float x, t_cube *cube);
