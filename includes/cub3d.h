@@ -221,8 +221,6 @@ void	*ft_calloc(size_t nmemb, size_t size);
 
 // Structs
 
-int	free_cube(t_cube *cube);
-
 
 // LIBS & MISC
 
@@ -230,5 +228,25 @@ char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
 size_t	ft_strlen(const char *str);
 
+// Frees
+int intfree(int **array, int i);
+int parsefree(t_parse *parse);
+int free_cube(t_cube *cube);
+int ft_clear_display(t_mlx *mlx);
 
+// List tools
+int listfree(t_list *list);
+int listaddfront(t_list **list, t_list *new);
+t_list *listnew(void *data);
+int listsize(t_list *list);
+int maxsize(t_list *list);
+
+//Draw
+void display_pix(t_img_data *img, int x, int y, int color);
+void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag);
+void draw_wall(float top_pixel, t_cube *cube, float offset);
+
+float	find_x_ray(t_cube *cube, float angle, float fixed_angle);
+float	find_y_ray(t_cube *cube, float angle, float fixed_angle);
+int check_wall(float y, float x, t_cube *cube);
 #endif

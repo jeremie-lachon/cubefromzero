@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/06 17:09:31 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/19 13:09:15 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,131 +19,25 @@
 // settings check 0
 // map      check 1
 
-int	listfree(t_list *list)
-{
-	if (list)
-	{
-		listfree(list->next);
-		free(list->data);
-	}
-	free(list);
-	return (0);
-}
-
-int	listaddfront(t_list **list, t_list *new)
-{
-	new->next = *list;
-	*list = new;
-	return (0);
-}
-
-t_list	*listnew(void *data)
-{
-	t_list	*new;
-
-	new = malloc(sizeof(t_list));
-	if (!new)
-		return (0);
-	new->data = data;
-	new->next = 0;
-	return (new);
-}
-
-int	intfree(int **array, int i)
-{
-	int	j;
-
-	if (!array)
-		return (1);
-	j = 0;
-	while (j < i)
-		free(array[j++]);
-	free(array);
-	return (0);
-}
-
-int	listsize(t_list *list)
-{
-	int	i;
-
-	i = 0;
-	while (list)
-	{
-		list = list->next;
-		i++;
-	}
-	return (i);
-}
-
-int	maxsize(t_list *list)
-{
-	int	maxlen;
-	int	len;
-
-	maxlen = -1;
-	while (list)
-	{
-		len = strlen((char *)list->data);
-		if (len > maxlen)
-			maxlen = len;
-		list = list->next;
-	}
-	return (maxlen);
-}
-
-static void gnlfree(int fd)
-{
-    char *buf;
-
-    buf = get_next_line(fd);
-    while (buf)
-    {
-        free(buf);
-        buf = get_next_line(fd);
-    }
-    close(fd);
-}
-
-int	parsefree(t_parse *parse)
-{
-	int	i;
-
-	i = 0;
-	if (!parse)
-		return (0);
-	if (parse->map)
-	{
-		while (i < parse->height)
-			free(parse->map[i++]);
-		free(parse->map);
-	}
-	i = 0;
-	while (i < 6)
-		free(parse->textures[i++]);
-	free(parse->textures);
-	free(parse);
-	return (0);
-}
-
 char *custom_read(int fd, int check)
 {
-    char *buf;
+	char *buf;
 
-    while (1)
-    {
-        buf = get_next_line(fd);
-        if (!buf || check)
-            return (buf);
-        if (*buf != '\n')
-            return (buf);
-        free(buf);
-    }
+	while (1)
+	{
+		buf = get_next_line(fd);
+		if (!buf || check)
+			return (buf);
+		if (*buf != '\n')
+			return (buf);
+		free(buf);
+	}
 }
 
-char	*ft_strchr(const char *s, int c)
+char *ft_strchr(const char *s, int c)
 {
-	char	*ptr;
-	int		i;
+	char *ptr;
+	int i;
 
 	i = 0;
 	c = c % 256;
@@ -151,22 +45,22 @@ char	*ft_strchr(const char *s, int c)
 	{
 		if (s[i] == c)
 		{
-			ptr = (char *) s + i;
-			return ((char *) ptr);
+			ptr = (char *)s + i;
+			return ((char *)ptr);
 		}
 		i++;
 	}
 	if (s[i] == c)
-		return ((char *) s + i);
+		return ((char *)s + i);
 	ptr = 0;
 	return (ptr);
 }
 
-char	*ft_substr(char const *s, int start, int len)
+char *ft_substr(char const *s, int start, int len)
 {
-	int	i;
-	int	j;
-	char	*copy;
+	int i;
+	int j;
+	char *copy;
 
 	if (start < 0)
 		return (0);
@@ -195,16 +89,16 @@ char	*ft_substr(char const *s, int start, int len)
 
 int settings_split(char *str)
 {
-    int i;
-    i = 2;
+	int i;
+	i = 2;
 
-    while (str[i])
-    {
-        if (!ft_strchr(" \t\v\f\r", str[i]))
-            return (i);
-        i++;
-    }
-    return (-1);
+	while (str[i])
+	{
+		if (!ft_strchr(" \t\v\f\r", str[i]))
+			return (i);
+		i++;
+	}
+	return (-1);
 }
 
 int skip(char *s, int *i, int check)
@@ -219,7 +113,7 @@ int skip(char *s, int *i, int check)
 			(*i)++;
 	while (ft_strchr(" \t\v\f\r,", s[*i]))
 	{
-		if(s[*i] == ',')
+		if (s[*i] == ',')
 			com++;
 		(*i)++;
 	}
@@ -239,13 +133,13 @@ int function(char *s)
 	if (tmp < 0 || tmp > 255)
 		return (-1);
 	ret = tmp << 16;
-	if(skip(s, &i, 1) != 1 || !s[i])
+	if (skip(s, &i, 1) != 1 || !s[i])
 		return (-1);
 	tmp = atoi(s + i);
-	if (tmp < 0 || tmp > 	255)
+	if (tmp < 0 || tmp > 255)
 		return (-1);
 	ret |= tmp << 8;
-	if(skip(s, &i, 1) != 1 || !s[i])
+	if (skip(s, &i, 1) != 1 || !s[i])
 		return (-1);
 	tmp = atoi(s + i);
 	if (tmp < 0 || tmp > 255)
@@ -255,10 +149,10 @@ int function(char *s)
 }
 // Trim
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void *ft_calloc(size_t nmemb, size_t size)
 {
-	size_t				i;
-	unsigned char		*new;
+	size_t i;
+	unsigned char *new;
 
 	i = nmemb * size;
 	if (i == 0)
@@ -279,7 +173,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (new);
 }
 
-static int	check_char(const char *set, char c)
+static int check_char(const char *set, char c)
 {
 	while (*set)
 		if (c == *set++)
@@ -287,9 +181,9 @@ static int	check_char(const char *set, char c)
 	return (0);
 }
 
-static char	*strmalloc(int *tab)
+static char *strmalloc(int *tab)
 {
-	char	*new;
+	char *new;
 
 	if (tab[1] == 0)
 		new = (char *)malloc(sizeof(char) * (tab[0]));
@@ -305,10 +199,10 @@ static char	*strmalloc(int *tab)
 	int		1	end;
 	int		2	new_count;
 	*/
-char	*ft_strtrim(char *s1, char const *set)
+char *ft_strtrim(char *s1, char const *set)
 {
-	char		*new;
-	int			tab[3];
+	char *new;
+	int tab[3];
 
 	tab[2] = 0;
 	tab[0] = 0;
@@ -330,9 +224,10 @@ char	*ft_strtrim(char *s1, char const *set)
 	return (free(s1), new);
 }
 // ^ Trim
+
 int parse_filler2(char *buf, t_parse *cube)
 {
-	char	*tmp;
+	char *tmp;
 
 	if (!buf)
 		return (1);
@@ -341,31 +236,47 @@ int parse_filler2(char *buf, t_parse *cube)
 	tmp = ft_strchr(buf, '\n');
 	if (!tmp)
 		return (1);
-    if (!strncmp("NO ", buf, 3) && !cube->textures[NO])
-        cube->textures[NO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else if (!strncmp("WE ", buf, 3) && !cube->textures[WE])
-        cube->textures[WE] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else if (!strncmp("SO ", buf, 3) && !cube->textures[SO])
-        cube->textures[SO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
-        cube->textures[EA] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else if (!strncmp("F ", buf, 2) && cube->F == -1)
-        cube->F = function(buf);
-    else if (!strncmp("C ", buf, 2) && cube->C == -1)
-        cube->C = function(buf);
-    else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
-        cube->textures[DO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
-        cube->textures[SP] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-    else
-        return (2);
-    return (free(buf), 0);
+	if (!strncmp("NO ", buf, 3) && !cube->textures[NO])
+		cube->textures[NO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+	else if (!strncmp("WE ", buf, 3) && !cube->textures[WE])
+		cube->textures[WE] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+	else if (!strncmp("SO ", buf, 3) && !cube->textures[SO])
+		cube->textures[SO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+	else if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
+		cube->textures[EA] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+	else if (!strncmp("F ", buf, 2) && cube->F == -1)
+		cube->F = function(buf);
+	else if (!strncmp("C ", buf, 2) && cube->C == -1)
+		cube->C = function(buf);
+	else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
+		cube->textures[DO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+	else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
+		cube->textures[SP] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+	else
+		return (2);
+	return (free(buf), 0);
 }
 
-int	fillmap(t_list *node, t_parse *parse, int i)
+void NSEW(int i, int j, char *str, t_parse *parse)
 {
-	int	j;
-	char	*str;
+	parse->map[i][j] = SPACE;
+	parse->player[PLAYER_Y] = i + 0.5;
+	parse->player[PLAYER_X] = j + 0.5;
+	if (str[j] == 'N')
+		parse->player[ANGLE] = 0.5;
+	else if (str[j] == 'E')
+		parse->player[ANGLE] = 0;
+	else if (str[j] == 'S')
+		parse->player[ANGLE] = 1.5;
+	else
+		parse->player[ANGLE] = 1;
+	parse->player[PLAYER_COUNT] += 1.0;
+}
+
+int fillmap(t_list *node, t_parse *parse, int i)
+{
+	int j;
+	char *str;
 
 	str = (char *)node->data;
 	j = 0;
@@ -380,20 +291,7 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 		else if (str[j] == 'P')
 			parse->map[i][j] = SPRITE;
 		else if (strchr("NSEW", str[j]))
-		{
-			parse->map[i][j] = SPACE;
-			parse->player[PLAYER_Y] = i + 0.5;
-			parse->player[PLAYER_X] = j + 0.5;
-			if (str[j] == 'N')
-				parse->player[ANGLE] = 0.5;
-			else if (str[j] == 'E')
-				parse->player[ANGLE] = 0;
-			else if (str[j] == 'S')
-				parse->player[ANGLE] = 1.5;
-			else
-				parse->player[ANGLE] = 1;
-			parse->player[PLAYER_COUNT] += 1.0;
-		}
+			NSEW(i, j, str, parse);
 		else if (str[j] == ' ')
 			parse->map[i][j] = -1;
 		else
@@ -405,13 +303,13 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 	return (0);
 }
 
-int	checksides(t_parse *parse, int i, int j)
+int checksides(t_parse *parse, int i, int j)
 {
 	if (!i || i + 1 == parse->height)
 		return (1);
 	if (!j || j + 1 == parse->width)
 		return (1);
-	if (parse->map[i -1][j] == OUT)
+	if (parse->map[i - 1][j] == OUT)
 		return (1);
 	if (parse->map[i][j - 1] == OUT)
 		return (1);
@@ -422,10 +320,10 @@ int	checksides(t_parse *parse, int i, int j)
 	return (0);
 }
 
-void	printmap(t_parse *parse)
+void printmap(t_parse *parse)
 {
-	int	i;
-	int	j;
+	int i;
+	int j;
 	i = parse->height - 1;
 	while (i >= 0)
 	{
@@ -440,7 +338,7 @@ void	printmap(t_parse *parse)
 	}
 }
 
-int	check_final_elements(t_parse *parse)
+int check_final_elements(t_parse *parse)
 {
 	if (!parse->textures[NO] || !parse->textures[EA] || !parse->textures[WE])
 		return (1);
@@ -449,11 +347,11 @@ int	check_final_elements(t_parse *parse)
 	return (0);
 }
 
-int	check_elements(t_parse *parse)
+int check_elements(t_parse *parse)
 {
-	int	spritedoor[2];
-	int	i;
-	int	j;
+	int spritedoor[2];
+	int i;
+	int j;
 
 	if (parse->player[PLAYER_COUNT] != 1.0)
 		return (1);
@@ -480,10 +378,10 @@ int	check_elements(t_parse *parse)
 	return (check_final_elements(parse));
 }
 
-int	checkmap(t_parse *parse)
+int checkmap(t_parse *parse)
 {
-	int	i;
-	int	j;
+	int i;
+	int j;
 
 	i = 0;
 	printmap(parse);
@@ -502,10 +400,10 @@ int	checkmap(t_parse *parse)
 	return (check_elements(parse));
 }
 
-int	mapcheckandstock(t_list *list, t_parse *map)
+int mapcheckandstock(t_list *list, t_parse *map)
 {
-	int	i;
-	t_list	*tmp;
+	int i;
+	t_list *tmp;
 
 	map->height = listsize(list);
 	map->map = calloc(sizeof(int *), map->height);
@@ -527,9 +425,9 @@ int	mapcheckandstock(t_list *list, t_parse *map)
 	return (listfree(list), checkmap(map));
 }
 
-char	*remove_end(char *str)
+char *remove_end(char *str)
 {
-	char	*tmp;
+	char *tmp;
 
 	tmp = strchr(str, '\n');
 	if (!tmp)
@@ -538,52 +436,11 @@ char	*remove_end(char *str)
 	return (tmp);
 }
 
-int	ft_clear_display(t_mlx *mlx)
-{
-	mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr);
-	mlx_destroy_image(mlx->mlx, mlx->img2->img_ptr);
-	mlx_destroy_window(mlx->mlx, mlx->win);
-	mlx_destroy_display(mlx->mlx);
-	free(mlx->img1);
-	free(mlx->img2);
-	free(mlx->mlx);
-	free(mlx);
-	return (0);
-}
 
-int	free_cube(t_cube *cube)
+int mapper(int fd, t_parse *parse, char *str)
 {
-	int	i;
-
-	i = 0;
-	if (!cube)
-		return (0);
-	while (i < 5)
-	{
-		if (cube->texture[i] && cube->texture[i]->img_ptr)
-			mlx_destroy_image(cube->mlx->mlx, cube->texture[i]->img_ptr);
-		free(cube->texture[i++]);
-	}
-	while (cube->sprite && cube->nsprite-- > 0)
-	{
-		if (cube->sprite[cube->nsprite] && cube->sprite[cube->nsprite]->img_ptr)
-			mlx_destroy_image(cube->mlx->mlx, cube->sprite[cube->nsprite]->img_ptr);
-		free(cube->sprite[cube->nsprite]);
-	}
-	free(cube->sprite);
-	i = 0;
-	while (i < cube->data.map_h)
-		free(cube->data.map[i++]);
-	free(cube->data.map);
-	ft_clear_display(cube->mlx);
-	free(cube);
-	return (0);
-}
-
-int	mapper(int fd, t_parse *parse, char *str)
-{
-	t_list	*list;
-	t_list	*new;
+	t_list *list;
+	t_list *new;
 
 	list = 0;
 	new = listnew(remove_end(str));
@@ -595,7 +452,7 @@ int	mapper(int fd, t_parse *parse, char *str)
 		free(str);
 		str = custom_read(fd, 1);
 		if (!str || *str == '\n')
-			break ;
+			break;
 		new = listnew(remove_end(str));
 		if (!new)
 			return (free(str), listfree(list), 1);
@@ -607,11 +464,23 @@ int	mapper(int fd, t_parse *parse, char *str)
 		return (free(str), 1);
 	return (free(str), 0);
 }
+static void gnlfree(int fd)
+{
+	char *buf;
+
+	buf = get_next_line(fd);
+	while (buf)
+	{
+		free(buf);
+		buf = get_next_line(fd);
+	}
+	close(fd);
+}
 
 int parse_filler(int fd, t_parse *cube)
 {
-    char *buff;
-    int check;
+	char *buff;
+	int check;
 
 	buff = custom_read(fd, 0);
 	check = parse_filler2(buff, cube);
@@ -624,12 +493,12 @@ int parse_filler(int fd, t_parse *cube)
 		return (gnlfree(fd), 1);
 	if (mapper(fd, cube, buff))
 		return (gnlfree(fd), 1);
-    return (gnlfree(fd) ,0);
+	return (gnlfree(fd), 0);
 }
 
-int	cub_check(char *str)
+int cub_check(char *str)
 {
-	int	i;
+	int i;
 
 	i = strlen(str);
 	if (i < 5)
@@ -646,9 +515,9 @@ int	cub_check(char *str)
 	return (0);
 }
 
-t_parse	*parseinit(void)
+t_parse *parseinit(void)
 {
-	t_parse	*parse;
+	t_parse *parse;
 
 	parse = calloc(sizeof(t_parse), 1);
 	if (!parse)
@@ -661,9 +530,9 @@ t_parse	*parseinit(void)
 	return (parse);
 }
 
-void	freetexts(t_cube *cube)
+void freetexts(t_cube *cube)
 {
-	int	j;
+	int j;
 
 	j = 0;
 	while (j < 6)
@@ -671,12 +540,12 @@ void	freetexts(t_cube *cube)
 		if (j < 5 && cube->texture[j]->img_ptr)
 			mlx_destroy_image(cube->mlx->mlx, cube->texture[j]->img_ptr);
 		free(cube->texture[j]);
-		
+
 		cube->texture[j++] = 0;
 	}
 }
 
-static int	imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse)
+static int imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse)
 {
 	cube->texture[num]->img_ptr = mlx_xpm_file_to_image(mlx->mlx, parse->textures[num], &cube->texture[num]->pix_w, &cube->texture[num]->pix_h);
 	if (!cube->texture[num]->img_ptr)
@@ -687,7 +556,7 @@ static int	imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse)
 	return (0);
 }
 
-int	fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
+int fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 {
 	if (imgstruct(cube, NO, mlx, parse))
 		return (1);
@@ -702,12 +571,12 @@ int	fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 	return (0);
 }
 
-static void	freesprite(t_img_data **sprite, int n, t_mlx *mlx)
+static void freesprite(t_img_data **sprite, int n, t_mlx *mlx)
 {
-	int	j;
+	int j;
 
 	if (!sprite)
-		return ;
+		return;
 	j = 0;
 	while (j < n)
 	{
@@ -716,10 +585,10 @@ static void	freesprite(t_img_data **sprite, int n, t_mlx *mlx)
 	}
 }
 
-int	fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx)
+int fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx)
 {
-	int	n;
-	char	**all;
+	int n;
+	char **all;
 
 	if (!parse->textures[SP])
 		return (0);
@@ -750,9 +619,9 @@ int	fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx)
 	return (ft_freesplit(all, n), 0);
 }
 
-static void	freecubetext(t_cube *cube)
+static void freecubetext(t_cube *cube)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (i < 5)
@@ -762,10 +631,10 @@ static void	freecubetext(t_cube *cube)
 	}
 }
 
-static t_cube	*ft_cube_init(void)
+static t_cube *ft_cube_init(void)
 {
-	t_cube	*cube;
-	int		i;
+	t_cube *cube;
+	int i;
 
 	i = 0;
 	cube = ft_calloc(sizeof(t_cube), 1);
@@ -780,9 +649,9 @@ static t_cube	*ft_cube_init(void)
 	return (cube);
 }
 
-t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx)
+t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
 {
-	t_cube	*cube;
+	t_cube *cube;
 
 	cube = ft_cube_init();
 	if (!cube)
@@ -804,9 +673,9 @@ t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx)
 	return (parsefree(parse), cube);
 }
 
-static t_mlx	*ft_mlx_init(void)
+static t_mlx *ft_mlx_init(void)
 {
-	t_mlx	*mlx;
+	t_mlx *mlx;
 
 	mlx = ft_calloc(sizeof(t_mlx), 1);
 	if (!mlx)
@@ -820,9 +689,9 @@ static t_mlx	*ft_mlx_init(void)
 	return (mlx);
 }
 
-int	ft_mlx_start(t_mlx **mlx_address)
+int ft_mlx_start(t_mlx **mlx_address)
 {
-	t_mlx	*mlx;
+	t_mlx *mlx;
 
 	mlx = ft_mlx_init();
 	if (!mlx)
@@ -847,46 +716,46 @@ int	ft_mlx_start(t_mlx **mlx_address)
 
 void mouse_rotation(t_cube *cube)
 {
-    mlx_mouse_get_pos(cube->mlx->mlx, cube->mlx->win, &cube->mouse_x, &cube->mouse_y);
-    if(cube->mouse_x < 0 || cube->mouse_x > WIN_W || cube->mouse_y < 0 || cube->mouse_y > WIN_H)
-        cube->mouse_x = HALF_WIDTH;
-    if(cube->mouse_x > HALF_WIDTH + 150)
-        cube->input[MOUSE_LEFT] = 1;
-    else
-        cube->input[MOUSE_LEFT] = 0;
-    if(cube->mouse_x < HALF_WIDTH - 150)
-        cube->input[MOUSE_RIGHT] = 1;
-    else
-        cube->input[MOUSE_RIGHT] = 0;
+	mlx_mouse_get_pos(cube->mlx->mlx, cube->mlx->win, &cube->mouse_x, &cube->mouse_y);
+	if (cube->mouse_x < 0 || cube->mouse_x > WIN_W || cube->mouse_y < 0 || cube->mouse_y > WIN_H)
+		cube->mouse_x = HALF_WIDTH;
+	if (cube->mouse_x > HALF_WIDTH + 150)
+		cube->input[MOUSE_LEFT] = 1;
+	else
+		cube->input[MOUSE_LEFT] = 0;
+	if (cube->mouse_x < HALF_WIDTH - 150)
+		cube->input[MOUSE_RIGHT] = 1;
+	else
+		cube->input[MOUSE_RIGHT] = 0;
 }
 
 void draw_map_line(t_cube *cube, int x)
 {
-    int y;
+	int y;
 
-    y = 0;
-    while(y < cube->minimap_h)
-    {   
-        ft_putpixel(x, y, cube, 0xea0000, 0);
-        y++;
-    }
+	y = 0;
+	while (y < cube->minimap_h)
+	{
+		ft_putpixel(x, y, cube, 0xea0000, 0);
+		y++;
+	}
 }
 void draw_minimap(t_cube *cube)
 {
-    int i;
+	int i;
 
-    i = 0;
-    while(i < cube->minimap_w)
-    {
-        draw_map_line(cube, i);
-        i++;
-    }
+	i = 0;
+	while (i < cube->minimap_w)
+	{
+		draw_map_line(cube, i);
+		i++;
+	}
 }
 
 int loop_render(t_cube *cube)
 {
-	static	int	i;
-	struct timeval	time;
+	static int i;
+	struct timeval time;
 
 	if (!i)
 	{
@@ -903,28 +772,28 @@ int loop_render(t_cube *cube)
 	cube->player[ANGLE] = fix_angle(cube->player[ANGLE]);
 	printf("angle %f; x %f; y %f;\n", cube->player[ANGLE], cube->player[PLAYER_X], cube->player[PLAYER_Y]);
 	raycasting(cube);
-    mlx_put_image_to_window(cube->mlx->mlx, cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
-    moving(cube);
-    mouse_rotation(cube);
-    return (0);
+	mlx_put_image_to_window(cube->mlx->mlx, cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
+	moving(cube);
+	mouse_rotation(cube);
+	return (0);
 }
 
 int main(int ac, char **av)
 {
 	t_parse *parse;
-	t_cube	*cube;
-	t_mlx	*mlx;
+	t_cube *cube;
+	t_mlx *mlx;
 	int fd;
 
-    if(ac != 2)
+	if (ac != 2)
 		return (write(1, "Error\nWrong number of arguments.\n", 33), 1);
-	if(cub_check(av[1]))
+	if (cub_check(av[1]))
 		return (write(1, "Error\nMap is not using .cub extension.\n", 39), 1);
 	fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 		return (perror("Error\n"), 1);
 	parse = parseinit();
-	if(!parse || parse_filler(fd, parse))
+	if (!parse || parse_filler(fd, parse))
 		return (perror("Error\n"), parsefree(parse), 1);
 	mlx = 0;
 	if (ft_mlx_start(&mlx))
@@ -932,20 +801,19 @@ int main(int ac, char **av)
 	cube = parse_to_cube(parse, mlx);
 	if (!cube)
 		return (1);
-	
-	
+
 	int h, w;
 	// Partie size map
-	if(cube->data.map_w > cube->data.map_h)
+	if (cube->data.map_w > cube->data.map_h)
 	{
 		h = 20;
 		w = 10;
-	}	
-	else if(cube->data.map_w < cube->data.map_h)
+	}
+	else if (cube->data.map_w < cube->data.map_h)
 	{
 		w = 20;
 		h = 10;
-	}	
+	}
 	else
 	{
 		w = 20;
@@ -955,7 +823,7 @@ int main(int ac, char **av)
 	cube->minimap_h = cube->data.map_h * h;
 
 	mlx_hook(cube->mlx->win, KeyPress, KeyPressMask, &key_press, cube);
-    mlx_hook(cube->mlx->win, KeyRelease, KeyReleaseMask, &key_release, cube);
+	mlx_hook(cube->mlx->win, KeyRelease, KeyReleaseMask, &key_release, cube);
 	mlx_hook(cube->mlx->win, 17, 0, &escape, cube);
 	mlx_loop_hook(cube->mlx->mlx, &loop_render, cube);
 
@@ -964,5 +832,5 @@ int main(int ac, char **av)
 	// printf("NO:%s:, SO:%s:, EA:%s:, WE:%s:\n", parse->textures[NO], parse->textures[SO], parse->textures[EA], parse->textures[WE]);
 	// printf("F %d:%d:%d C %d:%d:%d \n", (parse->F >> 16) & 0xFF, (parse->F >> 8) & 0xFF, parse->F & 0xFF, parse->C >> 16 & 255, parse->C >> 8 & 255, parse->C & 255);
 	free_cube(cube);
-    return (0);
+	return (0);
 }

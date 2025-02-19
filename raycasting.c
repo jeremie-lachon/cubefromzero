@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/06 17:49:54 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/19 14:31:59 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	check_door(int x, int y, t_cube *cube)
 	int	plax;
 	int	play;
 
-	plax = (int)cube->player[PLAYER_X];
-	play = (int)cube->player[PLAYER_Y];
+	plax = cube->player[PLAYER_X];
+	play = cube->player[PLAYER_Y];
 	if (abs(x - plax) <= 1 && abs(y - play) <= 1)
 		return (0);
 	return (1);
@@ -52,91 +52,6 @@ int check_wall(float y, float x, t_cube *cube)
 		return (1);
 	return (0);
 }
-
-float	find_y_ray(t_cube *cube, float angle, float fixed_angle)
-{
-	float	delta;
-	float	move_x;
-	float	wall_y;
-	int		check;
-
-	delta = cube->player[PLAYER_Y] - fixed_angle * cube->player[PLAYER_X];
-	if(angle < 0.5 || angle > 1.5)
-	{
-		move_x = floorf(cube->player[PLAYER_X]);
-		wall_y = fixed_angle * move_x + delta;
-		check = check_wall(wall_y, move_x - 1, cube);
-		while (check == 1)
-		{
-			move_x -= 1.0;
-			wall_y = fixed_angle * move_x + delta;
-			check = check_wall(wall_y, move_x - 1, cube);
-		}
-	}
-	else
-	{
-		move_x = ceilf(cube->player[PLAYER_X]);
-		wall_y = fixed_angle * move_x + delta; 
-		check = check_wall(wall_y, move_x, cube);
-		while (check == 1)
-		{
-			move_x += 1.0;
-			wall_y = fixed_angle * move_x + delta; 
-			check = check_wall(wall_y, move_x, cube);
-		}
-	}
-	if (check == -1)
-		return (-1.0);
-	cube->ray.h_x = move_x;
-	if (angle < 0.5 || angle > 1.5)
-		cube->ray.h_x -= 1;
-	cube->ray.h_y = wall_y;
-	cube->ray.hity = cube->ray.hit;
-	return (sqrt(powf(wall_y - cube->player[PLAYER_Y], 2) + powf(move_x - cube->player[PLAYER_X], 2)));    
-}
-
-float	find_x_ray(t_cube *cube, float angle, float fixed_angle)
-{
-	float	delta;
-	float	move_y;
-	float	wall_x;
-	int		check;
-
-	delta = cube->player[PLAYER_X] - cube->player[PLAYER_Y] / fixed_angle;
-	if(angle > 1)
-	{
-		move_y = floorf(cube->player[PLAYER_Y]);
-		wall_x = delta + move_y / fixed_angle;
-		check = check_wall(move_y - 1, wall_x, cube);
-		while (check == 1)
-		{
-			move_y -= 1.0;
-			wall_x = delta + move_y / fixed_angle; 
-			check = check_wall(move_y - 1, wall_x, cube);
-		}
-	}
-	else
-	{
-		move_y = ceilf(cube->player[PLAYER_Y]);
-		wall_x = delta + move_y / fixed_angle; 
-		check = check_wall(move_y, wall_x, cube);
-		while (check == 1)
-		{
-			move_y += 1.0;
-			wall_x = delta + move_y / fixed_angle; 
-			check = check_wall(move_y, wall_x, cube);
-		}
-	}
-	if (check == -1)
-		return (-1.0);
-	cube->ray.v_y = move_y;
-	if (angle > 1)
-		cube->ray.v_y -= 1;
-	cube->ray.v_x = wall_x;
-	cube->ray.hitx = cube->ray.hit;
-	return (sqrt(powf(wall_x - cube->player[PLAYER_X], 2) + powf(move_y - cube->player[PLAYER_Y], 2)));
-}
-
 float	fix_angle(float angle)
 {
 	while (angle > 2.F)
@@ -146,43 +61,6 @@ float	fix_angle(float angle)
 	return (angle);
 }
 
-void display_pix(t_img_data *img, int x, int y, int color)
-{
-	char *dest;
-	dest = img->adress + (y * img->size + x  * (img->bpp / 8));
-	*(unsigned int *)dest = color;
-}
-
-void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag)
-{
-	if(flag)
-	{
-		if (ray < 0 || ray >= WIN_W || i > WIN_H || i < 0)
-			return ;
-		if(ray <= cube->minimap_w && i <= cube->minimap_h)
-			return ;
-	}
-	display_pix(cube->mlx->image, ray, i, color);
-}
-
-void draw_wall(float top_pixel, t_cube *cube, float offset)
-{
-	int i;
-	int k;
-	float l;
-	float scale;
-
-	i = 0;
-	k = (int)(offset * cube->ray.texture->pix_w);
-	l = top_pixel * cube->ray.texture->pix_h;
-	scale = ((1 - 2 * top_pixel) / WIN_H) * cube->ray.texture->pix_h;
-	while(i < WIN_H)
-	{
-		ft_putpixel(cube->ray.index, i, cube, cube->ray.adress[cube->ray.texture->pix_w  * (int)(l)  + k], 1);
-		l += scale;
-		i++;
-	}
-}
 
 float added_angle(t_cube *cube)
 {
@@ -299,6 +177,8 @@ void draw_other(float top, t_cube *cube)
 		ft_putpixel(cube->ray.index, i, cube, 16777215, 1);
 		i++;
 	}
+	if(i != 0)
+		i--;
 	while(i < WIN_H)
 	{
 		ft_putpixel(cube->ray.index, i, cube, cube->data.FC[1], 1);
