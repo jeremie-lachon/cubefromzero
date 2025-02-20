@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 13:45:50 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/20 18:30:29 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,23 +121,6 @@ int fillmap(t_list *node, t_parse *parse, int i)
 	return (0);
 }
 
-int checksides(t_parse *parse, int i, int j)
-{
-	if (!i || i + 1 == parse->height)
-		return (1);
-	if (!j || j + 1 == parse->width)
-		return (1);
-	if (parse->map[i - 1][j] == OUT)
-		return (1);
-	if (parse->map[i][j - 1] == OUT)
-		return (1);
-	if (parse->map[i][j + 1] == OUT)
-		return (1);
-	if (parse->map[i + 1][j] == OUT)
-		return (1);
-	return (0);
-}
-
 void printmap(t_parse *parse)
 {
 	int i;
@@ -156,67 +139,7 @@ void printmap(t_parse *parse)
 	}
 }
 
-int check_final_elements(t_parse *parse)
-{
-	if (!parse->textures[NO] || !parse->textures[EA] || !parse->textures[WE])
-		return (1);
-	if (!parse->textures[SO] || parse->C == -1 || parse->F == -1)
-		return (1);
-	return (0);
-}
 
-int check_elements(t_parse *parse)
-{
-	int spritedoor[2];
-	int i;
-	int j;
-
-	if (parse->player[PLAYER_COUNT] != 1.0)
-		return (1);
-	spritedoor[0] = 0;
-	spritedoor[1] = 0;
-	i = 0;
-	while (i < parse->height)
-	{
-		j = 0;
-		while (j < parse->width)
-		{
-			if (parse->map[i][j] == SPRITE)
-				spritedoor[0] = 1;
-			else if (parse->map[i][j] == DOOR)
-				spritedoor[1] = 1;
-			j++;
-		}
-		i++;
-	}
-	if (!parse->textures[SP] && spritedoor[0])
-		return (1);
-	if (!parse->textures[DO] && spritedoor[1])
-		return (1);
-	return (check_final_elements(parse));
-}
-
-int checkmap(t_parse *parse)
-{
-	int i;
-	int j;
-
-	i = 0;
-	printmap(parse);
-	while (i < parse->height)
-	{
-		j = 0;
-		while (j < parse->width)
-		{
-			if (parse->map[i][j] == SPACE || parse->map[i][j] == DOOR)
-				if (checksides(parse, i, j))
-					return (1);
-			j++;
-		}
-		i++;
-	}
-	return (check_elements(parse));
-}
 
 int mapcheckandstock(t_list *list, t_parse *map)
 {
@@ -227,7 +150,7 @@ int mapcheckandstock(t_list *list, t_parse *map)
 	map->map = calloc(sizeof(int *), map->height);
 	if (!map->map)
 		return (listfree(list), 1);
-	map->width = maxsize(list);
+	map->width = maxsize(list) - 1;
 	i = 0;
 	tmp = list;
 	while (i < map->height)
@@ -389,53 +312,7 @@ int fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 	return (0);
 }
 
-static void freesprite(t_img_data **sprite, int n, t_mlx *mlx)
-{
-	int j;
 
-	if (!sprite)
-		return;
-	j = 0;
-	while (j < n)
-	{
-		if (sprite[j])
-			mlx_destroy_image(mlx->mlx, sprite[j++]->img_ptr);
-	}
-}
-
-int fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx)
-{
-	int n;
-	char **all;
-
-	if (!parse->textures[SP])
-		return (0);
-	all = ft_split(parse->textures[SP], ' ');
-	if (!all)
-		return (1);
-	n = 0;
-	while (all[n])
-		n++;
-	cube->sprite = ft_calloc(n, sizeof(t_img_data *));
-	if (!cube->sprite)
-		return (ft_freesplit(all, n), 1);
-	cube->nsprite = n;
-	n = 0;
-	while (n < cube->nsprite)
-	{
-		cube->sprite[n] = ft_calloc(sizeof(t_img_data), 1);
-		if (!cube->sprite[n])
-			return (freesprite(cube->sprite, n, mlx), ft_freesplit(all, n), 1);
-		cube->sprite[n]->img_ptr = mlx_xpm_file_to_image(mlx->mlx, all[n], &cube->sprite[n]->pix_w, &cube->sprite[n]->pix_h);
-		if (!cube->sprite[n]->img_ptr)
-			return (freesprite(cube->sprite, n, mlx), ft_freesplit(all, n), 1);
-		cube->sprite[n]->adress = mlx_get_data_addr(cube->sprite[n]->img_ptr, &cube->sprite[n]->bpp, &cube->sprite[n]->size, &cube->sprite[n]->endl);
-		if (!cube->sprite[n]->adress)
-			return (freesprite(cube->sprite, n, mlx), ft_freesplit(all, n), 1);
-		n++;
-	}
-	return (ft_freesplit(all, n), 0);
-}
 
 static void freecubetext(t_cube *cube)
 {
@@ -479,7 +356,7 @@ t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
 	parse->map = 0;
 	cube->data.map_w = parse->width;
 	cube->data.map_h = parse->height;
-	printf("parse->height %d\n", parse->height);
+	// printf("parse->height %d parse->width %d\n", parse->height, parse->width);
 	cube->data.FC[0] = parse->F;
 	cube->data.FC[1] = parse->C;
 	cube->player[PLAYER_X] = parse->player[PLAYER_X];
@@ -534,6 +411,26 @@ int ft_mlx_start(t_mlx **mlx_address)
 }
 
 
+void	display_pix2(t_img_data *img, int x, int y, int color)
+{
+	char	*dest;
+
+	dest = img->adress + (y * img->size + x * (img->bpp / 8));
+	*(unsigned int *)dest = color;
+}
+
+void	ft_putpixel2(int ray, int i, t_cube *cube, int flag)
+{
+	if (flag)
+	{
+		if (ray < 0 || ray >= WIN_W || \
+			i > WIN_H || i < 0)
+			return ;
+		if (ray <= cube->minimap_w && i <= cube->minimap_h)
+			return ;
+	}
+	display_pix(cube->mlx->image, ray, i, 0xea0000);
+}
 
 void draw_map_line(t_cube *cube, int x)
 {
@@ -542,10 +439,11 @@ void draw_map_line(t_cube *cube, int x)
 	y = 0;
 	while (y < cube->minimap_h)
 	{
-		ft_putpixel(x, y, cube, 0xea0000, 0);
+		ft_putpixel2(x, y, cube, 0);
 		y++;
 	}
 }
+
 void draw_minimap(t_cube *cube)
 {
 	int i;

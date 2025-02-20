@@ -204,7 +204,9 @@ typedef struct s_cube
 //     struct timeval time;
 //     int frame;
 // }   t_cube;
-
+int fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx);
+int checkmap(t_parse *parse);
+void printmap(t_parse *parse);
 int map_filler(t_data *data);
 int init_mlx(t_cube *cube);
 

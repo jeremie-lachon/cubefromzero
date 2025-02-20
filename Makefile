@@ -20,6 +20,8 @@ SRC_PARSE = o.c  raycasting.c  main.c
 
 SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c
 
+SRC_PARSING = check_map.c init.c
+
 SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c
 SRC = main.c done.c raycasting.c
 # SRC = essai.c
@@ -27,14 +29,18 @@ SRC = main.c done.c raycasting.c
 DIR_GNL = utils/gnl/
 DIR_EXEC = exec/
 DIR_LIB = lib/
+DIR_PARSING = parsing/
 
 #DEP = $(SRC:.c=.d)
 OBJ_E = $(addprefix $(DIR_EXEC), $(SRC_EXEC:.c=.o))
 OBJ_G = $(addprefix $(DIR_GNL), $(SRC_GNL:.c=.o))
 OBJ_L = $(addprefix $(DIR_LIB), $(SRC_LIB:.c=.o))
+OBJ_PARSING = $(addprefix $(DIR_PARSING), $(SRC_PARSING:.c=.o))
+
 OBJ_P = $(SRC_PARSE:.c=.o)
 OBJ = $(SRC:.c=.o)
-OBJ_ALLPARSE = $(OBJ_G) $(OBJ_L) $(OBJ_P) $(OBJ_E)
+
+OBJ_ALLPARSE = $(OBJ_G) $(OBJ_L) $(OBJ_P) $(OBJ_E) $(OBJ_PARSING)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
