@@ -19,8 +19,8 @@
 # include <float.h>
 #include <sys/time.h>
 # define MAX_VIEW_DISTANCE 50
-# define WIN_W 1200
-# define WIN_H 800
+# define WIN_W 1600
+# define WIN_H 900
 # define FOV_W 90.F
 # define FOV_H 100.F
 # define ROTATION_SPEED .006
@@ -205,24 +205,18 @@ typedef struct s_cube
 //     int frame;
 // }   t_cube;
 
-void *ft_calloc(size_t nmemb, size_t size);
 int map_filler(t_data *data);
-int	escape(t_cube *cube);
-int key_press(int keysym, t_cube *cube);
 int init_mlx(t_cube *cube);
-void raycasting(t_cube *cube);
-// void	move_player(t_cube *cube, float angle);
-float	fix_angle(float angle);
-void moving (t_cube *cube);
-int key_release(int keysym, t_cube *cube);
-void display_pix(t_img_data *img, int x, int y, int color);
-void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag);
 
+// Keys
+int key_release(int keysym, t_cube *cube);
+int key_press(int keysym, t_cube *cube);
+int	escape(t_cube *cube);
 // Structs
 
 
 // LIBS & MISC
-
+void *ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
 size_t	ft_strlen(const char *str);
@@ -235,13 +229,27 @@ int skip(char *s, int *i, int check);
 char	*ft_strtrim(char *s1, char *set);
 
 
+
+// Move
+void mouse_rotation(t_cube *cube);
+void moving (t_cube *cube);
+
 // Angle tools
 float added_angle(t_cube *cube);
 float	fix_angle(float angle);
 
+// Parse
+
+int cub_check(char *str);
+t_parse *parseinit(void);
+int parse_filler(int fd, t_parse *cube);
+int parsefree(t_parse *parse);
+t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx);
+int loop_render(t_cube *cube);
+int ft_mlx_start(t_mlx **mlx_address);
 
 // Frees
-int intfree(int **array, int i);
+int intfree(int ***array, int i);
 int parsefree(t_parse *parse);
 int free_cube(t_cube *cube);
 int ft_clear_display(t_mlx *mlx);
@@ -262,6 +270,7 @@ void draw_other(float top, t_cube *cube);
 void wall_display(t_cube *cube, float dist, float offset);
 
 //Raycasting
+void raycasting(t_cube *cube);
 void    wall_check(float distxy[2], t_cube *cube, float angle, float cosangled);
 int check_wall(float y, float x, t_cube *cube);
 int	check_door(int x, int y, t_cube *cube);

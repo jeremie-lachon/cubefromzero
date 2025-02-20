@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:26:24 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 15:27:52 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/20 13:45:47 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,26 @@ void	moving(t_cube *cube)
 {
 	float angle;
 
-	if (cube->input[KEY_LEFT])
+	if (cube->input[KEY_LEFT] || cube->input[MOUSE_LEFT])
 		cube->player[ANGLE] += ROTATION_SPEED;
-	if (cube->input[KEY_RIGHT])
+	if (cube->input[KEY_RIGHT] || cube->input[MOUSE_RIGHT])
 		cube->player[ANGLE] -= ROTATION_SPEED;
 	angle = added_angle(cube);
 	if (angle != -1)
 		move_player(cube, fix_angle(angle + cube->player[ANGLE]) * PI);
+}
+
+void mouse_rotation(t_cube *cube)
+{
+	mlx_mouse_get_pos(cube->mlx->mlx, cube->mlx->win, &cube->mouse_x, &cube->mouse_y);
+	if (cube->mouse_x < 0 || cube->mouse_x > WIN_W || cube->mouse_y < 0 || cube->mouse_y > WIN_H)
+		cube->mouse_x = HALF_WIDTH;
+	if (cube->mouse_x > HALF_WIDTH + 150)
+		cube->input[MOUSE_LEFT] = 1;
+	else
+		cube->input[MOUSE_LEFT] = 0;
+	if (cube->mouse_x < HALF_WIDTH - 150)
+		cube->input[MOUSE_RIGHT] = 1;
+	else
+		cube->input[MOUSE_RIGHT] = 0;
 }

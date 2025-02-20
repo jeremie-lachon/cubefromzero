@@ -6,22 +6,23 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:01:45 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 17:34:52 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/20 11:48:29 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int intfree(int **array, int i)
+int intfree(int ***array, int i)
 {
 	int j;
 
-	if (!array)
+	if (!*array)
 		return (1);
 	j = 0;
 	while (j < i)
-		free(array[j++]);
-	free(array);
+		free((*array)[j++]);
+	free(*array);
+	*array = 0;
 	return (0);
 }
 

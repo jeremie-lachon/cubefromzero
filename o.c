@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 23:03:04 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/20 13:45:50 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,9 +234,9 @@ int mapcheckandstock(t_list *list, t_parse *map)
 	{
 		map->map[i] = calloc(sizeof(int), map->width);
 		if (!map->map[i])
-			return (listfree(list), intfree(map->map, i), 1);
+			return (listfree(list), intfree(&map->map, i), 1);
 		if (fillmap(tmp, map, i))
-			return (listfree(list), intfree(map->map, i), 1);
+			return (listfree(list), intfree(&map->map, i + 1), 1);
 		tmp = tmp->next;
 		i++;
 	}
@@ -533,20 +533,7 @@ int ft_mlx_start(t_mlx **mlx_address)
 	return (0);
 }
 
-void mouse_rotation(t_cube *cube)
-{
-	mlx_mouse_get_pos(cube->mlx->mlx, cube->mlx->win, &cube->mouse_x, &cube->mouse_y);
-	if (cube->mouse_x < 0 || cube->mouse_x > WIN_W || cube->mouse_y < 0 || cube->mouse_y > WIN_H)
-		cube->mouse_x = HALF_WIDTH;
-	if (cube->mouse_x > HALF_WIDTH + 150)
-		cube->input[MOUSE_LEFT] = 1;
-	else
-		cube->input[MOUSE_LEFT] = 0;
-	if (cube->mouse_x < HALF_WIDTH - 150)
-		cube->input[MOUSE_RIGHT] = 1;
-	else
-		cube->input[MOUSE_RIGHT] = 0;
-}
+
 
 void draw_map_line(t_cube *cube, int x)
 {
@@ -594,62 +581,5 @@ int loop_render(t_cube *cube)
 	mlx_put_image_to_window(cube->mlx->mlx, cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
 	moving(cube);
 	mouse_rotation(cube);
-	return (0);
-}
-
-int main(int ac, char **av)
-{
-	t_parse *parse;
-	t_cube *cube;
-	t_mlx *mlx;
-	int fd;
-
-	if (ac != 2)
-		return (write(1, "Error\nWrong number of arguments.\n", 33), 1);
-	if (cub_check(av[1]))
-		return (write(1, "Error\nMap is not using .cub extension.\n", 39), 1);
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-		return (perror("Error\n"), 1);
-	parse = parseinit();
-	if (!parse || parse_filler(fd, parse))
-		return (perror("Error\n"), parsefree(parse), 1);
-	mlx = 0;
-	if (ft_mlx_start(&mlx))
-		return (perror("Error\n"), free(mlx), parsefree(parse), 1);
-	cube = parse_to_cube(parse, mlx);
-	if (!cube)
-		return (1);
-
-	int h, w;
-	// Partie size map
-	if (cube->data.map_w > cube->data.map_h)
-	{
-		h = 20;
-		w = 10;
-	}
-	else if (cube->data.map_w < cube->data.map_h)
-	{
-		w = 20;
-		h = 10;
-	}
-	else
-	{
-		w = 20;
-		h = 10;
-	}
-	cube->minimap_w = (cube->data.map_w) * w;
-	cube->minimap_h = cube->data.map_h * h;
-
-	mlx_hook(cube->mlx->win, KeyPress, KeyPressMask, &key_press, cube);
-	mlx_hook(cube->mlx->win, KeyRelease, KeyReleaseMask, &key_release, cube);
-	mlx_hook(cube->mlx->win, 17, 0, &escape, cube);
-	mlx_loop_hook(cube->mlx->mlx, &loop_render, cube);
-
-	mlx_loop(cube->mlx->mlx);
-
-	// printf("NO:%s:, SO:%s:, EA:%s:, WE:%s:\n", parse->textures[NO], parse->textures[SO], parse->textures[EA], parse->textures[WE]);
-	// printf("F %d:%d:%d C %d:%d:%d \n", (parse->F >> 16) & 0xFF, (parse->F >> 8) & 0xFF, parse->F & 0xFF, parse->C >> 16 & 255, parse->C >> 8 & 255, parse->C & 255);
-	free_cube(cube);
 	return (0);
 }

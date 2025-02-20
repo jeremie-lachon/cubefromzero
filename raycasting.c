@@ -6,18 +6,11 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 16:51:41 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/20 11:45:24 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-float ft_min(float x, float y)
-{
-	if (x > y)
-		return (y);
-	return (x);
-}
 
 void raycasting(t_cube *cube)
 {
