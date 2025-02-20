@@ -263,7 +263,7 @@ int maxsize(t_list *list);
 
 //Draw
 void display_pix(t_img_data *img, int x, int y, int color);
-void ft_putpixel(int ray, int i, t_cube *cube, int color, int flag);
+void ft_putpixel(int i, t_cube *cube, int color, int flag);
 void draw_wall(float top_pixel, t_cube *cube, float offset);
 void draw_wall_other(t_cube *cube, float pixel, float offset, int i);
 void draw_other(float top, t_cube *cube);
