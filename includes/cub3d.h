@@ -244,13 +244,10 @@ float added_angle(t_cube *cube);
 float	fix_angle(float angle);
 
 // Parse
-
-int cub_check(char *str);
+int imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse);
 t_parse *parseinit(void);
 int parse_filler(int fd, t_parse *cube);
-int parsefree(t_parse *parse);
 t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx);
-int loop_render(t_cube *cube);
 int ft_mlx_start(t_mlx **mlx_address);
 
 // Frees

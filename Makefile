@@ -16,11 +16,13 @@ GNL_DIR = -I$(UTILS_DIR)gnl/
 
 SRC_GNL = get_next_line.c get_next_line_utils.c
 
-SRC_PARSE = o.c main.c for_DARKO.c
+SRC_PARSE = main.c
 
 SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c
 
-SRC_PARSING = check_map.c init.c
+SRC_PARSING = check_map.c  filler.c  init.c map_tools.c \
+				mlx_starter.c  parse_to_cube.c check_map.o  frees.c \
+				init.o  misc.c parse_init.c
 
 SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c minimap.c raycasting.c
 SRC = main.c done.c raycasting.c
@@ -31,12 +33,12 @@ DIR_EXEC = exec/
 DIR_LIB = lib/
 DIR_PARSING = parsing/
 
-#DEP = $(SRC:.c=.d)
+
 OBJ_E = $(addprefix $(DIR_EXEC), $(SRC_EXEC:.c=.o))
 OBJ_G = $(addprefix $(DIR_GNL), $(SRC_GNL:.c=.o))
 OBJ_L = $(addprefix $(DIR_LIB), $(SRC_LIB:.c=.o))
 OBJ_PARSING = $(addprefix $(DIR_PARSING), $(SRC_PARSING:.c=.o))
-
+#DEP = $(OBJ_PARSING:.c=.d)
 OBJ_P = $(SRC_PARSE:.c=.o)
 OBJ = $(SRC:.c=.o)
 

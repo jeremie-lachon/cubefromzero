@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:02:35 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 13:42:46 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 15:31:31 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static int checksides(t_parse *parse, int i, int j)
 		return (1);
 	return (0);
 }
+
+
 
 int checkmap(t_parse *parse)
 {

@@ -12,7 +12,26 @@
 
 #include "cub3d.h"
 
-int	basic_checks(int ac, char **av, int *fd)
+static int cub_check(char *str)
+{
+	int i;
+
+	i = strlen(str);
+	if (i < 5)
+		return (1);
+	i--;
+	if (str[i] != 'b')
+		return (1);
+	if (str[i - 1] != 'u')
+		return (1);
+	if (str[i - 2] != 'c')
+		return (1);
+	if (str[i - 3] != '.')
+		return (1);
+	return (0);
+}
+
+static int	basic_checks(int ac, char **av, int *fd)
 {
 	if (ac != 2)
 		return (write(1, "Error\nWrong number of arguments.\n", 33), 1);
@@ -26,7 +45,7 @@ int	basic_checks(int ac, char **av, int *fd)
 	return (0);
 }
 
-int	init(t_parse *parse, int fd, t_mlx **mlx, t_cube **cube)
+static int	init(t_parse *parse, int fd, t_mlx **mlx, t_cube **cube)
 {
 	parse = parseinit();
 	if (!parse)
@@ -39,6 +58,31 @@ int	init(t_parse *parse, int fd, t_mlx **mlx, t_cube **cube)
 	*cube = parse_to_cube(parse, *mlx);
 	if (!*cube)
 		return (1);
+	return (0);
+}
+
+static int loop_render(t_cube *cube)
+{
+	static int i;
+	struct timeval time;
+
+	if (!i)
+	{
+		cube->mlx->image = cube->mlx->img1;
+		i++;
+	}
+	else
+	{
+		cube->mlx->image = cube->mlx->img2;
+		i--;
+	}
+	gettimeofday(&time, NULL);
+	cube->frame = time.tv_sec % 4;
+	cube->player[ANGLE] = fix_angle(cube->player[ANGLE]);
+	raycasting(cube);
+	mlx_put_image_to_window(cube->mlx->mlx, cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
+	moving(cube);
+	mouse_rotation(cube);
 	return (0);
 }
 
