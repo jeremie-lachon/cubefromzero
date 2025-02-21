@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:02:35 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 15:30:35 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 09:49:23 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 static int check_final_elements(t_parse *parse)
 {
 	if (!parse->textures[NO] || !parse->textures[EA] || !parse->textures[WE])
-		return (1);
+		return (printf("Error\nMissing basic info\n"), 1);
 	if (!parse->textures[SO] || parse->C == -1 || parse->F == -1)
-		return (1);
+		return (printf("Error\nMissing basic info\n"), 1);
 	return (0);
 }
 
@@ -48,9 +48,9 @@ static int check_elements(t_parse *parse)
 		i++;
 	}
 	if (!parse->textures[SP] && spritedoor[0])
-		return (1);
+		return (printf("Error\nMissing sprite textures\n"), 1);
 	if (!parse->textures[DO] && spritedoor[1])
-		return (1);
+		return (printf("Error\nMissing door texture"), 1);
 	return (check_final_elements(parse));
 }
 
@@ -86,7 +86,7 @@ int checkmap(t_parse *parse)
 		{
 			if (parse->map[i][j] == SPACE || parse->map[i][j] == DOOR)
 				if (checksides(parse, i, j))
-					return (1);
+					return (printf("Error\nMap not closed\n"), 1);
 			j++;
 		}
 		i++;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:43:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 17:31:31 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 09:51:01 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,12 @@ static void	minimap_display(t_cube *cube)
 		draw_pixel_map(i, cube, pos_y, pos_x);
 		i++;
 		if (i % size_h == 0 && pos_y < cube->data.map_h - 1)
+		{
 			pos_y++;
+			printf("\n");
+		}
 	}
+	printf("\n");
 	givemeplayer(cube, size_w, size_h);
 }
 

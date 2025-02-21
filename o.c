@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 18:30:29 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 09:57:39 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,19 @@ int function(char *s)
 	i = 1;
 	if (skip(s, &i, 0) || !s[i])
 		return (-1);
-	tmp = atoi(s + i);
+	tmp = ft_atoi(s + i);
 	if (tmp < 0 || tmp > 255)
 		return (-1);
 	ret = tmp << 16;
 	if (skip(s, &i, 1) != 1 || !s[i])
 		return (-1);
-	tmp = atoi(s + i);
+	tmp = ft_atoi(s + i);
 	if (tmp < 0 || tmp > 255)
 		return (-1);
 	ret |= tmp << 8;
 	if (skip(s, &i, 1) != 1 || !s[i])
 		return (-1);
-	tmp = atoi(s + i);
+	tmp = ft_atoi(s + i);
 	if (tmp < 0 || tmp > 255)
 		return (-1);
 	ret |= tmp;
@@ -113,7 +113,7 @@ int fillmap(t_list *node, t_parse *parse, int i)
 		else if (str[j] == ' ')
 			parse->map[i][j] = OUT;
 		else
-			return (1);
+			return (printf("Error\nIncorrect map information\n"), 1);
 		j++;
 	}
 	while (j < parse->width)
@@ -147,17 +147,17 @@ int mapcheckandstock(t_list *list, t_parse *map)
 	t_list *tmp;
 
 	map->height = listsize(list);
-	map->map = calloc(sizeof(int *), map->height);
+	map->map = ft_calloc(sizeof(int *), map->height);
 	if (!map->map)
-		return (listfree(list), 1);
+		return (perror("Error\n"), listfree(list), 1);
 	map->width = maxsize(list) - 1;
 	i = 0;
 	tmp = list;
 	while (i < map->height)
 	{
-		map->map[i] = calloc(sizeof(int), map->width);
+		map->map[i] = ft_calloc(sizeof(int), map->width);
 		if (!map->map[i])
-			return (listfree(list), intfree(&map->map, i), 1);
+			return (perror("Error\n"), listfree(list), intfree(&map->map, i), 1);
 		if (fillmap(tmp, map, i))
 			return (listfree(list), intfree(&map->map, i + 1), 1);
 		tmp = tmp->next;
@@ -200,7 +200,7 @@ int mapper(int fd, t_parse *parse, char *str)
 		listaddfront(&list, new);
 	}
 	if (str)
-		return (free(str), listfree(list), 1);
+		return (printf("Error\nInformation after map\n"), free(str), listfree(list), 1);
 	if (mapcheckandstock(list, parse))
 		return (free(str), 1);
 	return (free(str), 0);
@@ -231,7 +231,7 @@ int parse_filler(int fd, t_parse *cube)
 		check = parse_filler2(buff, cube);
 	}
 	if (check == 1)
-		return (gnlfree(fd), 1);
+		return (printf("Error\nMissing information\n"), gnlfree(fd), 1);
 	if (mapper(fd, cube, buff))
 		return (gnlfree(fd), 1);
 	return (gnlfree(fd), 0);
@@ -260,12 +260,12 @@ t_parse *parseinit(void)
 {
 	t_parse *parse;
 
-	parse = calloc(sizeof(t_parse), 1);
+	parse = ft_calloc(sizeof(t_parse), 1);
 	if (!parse)
-		return (0);
-	parse->textures = calloc(sizeof(char *), 6);
+		return (perror("Error\n"), NULL);
+	parse->textures = ft_calloc(sizeof(char *), 6);
 	if (!parse->textures)
-		return (free(parse), NULL);
+		return (perror("Error\n"), free(parse), NULL);
 	parse->C = -1;
 	parse->F = -1;
 	return (parse);
@@ -334,12 +334,12 @@ static t_cube *ft_cube_init(void)
 	i = 0;
 	cube = ft_calloc(sizeof(t_cube), 1);
 	if (!cube)
-		return (0);
+		return (perror("Error\n"), NULL);
 	while (i < 5)
 	{
 		cube->texture[i] = ft_calloc(sizeof(t_img_data), 1);
 		if (!cube->texture[i++])
-			return (freecubetext(cube), free(cube), NULL);
+			return (perror("Error\n"), freecubetext(cube), free(cube), NULL);
 	}
 	return (cube);
 }
@@ -350,7 +350,7 @@ t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
 
 	cube = ft_cube_init();
 	if (!cube)
-		return (perror("Error\n"), parsefree(parse), ft_clear_display(mlx), NULL);
+		return (parsefree(parse), ft_clear_display(mlx), NULL);
 	cube->mlx = mlx;
 	cube->data.map = parse->map;
 	parse->map = 0;
@@ -363,9 +363,9 @@ t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
 	cube->player[PLAYER_Y] = parse->player[PLAYER_Y];
 	cube->player[ANGLE] = parse->player[ANGLE];
 	if (fillsides(cube, parse, cube->mlx))
-		return (perror("Error\n"), free_cube(cube), parsefree(parse), NULL);
+		return (printf("Error\nProblem converting wall/door images to mlx_img"), free_cube(cube), parsefree(parse), NULL);
 	if (fillsprite(parse, cube, cube->mlx))
-		return (freetexts(cube), perror("Error\n"), free_cube(cube), parsefree(parse), NULL);
+		return (freetexts(cube), printf("Error\nProblem converting sprite images to mlx_img"), free_cube(cube), parsefree(parse), NULL);
 	return (parsefree(parse), cube);
 }
 

@@ -27,11 +27,13 @@ int	basic_checks(int ac, char **av, int *fd)
 int	init(t_parse *parse, int fd, t_mlx **mlx, t_cube **cube)
 {
 	parse = parseinit();
-	if (!parse || parse_filler(fd, parse))
-		return (perror("Error\n"), parsefree(parse), 1);
+	if (!parse)
+		return (parsefree(parse), 1);
+	if (parse_filler(fd, parse))
+		return (parsefree(parse), 1);
 	*mlx = 0;
 	if (ft_mlx_start(mlx))
-		return (perror("Error\n"), free(*mlx), parsefree(parse), 1);
+		return (printf("Error\nProblem initialising mlx structs\n"), free(*mlx), parsefree(parse), 1);
 	*cube = parse_to_cube(parse, *mlx);
 	if (!*cube)
 		return (1);

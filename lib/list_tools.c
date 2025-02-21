@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:59:39 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 13:00:13 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 09:34:31 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_list *listnew(void *data)
 
 	new = malloc(sizeof(t_list));
 	if (!new)
-		return (0);
+		return (perror("Error\n"), NULL);
 	new->data = data;
 	new->next = 0;
 	return (new);

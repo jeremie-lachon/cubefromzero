@@ -222,6 +222,7 @@ void *ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
 size_t	ft_strlen(const char *str);
+int	ft_atoi(const char *nptr);
 
 char *custom_read(int fd, int check);
 char *ft_strchr(const char *s, int c);

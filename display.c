@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:43:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 16:04:41 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 07:00:54 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,15 @@ static void	frame_setter(t_cube *cube)
 static void	draw_pixel_map(int i, t_cube *cube, int pos_y, int pos_x)
 {
 	if (cube->data.map[pos_y][pos_x] == WALL)
-		ft_putpixel(cube->ray.index, i, cube, 0x1e17fb, 0);
+		ft_putpixel(i, cube, 0x1e17fb, 0);
 	else if (cube->data.map[pos_y][pos_x] == SPACE)
-		ft_putpixel(cube->ray.index, i, cube, 0xffffff, 0);
+		ft_putpixel(i, cube, 0xffffff, 0);
 	else if (cube->data.map[pos_y][pos_x] == SPRITE)
-		ft_putpixel(cube->ray.index, i, cube, 0x00ff00, 0);
+		ft_putpixel(i, cube, 0x00ff00, 0);
 	else if (cube->data.map[pos_y][pos_x] == DOOR)
-		ft_putpixel(cube->ray.index, i, cube, 0xA04000, 0);
+		ft_putpixel(i, cube, 0xA04000, 0);
 	else
-		ft_putpixel(cube->ray.index, i, cube, 0x000000, 0);
+		ft_putpixel(i, cube, 0x000000, 0);
 }
 
 static void	minimap_display(t_cube *cube)
