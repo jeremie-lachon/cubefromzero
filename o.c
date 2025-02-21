@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 13:16:50 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 13:43:57 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ int mapcheckandstock(t_list *list, t_parse *map)
 	map->map = ft_calloc(sizeof(int *), map->height);
 	if (!map->map)
 		return (perror("Error\n"), listfree(list), 1);
-	map->width = maxsize(list) - 1;
+	map->width = maxsize(list);
 	i = 0;
 	tmp = list;
 	while (i < map->height)

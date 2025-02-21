@@ -35,6 +35,7 @@
 # define MAP_W 190
 # define MAP_H 90
 # define MM_SIZE 25
+# define MM_MAXSIZE MM_SIZE * 9
 
 // enum texture
 // {

@@ -72,7 +72,7 @@ fclean: clean
 re: fclean all
 
 gdb: fclean parse
-	gdb --command=gdbcmds --args ./parse test.cub
+	gdb --command=gdbcmds ./parse
 
 launch: re
 	clear

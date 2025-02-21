@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:26:13 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 14:02:59 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 13:30:38 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_putpixel(int i, t_cube *cube, int color, int flag)
 		if (cube->ray.index < 0 || cube->ray.index >= WIN_W || \
 			i > WIN_H || i < 0)
 			return ;
-		if (cube->ray.index <= cube->minimap_w && i <= cube->minimap_h)
+		if (cube->ray.index <= MM_MAXSIZE && i <= MM_MAXSIZE)
 			return ;
 	}
 	display_pix(cube->mlx->image, cube->ray.index, i, color);
