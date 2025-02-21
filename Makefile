@@ -16,13 +16,13 @@ GNL_DIR = -I$(UTILS_DIR)gnl/
 
 SRC_GNL = get_next_line.c get_next_line_utils.c
 
-SRC_PARSE = o.c  raycasting.c  main.c
+SRC_PARSE = o.c main.c
 
 SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c
 
 SRC_PARSING = check_map.c init.c
 
-SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c minimap.c
+SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c minimap.c raycasting.c
 SRC = main.c done.c raycasting.c
 # SRC = essai.c
 
