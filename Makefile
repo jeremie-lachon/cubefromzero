@@ -22,7 +22,7 @@ SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_st
 
 SRC_PARSING = check_map.c init.c
 
-SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c
+SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c minimap.c
 SRC = main.c done.c raycasting.c
 # SRC = essai.c
 

@@ -34,6 +34,7 @@
 # define ADJACENT (HALF_WIDTH / tanf(FOV_DEGREE * PI))
 # define MAP_W 190
 # define MAP_H 90
+# define MM_SIZE 25
 
 // enum texture
 // {
@@ -271,6 +272,8 @@ void draw_wall(float top_pixel, t_cube *cube, float offset);
 void draw_wall_other(t_cube *cube, float pixel, float offset, int i);
 void draw_other(float top, t_cube *cube);
 void wall_display(t_cube *cube, float dist, float offset);
+void	minimap_display(t_cube *cube);
+
 
 //Raycasting
 void raycasting(t_cube *cube);

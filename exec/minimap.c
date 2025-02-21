@@ -6,85 +6,81 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 08:59:50 by snek              #+#    #+#             */
-/*   Updated: 2025/02/21 09:50:57 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 12:34:03 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	givemeplayer(t_cube *cube, int size_w, int size_h)
-{
+static void	draw_pixel_map(int x, int y, t_cube *cube, int sprite)
+{	
 	int	i;
-	int	y;
+	int	j;
 
-	i = -4;
-	while (i != 4)
+	i = 0;
+	if (sprite == SPACE)
+		sprite = 0xffffff;
+	else if (sprite == WALL)
+		sprite = 0x1e17fb;
+	else if (sprite == OUT)
+		sprite = 0xffffff;
+	else if (sprite == DOOR)
+		sprite = 0xA04000;
+	else
+		sprite = 0x00ff00;
+	while (i < MM_SIZE)
 	{
-		y = -4;
-		while (y != 4)
+		j = 0;
+		while (j < MM_SIZE)
 		{
-			display_pix(cube->mlx->image, \
-				(cube->player[PLAYER_X] * size_w) + i, \
-				(cube->player[PLAYER_Y] * size_h) + y, 0x0);
-			y++;
+			display_pix(cube->mlx->image, x + i, y + j, sprite);
+			j++;
 		}
 		i++;
 	}
-	display_pix(cube->mlx->image, (cube->player[PLAYER_X] * size_w), \
-		(cube->player[PLAYER_Y] * size_h), 0x0);
 }
 
-static void	draw_pixel_map(int i, t_cube *cube, int pos_y, int pos_x)
-{	
-	(void)i;
-	// printf("Y %d X %x\n", pos_y, pos_x);
-	if (cube->data.map[pos_y][pos_x] == WALL)
-		printf("*");
-
-		// ft_putpixel(i, cube, 0x1e17fb, 0);
-	else if (cube->data.map[pos_y][pos_x] == SPACE)
-		printf("-");
-	// ft_putpixel(i, cube, 0xffffff, 0);
-	else if (cube->data.map[pos_y][pos_x] == SPRITE)
-		printf(".");
-		// ft_putpixel(i, cube, 0x00ff00, 0);
-	else if (cube->data.map[pos_y][pos_x] == DOOR)
-		printf("+");
-		// ft_putpixel(i, cube, 0xA04000, 0);
-	else
-		printf("/");
-		// ft_putpixel(i, cube, 0xffffff, 0);
-}
-
-static void	minimap_display(t_cube *cube)
+void	minimap_display(t_cube *cube)
 {
-	int	size_w;
-	int	size_h;
 	int	i;
-	int	pos_y;
-	int	pos_x;
+	int	j;
 	int	x_place;
 	int	y_place;
+	int	sprite;
+	int	x;
+	int	y;
 
-	x_place = 
 
-	size_w = cube->minimap_w / cube->data.map_w;
-	size_h = cube->minimap_h / cube->data.map_h;
+	x_place = (int)cube->player[PLAYER_X] - 2;
+	y_place = (int)cube->player[PLAYER_Y] - 2;
 	i = 0;
-	pos_y = 0;
-	pos_x = cube->ray.index / size_w;
-	// printf("Ray %d size %d\n",cube->ray.index , size_w );
-	// exit(1);
-	while (i < cube->minimap_h)
+	while (i < 10)
 	{
-		draw_pixel_map(i, cube, pos_y, pos_x);
-		i++;
-		if (i % size_h == 0 && pos_y < cube->data.map_h - 1)
+		j = 0;
+		while (j < 10)
 		{
-			pos_y++;
-			printf("\n");
+			x = x_place + i;
+			y = y_place + j;	
+			if (x < 0 || x >= cube->data.map_w)
+				sprite = OUT;
+			else if (y < 0 || y >= cube->data.map_h)
+				sprite = OUT;
+			else
+				sprite = cube->data.map[y][x];
+			draw_pixel_map(i * MM_SIZE, j * MM_SIZE, cube, sprite);
+			j++;
 		}
+		i++;
 	}
-	printf("\n");
-	givemeplayer(cube, size_w, size_h);
+	i = MM_SIZE * 4;
+	while (i < MM_SIZE * 5)
+	{
+		j = MM_SIZE * 4;
+		while (j < MM_SIZE * 5)
+		{
+			display_pix(cube->mlx->image, i, j, 0);
+			j++;
+		}
+		i++;
+	}
 }
