@@ -217,7 +217,7 @@ int key_release(int keysym, t_cube *cube);
 int key_press(int keysym, t_cube *cube);
 int	escape(t_cube *cube);
 // Structs
-
+int parse_filler2(char *buf, t_parse *cube);
 
 // LIBS & MISC
 void *ft_calloc(size_t nmemb, size_t size);

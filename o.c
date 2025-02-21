@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 13:43:57 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 14:18:40 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,37 +43,37 @@ int function(char *s)
 	ret |= tmp;
 	return (ret);
 }
-int parse_filler2(char *buf, t_parse *cube)
-{
-	char *tmp;
+// int parse_filler2(char *buf, t_parse *cube)
+// {
+// 	char *tmp;
 
-	if (!buf)
-		return (1);
-	if (*buf == '\n')
-		return (free(buf), 0);
-	tmp = ft_strchr(buf, '\n');
-	if (!tmp)
-		return (1);
-	if (!strncmp("NO ", buf, 3) && !cube->textures[NO])
-		cube->textures[NO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-	else if (!strncmp("WE ", buf, 3) && !cube->textures[WE])
-		cube->textures[WE] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-	else if (!strncmp("SO ", buf, 3) && !cube->textures[SO])
-		cube->textures[SO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-	else if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
-		cube->textures[EA] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-	else if (!strncmp("F ", buf, 2) && cube->F == -1)
-		cube->F = function(buf);
-	else if (!strncmp("C ", buf, 2) && cube->C == -1)
-		cube->C = function(buf);
-	else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
-		cube->textures[DO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-	else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
-		cube->textures[SP] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
-	else
-		return (2);
-	return (free(buf), 0);
-}
+// 	if (!buf)
+// 		return (1);
+// 	if (*buf == '\n')
+// 		return (free(buf), 0);
+// 	tmp = ft_strchr(buf, '\n');
+// 	if (!tmp)
+// 		return (1);
+// 	if (!strncmp("NO ", buf, 3) && !cube->textures[NO])
+// 		cube->textures[NO] = ft_strtrim(ft_substr(buf, 	(buf), tmp - buf - 3), " \t\v\f\r\n");
+// 	else if (!strncmp("WE ", buf, 3) && !cube->textures[WE])
+// 		cube->textures[WE] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+// 	else if (!strncmp("SO ", buf, 3) && !cube->textures[SO])
+// 		cube->textures[SO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+// 	else if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
+// 		cube->textures[EA] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+// 	else if (!strncmp("F ", buf, 2) && cube->F == -1)
+// 		cube->F = function(buf);
+// 	else if (!strncmp("C ", buf, 2) && cube->C == -1)
+// 		cube->C = function(buf);
+// 	else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
+// 		cube->textures[DO] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+// 	else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
+// 		cube->textures[SP] = ft_strtrim(ft_substr(buf, settings_split(buf), tmp - buf - 3), " \t\v\f\r\n");
+// 	else
+// 		return (2);
+// 	return (free(buf), 0);
+// }
 
 void NSEW(int i, int j, char *str, t_parse *parse)
 {

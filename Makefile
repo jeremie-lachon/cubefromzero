@@ -16,7 +16,7 @@ GNL_DIR = -I$(UTILS_DIR)gnl/
 
 SRC_GNL = get_next_line.c get_next_line_utils.c
 
-SRC_PARSE = o.c main.c
+SRC_PARSE = o.c main.c for_DARKO.c
 
 SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c
 
