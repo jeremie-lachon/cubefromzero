@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:35:14 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 16:36:48 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 18:08:23 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static void	freesprite(t_img_data **sprite, int n, t_mlx *mlx)
 		return ;
 	j = 0;
 	while (j < n)
-	{
-		if (sprite[j])
-			mlx_destroy_image(mlx->mlx, sprite[j++]->img_ptr);
+	{	
+			if (sprite[j])
+				mlx_destroy_image(mlx->mlx, sprite[j++]->img_ptr);
 	}
 }
 
