@@ -6,15 +6,15 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:28:00 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 15:41:56 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:20:53 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void freetexts(t_cube *cube)
+void	freetexts(t_cube *cube)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (j < 6)
@@ -22,25 +22,27 @@ void freetexts(t_cube *cube)
 		if (j < 5 && cube->texture[j]->img_ptr)
 			mlx_destroy_image(cube->mlx->mlx, cube->texture[j]->img_ptr);
 		free(cube->texture[j]);
-
 		cube->texture[j++] = 0;
 	}
 }
 
-int imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse)
+int	imgstruct(t_cube *c, int num, t_mlx *mlx, t_parse *p)
 {
-	cube->texture[num]->img_ptr = mlx_xpm_file_to_image(mlx->mlx, parse->textures[num], &cube->texture[num]->pix_w, &cube->texture[num]->pix_h);
-	if (!cube->texture[num]->img_ptr)
-		return (freetexts(cube), 1);
-	cube->texture[num]->adress = mlx_get_data_addr(cube->texture[num]->img_ptr, &cube->texture[num]->bpp, &cube->texture[num]->size, &cube->texture[num]->endl);
-	if (!cube->texture[num]->adress)
-		return (freetexts(cube), 1);
+	c->texture[num]->img_ptr = mlx_xpm_file_to_image(mlx->mlx, \
+		p->textures[num], \
+		&c->texture[num]->pix_w, &c->texture[num]->pix_h);
+	if (!c->texture[num]->img_ptr)
+		return (freetexts(c), 1);
+	c->texture[num]->adress = mlx_get_data_addr(c->texture[num]->img_ptr, \
+	&c->texture[num]->bpp, &c->texture[num]->size, &c->texture[num]->endl);
+	if (!c->texture[num]->adress)
+		return (freetexts(c), 1);
 	return (0);
 }
 
-static t_mlx *ft_mlx_init(void)
+static t_mlx	*ft_mlx_init(void)
 {
-	t_mlx *mlx;
+	t_mlx	*mlx;
 
 	mlx = ft_calloc(sizeof(t_mlx), 1);
 	if (!mlx)
@@ -54,9 +56,16 @@ static t_mlx *ft_mlx_init(void)
 	return (mlx);
 }
 
-int ft_mlx_start(t_mlx **mlx_address)
+void	destroyer(t_mlx *mlx)
 {
-	t_mlx *mlx;
+	mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr);
+	mlx_destroy_window(mlx->mlx, mlx->win);
+	mlx_destroy_display(mlx->mlx);
+}
+
+int	ft_mlx_start(t_mlx **mlx_address)
+{
+	t_mlx	*mlx;
 
 	mlx = ft_mlx_init();
 	if (!mlx)
@@ -69,12 +78,15 @@ int ft_mlx_start(t_mlx **mlx_address)
 		return (mlx_destroy_display(mlx->mlx), 1);
 	mlx->img1->img_ptr = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
 	if (!mlx->img1)
-		return (mlx_destroy_window(mlx->mlx, mlx->win), mlx_destroy_display(mlx->mlx), 1);
-	mlx->img1->adress = mlx_get_data_addr(mlx->img1->img_ptr, &mlx->img1->bpp, &mlx->img1->size, &mlx->img1->endl);
+		return (mlx_destroy_window(mlx->mlx, mlx->win), \
+		mlx_destroy_display(mlx->mlx), 1);
+	mlx->img1->adress = mlx_get_data_addr(mlx->img1->img_ptr, \
+		&mlx->img1->bpp, &mlx->img1->size, &mlx->img1->endl);
 	mlx->img2->img_ptr = mlx_new_image(mlx->mlx, WIN_W, WIN_H);
 	if (!mlx->img2)
-		return (mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr), mlx_destroy_window(mlx->mlx, mlx->win), mlx_destroy_display(mlx->mlx), 1);
-	mlx->img2->adress = mlx_get_data_addr(mlx->img2->img_ptr, &mlx->img2->bpp, &mlx->img2->size, &mlx->img2->endl);
+		return (destroyer(mlx), 1);
+	mlx->img2->adress = mlx_get_data_addr(mlx->img2->img_ptr, \
+		&mlx->img2->bpp, &mlx->img2->size, &mlx->img2->endl);
 	*mlx_address = mlx;
 	return (0);
 }

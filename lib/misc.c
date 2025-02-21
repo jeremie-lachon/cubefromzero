@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   misc.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 19:18:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 14:18:01 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 16:46:46 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-char *custom_read(int fd, int check)
+char	*custom_read(int fd, int check)
 {
-	char *buf;
+	char	*buf;
 
 	while (1)
 	{
@@ -27,10 +27,10 @@ char *custom_read(int fd, int check)
 	}
 }
 
-char *ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	char *ptr;
-	int i;
+	char	*ptr;
+	int		i;
 
 	i = 0;
 	c = c % 256;
@@ -49,11 +49,11 @@ char *ft_strchr(const char *s, int c)
 	return (ptr);
 }
 
-char *ft_substr(char const *s, int start, int len)
+char	*ft_substr(char const *s, int start, int len)
 {
-	int i;
-	int j;
-	char *copy;
+	int		i;
+	int		j;
+	char	*copy;
 
 	if (start < 0)
 		return (0);
@@ -65,26 +65,22 @@ char *ft_substr(char const *s, int start, int len)
 		copy = (char *)malloc(sizeof(char) * (strlen(s + start) + 1));
 	if (!copy)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (s[i])
+	i = -1;
+	j = -1;
+	while (s[++i])
 	{
-		if (i >= start && j < len)
-		{
+		if (i >= start && ++j < len)
 			copy[j] = s[i];
-			j++;
-		}
-		i++;
 	}
 	copy[j] = 0;
 	return (copy);
 }
 
-int sett(char *str)
+int	sett(char *str)
 {
-	int i;
-	i = 2;
+	int	i;
 
+	i = 2;
 	while (str[i])
 	{
 		if (!ft_strchr(" \t\v\f\r", str[i]))
@@ -94,9 +90,9 @@ int sett(char *str)
 	return (-1);
 }
 
-int skip(char *s, int *i, int check)
+int	skip(char *s, int *i, int check)
 {
-	int com;
+	int	com;
 
 	com = 0;
 	while (ft_strchr(" \t\v\f\r", s[*i]))

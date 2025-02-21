@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:26:24 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 13:54:32 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:21:13 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,12 @@ void	mouse_rotation(t_cube *cube)
 		&cube->mouse_x, &cube->mouse_y);
 	if (cube->mouse_x < 0 || cube->mouse_x > WIN_W || \
 		cube->mouse_y < 0 || cube->mouse_y > WIN_H)
-		cube->mouse_x = HALF_WIDTH;
-	if (cube->mouse_x > HALF_WIDTH + 150)
+		cube->mouse_x = (WIN_W / 2);
+	if (cube->mouse_x > (WIN_W / 2) + 150)
 		cube->input[MOUSE_LEFT] = 1;
 	else
 		cube->input[MOUSE_LEFT] = 0;
-	if (cube->mouse_x < HALF_WIDTH - 150)
+	if (cube->mouse_x < (WIN_W / 2) - 150)
 		cube->input[MOUSE_RIGHT] = 1;
 	else
 		cube->input[MOUSE_RIGHT] = 0;

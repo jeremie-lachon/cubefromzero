@@ -6,16 +6,17 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:21:50 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 15:38:43 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:13:39 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void printmap(t_parse *parse)
+void	printmap(t_parse *parse)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
+
 	i = parse->height - 1;
 	while (i >= 0)
 	{
@@ -30,9 +31,9 @@ void printmap(t_parse *parse)
 	}
 }
 
-static void gnlfree(int fd)
+static void	gnlfree(int fd)
 {
-	char *buf;
+	char	*buf;
 
 	buf = get_next_line(fd);
 	while (buf)
@@ -43,10 +44,10 @@ static void gnlfree(int fd)
 	close(fd);
 }
 
-int parse_filler(int fd, t_parse *cube)
+int	parse_filler(int fd, t_parse *cube)
 {
-	char *buff;
-	int check;
+	char	*buff;
+	int		check;
 
 	buff = custom_read(fd, 0);
 	check = parse_filler2(buff, cube);

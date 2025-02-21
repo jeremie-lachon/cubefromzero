@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:26:13 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 13:30:38 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 17:21:56 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_putpixel(int i, t_cube *cube, int color, int flag)
 		if (cube->ray.index < 0 || cube->ray.index >= WIN_W || \
 			i > WIN_H || i < 0)
 			return ;
-		if (cube->ray.index <= MM_MAXSIZE && i <= MM_MAXSIZE)
+		if (cube->ray.index <= (MM_SIZE * 9) && i <= (MM_SIZE * 9))
 			return ;
 	}
 	display_pix(cube->mlx->image, cube->ray.index, i, color);
@@ -40,14 +40,14 @@ void	draw_other(float top, t_cube *cube)
 	i = 0;
 	while (i < top)
 	{
-		ft_putpixel(i, cube, cube->data.FC[1], 1);
+		ft_putpixel(i, cube, cube->data.fc[1], 1);
 		i++;
 	}
 	if (i >= 1)
 		i--;
 	while (i < WIN_H)
 	{
-		ft_putpixel(i, cube, cube->data.FC[0], 1);
+		ft_putpixel(i, cube, cube->data.fc[0], 1);
 		i++;
 	}
 }

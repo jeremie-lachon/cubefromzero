@@ -21,11 +21,11 @@ SRC_PARSE = main.c
 SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c
 
 SRC_PARSING = check_map.c  filler.c  init.c map_tools.c \
-				mlx_starter.c  parse_to_cube.c  frees.c \
+				mlx_starter.c  parse_to_cube.c \
 				misc.c parse_init.c
 
 SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c minimap.c raycasting.c
-SRC = main.c done.c raycasting.c
+SRC = main.c
 # SRC = essai.c
 
 DIR_GNL = utils/gnl/
@@ -69,7 +69,7 @@ clean:
 
 fclean: clean
 #	$(MAKE) -C $(PRINTF_DIR) fclean
-	rm -f $(NAME) parse
+	rm -f $(NAME) parse $(DEP)
 
 re: fclean all
 

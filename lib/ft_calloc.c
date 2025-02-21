@@ -6,16 +6,16 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 19:16:22 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 19:35:21 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:43:46 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void *ft_calloc(size_t nmemb, size_t size)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	size_t i;
-	unsigned char *new;
+	size_t			i;
+	unsigned char	*new;
 
 	i = nmemb * size;
 	if (i == 0)

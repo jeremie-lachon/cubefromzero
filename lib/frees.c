@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:01:45 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 23:04:13 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 16:42:45 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int intfree(int ***array, int i)
+int	intfree(int ***array, int i)
 {
-	int j;
+	int	j;
 
 	if (!*array)
 		return (1);
@@ -26,9 +26,9 @@ int intfree(int ***array, int i)
 	return (0);
 }
 
-int parsefree(t_parse *parse)
+int	parsefree(t_parse *parse)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!parse)
@@ -50,7 +50,7 @@ int parsefree(t_parse *parse)
 	return (0);
 }
 
-int ft_clear_display(t_mlx *mlx)
+int	ft_clear_display(t_mlx *mlx)
 {
 	mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr);
 	mlx_destroy_image(mlx->mlx, mlx->img2->img_ptr);
@@ -63,31 +63,31 @@ int ft_clear_display(t_mlx *mlx)
 	return (0);
 }
 
-int free_cube(t_cube *cube)
+int	free_cube(t_cube *c)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if (!cube)
+	if (!c)
 		return (0);
 	while (i < 5)
 	{
-		if (cube->texture[i] && cube->texture[i]->img_ptr)
-			mlx_destroy_image(cube->mlx->mlx, cube->texture[i]->img_ptr);
-		free(cube->texture[i++]);
+		if (c->texture[i] && c->texture[i]->img_ptr)
+			mlx_destroy_image(c->mlx->mlx, c->texture[i]->img_ptr);
+		free(c->texture[i++]);
 	}
-	while (cube->sprite && cube->nsprite-- > 0)
+	while (c->sprite && c->nsprite-- > 0)
 	{
-		if (cube->sprite[cube->nsprite] && cube->sprite[cube->nsprite]->img_ptr)
-			mlx_destroy_image(cube->mlx->mlx, cube->sprite[cube->nsprite]->img_ptr);
-		free(cube->sprite[cube->nsprite]);
+		if (c->sprite[c->nsprite] && c->sprite[c->nsprite]->img_ptr)
+			mlx_destroy_image(c->mlx->mlx, c->sprite[c->nsprite]->img_ptr);
+		free(c->sprite[c->nsprite]);
 	}
-	free(cube->sprite);
+	free(c->sprite);
 	i = 0;
-	while (i < cube->data.map_h)
-		free(cube->data.map[i++]);
-	free(cube->data.map);
-	ft_clear_display(cube->mlx);
-	free(cube);
+	while (i < c->data.map_h)
+		free(c->data.map[i++]);
+	free(c->data.map);
+	ft_clear_display(c->mlx);
+	free(c);
 	return (0);
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   list_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:59:39 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 09:34:31 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 16:44:31 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int listfree(t_list *list)
+int	listfree(t_list *list)
 {
 	if (list)
 	{
@@ -23,16 +23,16 @@ int listfree(t_list *list)
 	return (0);
 }
 
-int listaddfront(t_list **list, t_list *new)
+int	listaddfront(t_list **list, t_list *new)
 {
 	new->next = *list;
 	*list = new;
 	return (0);
 }
 
-t_list *listnew(void *data)
+t_list	*listnew(void *data)
 {
-	t_list *new;
+	t_list	*new;
 
 	new = malloc(sizeof(t_list));
 	if (!new)
@@ -42,9 +42,9 @@ t_list *listnew(void *data)
 	return (new);
 }
 
-int listsize(t_list *list)
+int	listsize(t_list *list)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (list)
@@ -55,10 +55,10 @@ int listsize(t_list *list)
 	return (i);
 }
 
-int maxsize(t_list *list)
+int	maxsize(t_list *list)
 {
-	int maxlen;
-	int len;
+	int	maxlen;
+	int	len;
 
 	maxlen = -1;
 	while (list)

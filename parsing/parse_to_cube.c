@@ -6,15 +6,15 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:27:11 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 15:40:33 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:12:04 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void freecubetext(t_cube *cube)
+static void	freecubetext(t_cube *cube)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < 5)
@@ -24,10 +24,10 @@ static void freecubetext(t_cube *cube)
 	}
 }
 
-static t_cube *ft_cube_init(void)
+static t_cube	*ft_cube_init(void)
 {
-	t_cube *cube;
-	int i;
+	t_cube	*cube;
+	int		i;
 
 	i = 0;
 	cube = ft_calloc(sizeof(t_cube), 1);
@@ -42,7 +42,7 @@ static t_cube *ft_cube_init(void)
 	return (cube);
 }
 
-static int fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
+static int	fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 {
 	if (imgstruct(cube, NO, mlx, parse))
 		return (1);
@@ -57,9 +57,9 @@ static int fillsides(t_cube *cube, t_parse *parse, t_mlx *mlx)
 	return (0);
 }
 
-t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
+t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx)
 {
-	t_cube *cube;
+	t_cube	*cube;
 
 	cube = ft_cube_init();
 	if (!cube)
@@ -69,14 +69,17 @@ t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx)
 	parse->map = 0;
 	cube->data.map_w = parse->width;
 	cube->data.map_h = parse->height;
-	cube->data.FC[0] = parse->F;
-	cube->data.FC[1] = parse->C;
+	cube->data.fc[0] = parse->f;
+	cube->data.fc[1] = parse->c;
 	cube->player[PLAYER_X] = parse->player[PLAYER_X];
 	cube->player[PLAYER_Y] = parse->player[PLAYER_Y];
 	cube->player[ANGLE] = parse->player[ANGLE];
 	if (fillsides(cube, parse, cube->mlx))
-		return (printf("Error\nProblem converting wall/door images to mlx_img"), free_cube(cube), parsefree(parse), NULL);
+		return (printf("Error\nProblem converting wall/door images to mlx_img"), \
+		free_cube(cube), parsefree(parse), NULL);
 	if (fillsprite(parse, cube, cube->mlx))
-		return (freetexts(cube), printf("Error\nProblem converting sprite images to mlx_img"), free_cube(cube), parsefree(parse), NULL);
+		return (freetexts(cube), \
+		printf("Error\nProblem converting sprite images to mlx_img"), \
+		free_cube(cube), parsefree(parse), NULL);
 	return (parsefree(parse), cube);
 }

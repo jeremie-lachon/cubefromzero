@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:43:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 12:35:26 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 17:23:54 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ static void	frame_setter(t_cube *cube)
 	else
 	{
 		if (cube->ray.hit == DOOR)
-			cube->NSWE = DO;
-		cube->ray.texture = cube->texture[cube->NSWE];
-		cube->ray.adress = (unsigned int *)cube->texture[cube->NSWE]->adress;
+			cube->nswe = DO;
+		cube->ray.texture = cube->texture[cube->nswe];
+		cube->ray.adress = (unsigned int *)cube->texture[cube->nswe]->adress;
 	}
 }
 

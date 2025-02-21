@@ -6,11 +6,22 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 08:59:50 by snek              #+#    #+#             */
-/*   Updated: 2025/02/21 15:26:10 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:31:34 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+typedef struct s_mini
+{
+	int	i;
+	int	j;
+	int	x_place;
+	int	y_place;
+	int	sprite;
+	int	x;
+	int	y;
+}	t_mini;
 
 static void	draw_pixel_map(int x, int y, t_cube *cube, int sprite)
 {	
@@ -40,47 +51,43 @@ static void	draw_pixel_map(int x, int y, t_cube *cube, int sprite)
 	}
 }
 
+void	mini_draw(t_mini *m, t_cube *cube)
+{
+	m->x = m->x_place + m->i;
+	m->y = m->y_place + m->j;
+	if (m->x < 0 || m->x >= cube->data.map_w)
+		m->sprite = OUT;
+	else if (m->y < 0 || m->y >= cube->data.map_h)
+		m->sprite = OUT;
+	else
+		m->sprite = cube->data.map[m->y][m->x];
+	draw_pixel_map((8 - m->i) * MM_SIZE, m->j * MM_SIZE, cube, m->sprite);
+}
+
 void	minimap_display(t_cube *cube)
 {
-	int	i;
-	int	j;
-	int	x_place;
-	int	y_place;
-	int	sprite;
-	int	x;
-	int	y;
+	t_mini	m;
 
-
-	x_place = (int)cube->player[PLAYER_X] - 4;
-	y_place = (int)cube->player[PLAYER_Y] - 4;
-	i = 0;
-	while (i < 9)
+	m.x_place = (int)cube->player[PLAYER_X] - 4;
+	m.y_place = (int)cube->player[PLAYER_Y] - 4;
+	m.i = -1;
+	while (++m.i < 9)
 	{
-		j = 0;
-		while (j < 9)
+		m.j = -1;
+		while (++m.j < 9)
 		{
-			x = x_place + i;
-			y = y_place + j;	
-			if (x < 0 || x >= cube->data.map_w)
-				sprite = OUT;
-			else if (y < 0 || y >= cube->data.map_h)
-				sprite = OUT;
-			else
-				sprite = cube->data.map[y][x];
-			draw_pixel_map((8 - i) * MM_SIZE, j * MM_SIZE, cube, sprite);
-			j++;
+			mini_draw(&m, cube);
 		}
-		i++;
 	}
-	i = MM_SIZE * 4;
-	while (i < MM_SIZE * 5)
+	m.i = MM_SIZE * 4;
+	while (m.i < MM_SIZE * 5)
 	{
-		j = MM_SIZE * 4;
-		while (j < MM_SIZE * 5)
+		m.j = MM_SIZE * 4;
+		while (m.j < MM_SIZE * 5)
 		{
-			display_pix(cube->mlx->image, i, j, 0);
-			j++;
+			display_pix(cube->mlx->image, m.i, m.j, 0);
+			m.j++;
 		}
-		i++;
+		m.i++;
 	}
 }

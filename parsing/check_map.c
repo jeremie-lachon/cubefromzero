@@ -3,49 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:02:35 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 15:54:43 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 17:48:38 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-
-
-static int check_final_elements(t_parse *parse)
+static int	check_final_elements(t_parse *parse)
 {
 	if (!parse->textures[NO] || !parse->textures[EA] || !parse->textures[WE])
 		return (printf("Error\nMissing basic info\n"), 1);
-	if (!parse->textures[SO] || parse->C == -1 || parse->F == -1)
+	if (!parse->textures[SO] || parse->c == -1 || parse->f == -1)
 		return (printf("Error\nMissing basic info\n"), 1);
 	return (0);
 }
 
-static int check_elements(t_parse *parse)
+static int	check_elements(t_parse *parse)
 {
-	int spritedoor[2];
-	int i;
-	int j;
+	int	spritedoor[2];
+	int	i;
+	int	j;
 
 	if (parse->player[PLAYER_COUNT] != 1.0)
 		return (1);
 	spritedoor[0] = 0;
 	spritedoor[1] = 0;
-	i = 0;
-	while (i < parse->height)
+	i = -1;
+	while (++i < parse->height)
 	{
-		j = 0;
-		while (j < parse->width)
+		j = -1;
+		while (++j < parse->width)
 		{
 			if (parse->map[i][j] == SPRITE)
 				spritedoor[0] = 1;
 			else if (parse->map[i][j] == DOOR)
 				spritedoor[1] = 1;
-			j++;
 		}
-		i++;
 	}
 	if (!parse->textures[SP] && spritedoor[0])
 		return (printf("Error\nMissing sprite textures\n"), 1);
@@ -54,8 +50,7 @@ static int check_elements(t_parse *parse)
 	return (check_final_elements(parse));
 }
 
-
-static int checksides(t_parse *parse, int i, int j)
+static int	checksides(t_parse *parse, int i, int j)
 {
 	if (!i || i + 1 == parse->height)
 		return (1);
@@ -72,15 +67,12 @@ static int checksides(t_parse *parse, int i, int j)
 	return (0);
 }
 
-
-
-int checkmap(t_parse *parse)
+int	checkmap(t_parse *parse)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
-	printmap(parse);
 	while (i < parse->height)
 	{
 		j = 0;

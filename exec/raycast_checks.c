@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:19:55 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/20 14:08:05 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:25:15 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,17 @@ static float	setter(t_cube *cube, float angle, int flag)
 	if (flag)
 	{
 		if (angle > 0.5 && angle < 1.5)
-			cube->NSWE = WE;
+			cube->nswe = WE;
 		else
-			cube->NSWE = EA;
+			cube->nswe = EA;
 		return (cube->ray.h_y - floorf(cube->ray.h_y));
 	}
 	else
 	{
 		if (angle > 1)
-			cube->NSWE = NO;
+			cube->nswe = NO;
 		else
-			cube->NSWE = SO;
+			cube->nswe = SO;
 		return (cube->ray.v_x - floorf(cube->ray.v_x));
 	}
 }
@@ -85,7 +85,7 @@ void	wall_check(float distxy[2], t_cube *cube, float angle, float cosangled)
 		offset = setter(cube, angle, 0);
 		cube->ray.hit = cube->ray.hitx;
 	}
-	if (cube->NSWE == WE || cube->NSWE == NO)
+	if (cube->nswe == WE || cube->nswe == NO)
 		offset = 1 - offset;
 	wall_display(cube, dist * cosangled, offset);
 }

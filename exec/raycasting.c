@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 13:16:33 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 17:27:24 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,18 @@ static void	rays(t_rayparam *r, t_cube *cube)
 
 static void	angle_setter(t_rayparam *r, t_cube *cube, float *aux_var)
 {
-	if (cube->ray.index < HALF_WIDTH)
+	if (cube->ray.index < (WIN_W / 2))
 	{
-		*aux_var = atanf((HALF_WIDTH - (float)cube->ray.index) / ADJACENT);
-		r->angle = FOV_DEGREE * PI - *aux_var;
-		r->angle = fix_angle(cube->player[ANGLE] - FOV_DEGREE + r->angle / PI);
+		*aux_var = atanf(((WIN_W / 2) - (float)cube->ray.index) / \
+		((WIN_W / 2) / tanf((FOV_W / 360.F) * PI)));
+		r->angle = (FOV_W / 360.F) * PI - *aux_var;
+		r->angle = fix_angle(cube->player[ANGLE] - \
+			(FOV_W / 360.F) + r->angle / PI);
 	}
 	else
 	{
-		*aux_var = atanf(((float)cube->ray.index - HALF_WIDTH) / ADJACENT);
+		*aux_var = atanf(((float)cube->ray.index - (WIN_W / 2)) / \
+		((WIN_W / 2) / tanf((FOV_W / 360.F) * PI)));
 		r->angle = fix_angle(cube->player[ANGLE] + *aux_var / PI);
 	}
 	r->fixed_angle[1] = cosf(*aux_var);
@@ -49,7 +52,7 @@ void	raycasting(t_cube *cube)
 	float		aux_var;
 
 	cube->ray.index = 0;
-	r.angle = fix_angle(cube->player[ANGLE] - FOV_DEGREE);
+	r.angle = fix_angle(cube->player[ANGLE] - (FOV_W / 360.F));
 	while (cube->ray.index < WIN_W)
 	{
 		angle_setter(&r, cube, &aux_var);

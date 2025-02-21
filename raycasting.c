@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 18:36:44 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 13:28:40 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 17:21:40 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ void raycasting(t_cube *cube)
     float angle;
 	float temp[2];
 	cube->ray.index = 0;
-    angle = fix_angle(cube->player[ANGLE] - FOV_DEGREE);
+    angle = fix_angle(cube->player[ANGLE] - (FOV_W / 360.F));
     while(cube->ray.index < WIN_W)
     {
         float aux_var;
-        if (cube->ray.index < HALF_WIDTH)
+        if (cube->ray.index < (WIN_W / 2))
         {
-            aux_var = atanf((HALF_WIDTH - (float)cube->ray.index) / ADJACENT);
-            angle = FOV_DEGREE * PI - aux_var;
-            angle = fix_angle(cube->player[ANGLE] - FOV_DEGREE +  angle / PI);
+            aux_var = atanf(((WIN_W / 2) - (float)cube->ray.index) / ((WIN_W / 2) / tanf((FOV_W / 360.F) * PI)));
+            angle = (FOV_W / 360.F) * PI - aux_var;
+            angle = fix_angle(cube->player[ANGLE] - (FOV_W / 360.F) +  angle / PI);
         }
         else
         {
-            aux_var = atanf(((float)cube->ray.index - HALF_WIDTH) / ADJACENT);
+            aux_var = atanf(((float)cube->ray.index - (WIN_W / 2)) / ((WIN_W / 2) / tanf((FOV_W / 360.F) * PI)));
             angle = fix_angle(cube->player[ANGLE] + aux_var / PI);
         }
         fixed_angle[1] = cosf(aux_var);

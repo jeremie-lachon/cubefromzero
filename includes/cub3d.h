@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/21 16:54:50 by dakojic           #+#    #+#             */
+/*   Updated: 2025/02/21 17:21:59 by dakojic          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
-
 # define CUB3D_H
-
 # include "mlx.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -17,7 +27,7 @@
 # include <stdbool.h>
 # include <math.h>
 # include <float.h>
-#include <sys/time.h>
+# include <sys/time.h>
 # define MAX_VIEW_DISTANCE 50
 # define WIN_W 1600
 # define WIN_H 900
@@ -29,28 +39,11 @@
 # define CELL_SIZE 1
 # define EPSILON 1e-6
 # define LARGE_NUMBER 1e6
-# define FOV_DEGREE (FOV_W / 360.F)
-# define HALF_WIDTH (WIN_W / 2)
-# define ADJACENT (HALF_WIDTH / tanf(FOV_DEGREE * PI))
 # define MAP_W 190
 # define MAP_H 90
 # define MM_SIZE 25
-# define MM_MAXSIZE MM_SIZE * 9
 
-// enum texture
-// {
-//     FROID1,
-//     FROID2,
-//     FROID3,
-//     FROID4,
-//     NORTH,
-//     SOUTH,
-//     EAST,
-//     WEST,
-
-// };
-
-enum move
+enum e_move
 {
 	KEY_W,
 	KEY_S,
@@ -61,59 +54,44 @@ enum move
 	MOUSE_LEFT,
 	MOUSE_RIGHT
 };
+
 typedef struct s_img_data
 {
-	void    *img_ptr;
-	char    *adress;
-	int     bpp;
-	int     size;
-	int     endl;
-	int     pix_w;
+	void	*img_ptr;
+	char	*adress;
+	int		bpp;
+	int		size;
+	int		endl;
+	int		pix_w;
 	int		pix_h;
-}   t_img_data;
+}	t_img_data;
 
 typedef struct s_data
 {
-	int		**map;
-
-	// int     pos_x;
-	// int     pos_y;
-	int     map_w;
-	int     map_h;
-	// char    facing;
-	unsigned int FC[2];
-}   t_data;
+	int				**map;
+	int				map_w;
+	int				map_h;
+	unsigned int	fc[2];
+}	t_data;
 
 typedef struct s_ray
 {
-	int index;
-	float tetta;
-	float distance;
-	int flag;
-	double h_x;
-	double h_y;
-	double v_x;
-	double v_y;
-	int	hitx;
-	int	hity;
-	int	hit;
-	unsigned int *adress;
-	t_img_data  *texture;
-} t_ray;
+	int				index;
+	float			tetta;
+	float			distance;
+	int				flag;
+	double			h_x;
+	double			h_y;
+	double			v_x;
+	double			v_y;
+	int				hitx;
+	int				hity;
+	int				hit;
+	unsigned int	*adress;
+	t_img_data		*texture;
+}	t_ray;
 
-// typedef struct s_player
-// {
-//     float     x;
-//     float     y;
-//     float   angle;
-//     float   dir_x;
-//     float   dir_y;
-//     float   plane_x;
-//     float   plane_y;
-//     float   fov_rad;
-// }   t_player;
-
-enum
+enum	e_values
 {
 	PLAYER_X,
 	PLAYER_Y,
@@ -121,7 +99,7 @@ enum
 	PLAYER_COUNT
 };
 
-enum
+enum	e_sprite
 {
 	SPACE,
 	WALL,
@@ -130,7 +108,7 @@ enum
 	SPRITE
 };
 
-enum
+enum e_side
 {
 	NO,
 	WE,
@@ -142,15 +120,15 @@ enum
 
 typedef struct s_list
 {
-	struct s_list *next;
-	void *data;
+	struct s_list	*next;
+	void			*data;
 }	t_list;
 
 typedef struct s_parse
 {
 	char	**textures;
-	int		F;
-	int		C;
+	int		f;
+	int		c;
 	float	player[4];
 	int		**map;
 	int		width;
@@ -159,8 +137,8 @@ typedef struct s_parse
 
 typedef struct s_mlx
 {
-	void	*mlx;
-	void	*win;
+	void		*mlx;
+	void		*win;
 	t_img_data	*img1;
 	t_img_data	*img2;
 	t_img_data	*image;
@@ -168,11 +146,11 @@ typedef struct s_mlx
 
 typedef struct s_cube
 {
-	bool    	input[8];
-	int     	mouse_x;
+	bool		input[8];
+	int			mouse_x;
 	int			mouse_y;
-	int 		frame;
-	int     	NSWE;
+	int			frame;
+	int			nswe;
 	t_ray		ray;
 	t_data		data;
 	int			minimap_w;
@@ -184,103 +162,57 @@ typedef struct s_cube
 	t_mlx		*mlx;
 }	t_cube;
 
-// typedef struct s_cube
-// {
-//     int     fd;
-//     void    *mlx_ptr;
-//     void    *win_ptr;
-//     bool    input[8];
-//     int     NSWE;
-//     t_img_data  img;
-//     t_data      data;
-//     t_player    player;
-//     t_ray       ray;
-//     int         mouse_x;
-//     int         mouse_y;
-// 	t_img_data	image1;
-// 	t_img_data	image2;
-// 	t_img_data	minimap;
-//     t_img_data     texture[9];
-//     int minimap_w;
-//     int minimap_h;
-//     struct timeval time;
-//     int frame;
-// }   t_cube;
-int fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx);
-int checkmap(t_parse *parse);
-void printmap(t_parse *parse);
-
-// Keys
-int key_release(int keysym, t_cube *cube);
-int key_press(int keysym, t_cube *cube);
-int	escape(t_cube *cube);
-// Structs
-int parse_filler2(char *buf, t_parse *cube);
-
-// LIBS & MISC
-void *ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
-size_t	ft_strlen(const char *str);
-int	ft_atoi(const char *nptr);
-
-char *custom_read(int fd, int check);
-char *ft_strchr(const char *s, int c);
-char *ft_substr(char const *s, int start, int len);
-int sett(char *str);
-int skip(char *s, int *i, int check);
+char	*custom_read(int fd, int check);
+char	*ft_strchr(const char *s, int c);
+char	*ft_substr(char const *s, int start, int len);
 char	*ft_strtrim(char *s1, char *set);
-
-
-
-// Move
-void mouse_rotation(t_cube *cube);
-void moving (t_cube *cube);
-
-// Angle tools
-float added_angle(t_cube *cube);
+void	printmap(t_parse *parse);
+void	*ft_calloc(size_t nmemb, size_t size);
+void	mouse_rotation(t_cube *cube);
+void	moving(t_cube *cube);
+float	added_angle(t_cube *cube);
 float	fix_angle(float angle);
-
-// Parse
-int imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse);
-t_parse *parseinit(void);
-int parse_filler(int fd, t_parse *cube);
-t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx);
-int ft_mlx_start(t_mlx **mlx_address);
-int mapper(int fd, t_parse *parse, char *str);
-
-
-// Frees
-int intfree(int ***array, int i);
-int parsefree(t_parse *parse);
-int free_cube(t_cube *cube);
-int ft_clear_display(t_mlx *mlx);
-void freetexts(t_cube *cube);
-
-
-// List tools
-int listfree(t_list *list);
-int listaddfront(t_list **list, t_list *new);
-t_list *listnew(void *data);
-int listsize(t_list *list);
-int maxsize(t_list *list);
-
-//Draw
-void display_pix(t_img_data *img, int x, int y, int color);
-void ft_putpixel(int i, t_cube *cube, int color, int flag);
-void draw_wall(float top_pixel, t_cube *cube, float offset);
-void draw_wall_other(t_cube *cube, float pixel, float offset, int i);
-void draw_other(float top, t_cube *cube);
-void wall_display(t_cube *cube, float dist, float offset);
+size_t	ft_strlen(const char *str);
+t_parse	*parseinit(void);
+t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx);
+t_list	*listnew(void *data);
+void	freetexts(t_cube *cube);
+void	display_pix(t_img_data *img, int x, int y, int color);
+void	ft_putpixel(int i, t_cube *cube, int color, int flag);
+void	draw_wall(float top_pixel, t_cube *cube, float offset);
+void	draw_wall_other(t_cube *cube, float pixel, float offset, int i);
+void	draw_other(float top, t_cube *cube);
+void	wall_display(t_cube *cube, float dist, float offset);
 void	minimap_display(t_cube *cube);
-
-
-//Raycasting
-void raycasting(t_cube *cube);
-void    wall_check(float distxy[2], t_cube *cube, float angle, float cosangled);
-int check_wall(float y, float x, t_cube *cube);
-int	check_door(int x, int y, t_cube *cube);
 float	find_x_ray(t_cube *cube, float angle, float fixed_angle);
 float	find_y_ray(t_cube *cube, float angle, float fixed_angle);
-int check_wall(float y, float x, t_cube *cube);
+
+void	raycasting(t_cube *cube);
+void	wall_check(float distxy[2], t_cube *cube, float angle, float cosangled);
+int		ft_atoi(const char *nptr);
+int		key_release(int keysym, t_cube *cube);
+int		key_press(int keysym, t_cube *cube);
+int		escape(t_cube *cube);
+int		parse_filler2(char *buf, t_parse *cube);
+int		sett(char *str);
+int		skip(char *s, int *i, int check);
+int		fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx);
+int		checkmap(t_parse *parse);
+int		listsize(t_list *list);
+int		maxsize(t_list *list);
+int		listfree(t_list *list);
+int		listaddfront(t_list **list, t_list *new);
+int		intfree(int ***array, int i);
+int		parsefree(t_parse *parse);
+int		free_cube(t_cube *cube);
+int		ft_clear_display(t_mlx *mlx);
+int		ft_mlx_start(t_mlx **mlx_address);
+int		mapper(int fd, t_parse *parse, char *str);
+int		imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse);
+int		parse_filler(int fd, t_parse *cube);
+int		check_wall(float y, float x, t_cube *cube);
+int		check_door(int x, int y, t_cube *cube);
+int		check_wall(float y, float x, t_cube *cube);
 #endif

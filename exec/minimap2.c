@@ -6,19 +6,11 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:24:03 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 15:24:44 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:32:36 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-// static void	display_pix2(t_img_data *img, int x, int y, int color)
-// {
-// 	char	*dest;
-
-// 	dest = img->adress + (y * img->size + x * (img->bpp / 8));
-// 	*(unsigned int *)dest = color;
-// }
 
 static void	ft_putpixel2(int ray, int i, t_cube *cube, int flag)
 {
@@ -33,9 +25,9 @@ static void	ft_putpixel2(int ray, int i, t_cube *cube, int flag)
 	display_pix(cube->mlx->image, ray, i, 0xea0000);
 }
 
-static void draw_map_line(t_cube *cube, int x)
+static void	draw_map_line(t_cube *cube, int x)
 {
-	int y;
+	int	y;
 
 	y = 0;
 	while (y < cube->minimap_h)
@@ -45,9 +37,9 @@ static void draw_map_line(t_cube *cube, int x)
 	}
 }
 
-void draw_minimap(t_cube *cube)
+void	draw_minimap(t_cube *cube)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < cube->minimap_w)

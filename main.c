@@ -12,9 +12,9 @@
 
 #include "cub3d.h"
 
-static int cub_check(char *str)
+static int	cub_check(char *str)
 {
-	int i;
+	int	i;
 
 	i = strlen(str);
 	if (i < 5)
@@ -37,7 +37,7 @@ static int	basic_checks(int ac, char **av, int *fd)
 		return (write(1, "Error\nWrong number of arguments.\n", 33), 1);
 	if (cub_check(av[1]))
 		return (write(1, "Error\nMap is not using .cub extension.\n", 39), 1);
-	if (WIN_H < MM_MAXSIZE || WIN_W < MM_MAXSIZE)
+	if (WIN_H < (MM_SIZE * 9) || WIN_W < (MM_SIZE * 9))
 		return (printf("Error\nWindow size is undersized.\n"), 1);
 	*fd = open(av[1], O_RDONLY);
 	if (*fd == -1)
@@ -54,17 +54,18 @@ static int	init(t_parse *parse, int fd, t_mlx **mlx, t_cube **cube)
 		return (parsefree(parse), 1);
 	*mlx = 0;
 	if (ft_mlx_start(mlx))
-		return (printf("Error\nProblem initialising mlx structs\n"), free(*mlx), parsefree(parse), 1);
+		return (printf("Error\nProblem initialising mlx structs\n"), \
+		free(*mlx), parsefree(parse), 1);
 	*cube = parse_to_cube(parse, *mlx);
 	if (!*cube)
 		return (1);
 	return (0);
 }
 
-static int loop_render(t_cube *cube)
+static int	loop_render(t_cube *cube)
 {
-	static int i;
-	struct timeval time;
+	static int		i;
+	struct timeval	time;
 
 	if (!i)
 	{
@@ -80,7 +81,8 @@ static int loop_render(t_cube *cube)
 	cube->frame = time.tv_sec % 4;
 	cube->player[ANGLE] = fix_angle(cube->player[ANGLE]);
 	raycasting(cube);
-	mlx_put_image_to_window(cube->mlx->mlx, cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
+	mlx_put_image_to_window(cube->mlx->mlx, \
+		cube->mlx->win, cube->mlx->image->img_ptr, 0, 0);
 	moving(cube);
 	mouse_rotation(cube);
 	return (0);

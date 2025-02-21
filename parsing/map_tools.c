@@ -6,15 +6,15 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:20:30 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 15:38:49 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 16:12:58 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-char *remove_end(char *str)
+char	*remove_end(char *str)
 {
-	char *tmp;
+	char	*tmp;
 
 	tmp = strchr(str, '\n');
 	if (!tmp)
@@ -23,7 +23,7 @@ char *remove_end(char *str)
 	return (tmp);
 }
 
-void NSEW(int i, int j, char *str, t_parse *parse)
+void	nswe(int i, int j, char *str, t_parse *parse)
 {
 	parse->map[i][j] = SPACE;
 	parse->player[PLAYER_Y] = i + 0.5;
@@ -39,14 +39,14 @@ void NSEW(int i, int j, char *str, t_parse *parse)
 	parse->player[PLAYER_COUNT] += 1.0;
 }
 
-int fillmap(t_list *node, t_parse *parse, int i)
+int	fillmap(t_list *node, t_parse *parse, int i)
 {
-	int j;
-	char *str;
+	int		j;
+	char	*str;
 
 	str = (char *)node->data;
-	j = 0;
-	while (j < parse->width && str[j])
+	j = -1;
+	while (++j < parse->width && str[j])
 	{
 		if (str[j] == '0')
 			parse->map[i][j] = SPACE;
@@ -57,22 +57,21 @@ int fillmap(t_list *node, t_parse *parse, int i)
 		else if (str[j] == 'P')
 			parse->map[i][j] = SPRITE;
 		else if (strchr("NSEW", str[j]))
-			NSEW(i, j, str, parse);
+			nswe(i, j, str, parse);
 		else if (str[j] == ' ')
 			parse->map[i][j] = OUT;
 		else
 			return (printf("Error\nIncorrect map information\n"), 1);
-		j++;
 	}
 	while (j < parse->width)
 		parse->map[i][j++] = OUT;
 	return (0);
 }
 
-int mapcheckandstock(t_list *list, t_parse *map)
+int	mapcheckandstock(t_list *list, t_parse *map)
 {
-	int i;
-	t_list *tmp;
+	int		i;
+	t_list	*tmp;
 
 	map->height = listsize(list);
 	map->map = ft_calloc(sizeof(int *), map->height);
@@ -94,10 +93,10 @@ int mapcheckandstock(t_list *list, t_parse *map)
 	return (listfree(list), checkmap(map));
 }
 
-int mapper(int fd, t_parse *parse, char *str)
+int	mapper(int fd, t_parse *parse, char *str)
 {
-	t_list *list;
-	t_list *new;
+	t_list	*list;
+	t_list	*new;
 
 	list = 0;
 	new = listnew(remove_end(str));
@@ -109,14 +108,15 @@ int mapper(int fd, t_parse *parse, char *str)
 		free(str);
 		str = custom_read(fd, 1);
 		if (!str || *str == '\n')
-			break;
+			break ;
 		new = listnew(remove_end(str));
 		if (!new)
 			return (free(str), listfree(list), 1);
 		listaddfront(&list, new);
 	}
 	if (str)
-		return (printf("Error\nInformation after map\n"), free(str), listfree(list), 1);
+		return (printf("Error\nInformation after map\n"), \
+		free(str), listfree(list), 1);
 	if (mapcheckandstock(list, parse))
 		return (free(str), 1);
 	return (free(str), 0);
