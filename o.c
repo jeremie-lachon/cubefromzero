@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   o.c                                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:56:48 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 14:18:40 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 14:26:26 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,33 +16,7 @@
 #include <string.h>
 #include "cub3d.h"
 
-int function(char *s)
-{
-	int i;
-	int ret;
-	int tmp;
-	ret = 0;
-	i = 1;
-	if (skip(s, &i, 0) || !s[i])
-		return (-1);
-	tmp = ft_atoi(s + i);
-	if (tmp < 0 || tmp > 255)
-		return (-1);
-	ret = tmp << 16;
-	if (skip(s, &i, 1) != 1 || !s[i])
-		return (-1);
-	tmp = ft_atoi(s + i);
-	if (tmp < 0 || tmp > 255)
-		return (-1);
-	ret |= tmp << 8;
-	if (skip(s, &i, 1) != 1 || !s[i])
-		return (-1);
-	tmp = ft_atoi(s + i);
-	if (tmp < 0 || tmp > 255)
-		return (-1);
-	ret |= tmp;
-	return (ret);
-}
+
 // int parse_filler2(char *buf, t_parse *cube)
 // {
 // 	char *tmp;
