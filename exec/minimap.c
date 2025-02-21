@@ -6,7 +6,7 @@
 /*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 08:59:50 by snek              #+#    #+#             */
-/*   Updated: 2025/02/21 12:34:03 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/21 13:24:25 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void	minimap_display(t_cube *cube)
 	int	y;
 
 
-	x_place = (int)cube->player[PLAYER_X] - 2;
-	y_place = (int)cube->player[PLAYER_Y] - 2;
+	x_place = (int)cube->player[PLAYER_X] - 4;
+	y_place = (int)cube->player[PLAYER_Y] - 4;
 	i = 0;
-	while (i < 10)
+	while (i < 9)
 	{
 		j = 0;
-		while (j < 10)
+		while (j < 9)
 		{
 			x = x_place + i;
 			y = y_place + j;	
@@ -67,7 +67,7 @@ void	minimap_display(t_cube *cube)
 				sprite = OUT;
 			else
 				sprite = cube->data.map[y][x];
-			draw_pixel_map(i * MM_SIZE, j * MM_SIZE, cube, sprite);
+			draw_pixel_map((8 - i) * MM_SIZE, j * MM_SIZE, cube, sprite);
 			j++;
 		}
 		i++;
