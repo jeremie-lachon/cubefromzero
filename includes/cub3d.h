@@ -209,8 +209,6 @@ typedef struct s_cube
 int fillsprite(t_parse *parse, t_cube *cube, t_mlx *mlx);
 int checkmap(t_parse *parse);
 void printmap(t_parse *parse);
-int map_filler(t_data *data);
-int init_mlx(t_cube *cube);
 
 // Keys
 int key_release(int keysym, t_cube *cube);
@@ -249,12 +247,16 @@ t_parse *parseinit(void);
 int parse_filler(int fd, t_parse *cube);
 t_cube *parse_to_cube(t_parse *parse, t_mlx *mlx);
 int ft_mlx_start(t_mlx **mlx_address);
+int mapper(int fd, t_parse *parse, char *str);
+
 
 // Frees
 int intfree(int ***array, int i);
 int parsefree(t_parse *parse);
 int free_cube(t_cube *cube);
 int ft_clear_display(t_mlx *mlx);
+void freetexts(t_cube *cube);
+
 
 // List tools
 int listfree(t_list *list);

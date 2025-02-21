@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   findwall.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/31 15:54:53 by jla-chon          #+#    #+#             */
-/*   Updated: 2024/12/31 16:41:28 by jla-chon         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:55:33 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+// #include "cub3d.h"
 
 static int player_filler(t_cube *cube)
 {
