@@ -67,7 +67,7 @@ clean:
 
 fclean: clean
 #	$(MAKE) -C $(PRINTF_DIR) fclean
-	rm -f $(NAME)
+	rm -f $(NAME) parse
 
 re: fclean all
 
