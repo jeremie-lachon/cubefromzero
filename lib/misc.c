@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   misc.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 19:18:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/19 19:18:47 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/21 14:16:07 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ char *ft_substr(char const *s, int start, int len)
 	return (copy);
 }
 
-int settings_split(char *str)
+int sett(char *str)
 {
 	int i;
 	i = 2;

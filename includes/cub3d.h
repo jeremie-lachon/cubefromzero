@@ -229,7 +229,7 @@ int	ft_atoi(const char *nptr);
 char *custom_read(int fd, int check);
 char *ft_strchr(const char *s, int c);
 char *ft_substr(char const *s, int start, int len);
-int settings_split(char *str);
+int sett(char *str);
 int skip(char *s, int *i, int check);
 char	*ft_strtrim(char *s1, char *set);
 
