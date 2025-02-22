@@ -6,11 +6,18 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 16:19:55 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 17:25:15 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 17:18:11 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+static int	ft_abs(int x)
+{
+	if (x < 0)
+		return (-x);
+	return (x);
+}
 
 int	check_door(int x, int y, t_cube *cube)
 {
@@ -19,7 +26,7 @@ int	check_door(int x, int y, t_cube *cube)
 
 	plax = cube->player[PLAYER_X];
 	play = cube->player[PLAYER_Y];
-	if (abs(x - plax) <= 1 && abs(y - play) <= 1)
+	if (ft_abs(x - plax) <= 1 && ft_abs(y - play) <= 1)
 		return (0);
 	return (1);
 }

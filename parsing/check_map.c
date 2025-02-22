@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:02:35 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 17:48:38 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 16:07:34 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	check_elements(t_parse *parse)
 	int	j;
 
 	if (parse->player[PLAYER_COUNT] != 1.0)
-		return (1);
+		return (printf("Error\nPlayer count not 1\n"), 1);
 	spritedoor[0] = 0;
 	spritedoor[1] = 0;
 	i = -1;

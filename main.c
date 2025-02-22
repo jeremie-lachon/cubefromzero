@@ -16,7 +16,7 @@ static int	cub_check(char *str)
 {
 	int	i;
 
-	i = strlen(str);
+	i = ft_strlen(str);
 	if (i < 5)
 		return (1);
 	i--;

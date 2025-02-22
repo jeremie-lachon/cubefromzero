@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:20:30 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 16:12:58 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 17:04:00 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ char	*remove_end(char *str)
 {
 	char	*tmp;
 
-	tmp = strchr(str, '\n');
+	tmp = ft_strchr(str, '\n');
 	if (!tmp)
-		return (strdup(str));
+		return (ft_strdup(str));
 	tmp = ft_substr(str, 0, tmp - str);
 	return (tmp);
 }
@@ -31,11 +31,11 @@ void	nswe(int i, int j, char *str, t_parse *parse)
 	if (str[j] == 'N')
 		parse->player[ANGLE] = 0.5;
 	else if (str[j] == 'E')
-		parse->player[ANGLE] = 0;
+		parse->player[ANGLE] = 1;
 	else if (str[j] == 'S')
 		parse->player[ANGLE] = 1.5;
 	else
-		parse->player[ANGLE] = 1;
+		parse->player[ANGLE] = 0;
 	parse->player[PLAYER_COUNT] += 1.0;
 }
 
@@ -56,7 +56,7 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 			parse->map[i][j] = DOOR;
 		else if (str[j] == 'P')
 			parse->map[i][j] = SPRITE;
-		else if (strchr("NSEW", str[j]))
+		else if (ft_strchr("NSEW", str[j]))
 			nswe(i, j, str, parse);
 		else if (str[j] == ' ')
 			parse->map[i][j] = OUT;
@@ -115,7 +115,7 @@ int	mapper(int fd, t_parse *parse, char *str)
 		listaddfront(&list, new);
 	}
 	if (str)
-		return (printf("Error\nInformation after map\n"), \
+		return (printf("Error\nWrong number of parameters\n"), \
 		free(str), listfree(list), 1);
 	if (mapcheckandstock(list, parse))
 		return (free(str), 1);

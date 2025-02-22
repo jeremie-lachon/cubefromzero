@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   misc.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 19:18:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 02:06:10 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/22 17:04:35 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,12 @@ char	*ft_substr(char const *s, int start, int len)
 
 	if (start < 0)
 		return (0);
-	if (start > (int)strlen(s))
-		return (calloc(1, 1));
-	if (len + start <= (int)strlen(s))
+	if (start > (int)ft_strlen(s))
+		return (ft_calloc(1, 1));
+	if (len + start <= (int)ft_strlen(s))
 		copy = (char *)malloc(sizeof(char) * (len + 1));
 	else
-		copy = (char *)malloc(sizeof(char) * (strlen(s + start) + 1));
+		copy = (char *)malloc(sizeof(char) * (ft_strlen(s + start) + 1));
 	if (!copy)
 		return (NULL);
 	i = -1;

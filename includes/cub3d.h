@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 16:54:50 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 17:21:59 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 17:12:55 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,8 @@ typedef struct s_cube
 	t_mlx		*mlx;
 }	t_cube;
 
+char	*ft_strdup(const char *s1);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	**ft_split(char const *s, char c);
 char	**ft_freesplit(char **res, int n);
 char	*custom_read(int fd, int check);

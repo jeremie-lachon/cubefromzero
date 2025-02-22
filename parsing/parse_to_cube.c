@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_to_cube.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:27:11 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 09:31:35 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/22 16:56:41 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,12 @@ t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx)
 	cube->player[PLAYER_Y] = parse->player[PLAYER_Y];
 	cube->player[ANGLE] = parse->player[ANGLE];
 	if (fillsides(cube, parse, cube->mlx))
-		return (printf("Error\nProblem converting wall/door images to mlx_img"), \
+		return (printf("Error\nProblem converting \
+			wall/door images to mlx_img\n"), \
 		free_cube(cube), parsefree(parse), NULL);
 	if (fillsprite(parse, cube, cube->mlx))
 		return (freetexts(cube), \
-		printf("Error\nProblem converting sprite images to mlx_img"), \
+		printf("Error\nProblem converting sprite images to mlx_img\n"), \
 		free_cube(cube), parsefree(parse), NULL);
 	return (parsefree(parse), cube);
 }

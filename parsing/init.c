@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 15:35:14 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 09:32:21 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/22 16:56:12 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,17 @@ int	fillsprite(t_parse *p, t_cube *c, t_mlx *m)
 		c->sprite[n] = ft_calloc(sizeof(t_img_data), 1);
 		if (!c->sprite[n])
 			return (freesprite(c->sprite, n, m), \
-			ft_freesplit(all, n), 1);
+			ft_freesplit(all, c->nsprite), 1);
 		c->sprite[n]->img_ptr = mlx_xpm_file_to_image(m->mlx, all[n], \
 			&c->sprite[n]->pix_w, &c->sprite[n]->pix_h);
 		if (!c->sprite[n]->img_ptr)
 			return (freesprite(c->sprite, n, m), \
-			ft_freesplit(all, n), 1);
+			ft_freesplit(all, c->nsprite), 1);
 		c->sprite[n]->adress = mlx_get_data_addr(c->sprite[n]->img_ptr, \
 			&c->sprite[n]->bpp, &c->sprite[n]->size, &c->sprite[n]->endl);
 		if (!c->sprite[n]->adress)
-			return (freesprite(c->sprite, n, m), ft_freesplit(all, n), 1);
+			return (ft_freesplit(all, c->nsprite), 1);
 		n++;
 	}
-	return (ft_freesplit(all, n), 0);
+	return (ft_freesplit(all, c->nsprite), 0);
 }

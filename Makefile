@@ -18,7 +18,7 @@ SRC_GNL = get_next_line.c get_next_line_utils.c
 
 SRC_PARSE = main.c
 
-SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c
+SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c ft_strncmp.c ft_strdup.c
 
 SRC_PARSING = check_map.c  filler.c  init.c map_tools.c \
 				mlx_starter.c  parse_to_cube.c \
@@ -46,38 +46,29 @@ DEP = $(OBJ_ALLPARSE:.o=.d)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
-#	$(CC) $(CFLAGS) -I$(MLX_INCLUDE) -I$(PRINTF_DIR) -I$(GNL_DIR) -c $< -o $@
-
-$(NAME): $(OBJ)
-#	$(MAKE) -C $(PRINTF_DIR)
-	$(MAKE) -C $(MLX_INCLUDE)
-	$(CC) $(OBJ) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -fPIE -pie -o $(NAME)
-# 	$(CC) $(OBJ) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
-#	$(CC) $(OBJ) $(PRINTF_DIR)libftprintf.a -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME)
-#	$(CC) $(CFLAGS) $(OBJ) -lm -lz -o $(NAME)
-#-include $(DEP)
-
-parse: $(OBJ_ALLPARSE)
-	$(MAKE) -C $(MLX_INCLUDE)
-	$(CC) $(OBJ_ALLPARSE) $(INC) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -fPIE -pie -o parse
 
 all: $(NAME)
 
+$(NAME): $(OBJ_ALLPARSE)
+	$(MAKE) -C $(MLX_INCLUDE)
+	$(CC) $(OBJ_ALLPARSE) $(INC) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -fPIE -pie -o $(NAME)
+-include $(DEP)
+
+
 clean:
-#	$(MAKE) -C $(PRINTF_DIR) clean
 	rm -f $(OBJ) $(DEP) $(OBJ_ALLPARSE)
 
 fclean: clean
-#	$(MAKE) -C $(PRINTF_DIR) fclean
+	$(MAKE) -C $(MLX_INCLUDE) clean
 	rm -f $(NAME) parse $(DEP)
 
 re: fclean all
 
-gdb: fclean parse
-	gdb --command=gdbcmds ./parse
+gdb: fclean all
+	gdb --command=gdbcmds $(NAME)
 
 launch: re
 	clear
 	./$(NAME)
 
-.PHONY: all clean fclean re launc
+.PHONY: all clean fclean re launch gdb 

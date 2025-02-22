@@ -6,7 +6,7 @@
 /*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:59:39 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 16:44:31 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 17:04:43 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	maxsize(t_list *list)
 	maxlen = -1;
 	while (list)
 	{
-		len = strlen((char *)list->data);
+		len = ft_strlen((char *)list->data);
 		if (len > maxlen)
 			maxlen = len;
 		list = list->next;

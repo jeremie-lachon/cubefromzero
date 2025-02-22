@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   filler.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 13:53:49 by snek              #+#    #+#             */
-/*   Updated: 2025/02/22 02:11:24 by snek             ###   ########.fr       */
+/*   Updated: 2025/02/22 17:06:02 by dakojic          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,15 @@ static int	get_color(char *s, int i, int ret)
 
 static int	parse_filler3(char *buf, t_parse *cube, int tmp)
 {
-	if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
+	if (!ft_strncmp("EA ", buf, 3) && !cube->textures[EA])
 		cube->textures[EA] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
-	else if (!strncmp("F ", buf, 2) && cube->f == -1)
+	else if (!ft_strncmp("F ", buf, 2) && cube->f == -1)
 		cube->f = get_color(buf, 1, 0);
-	else if (!strncmp("C ", buf, 2) && cube->c == -1)
+	else if (!ft_strncmp("C ", buf, 2) && cube->c == -1)
 		cube->c = get_color(buf, 1, 0);
-	else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
+	else if (!ft_strncmp("DO ", buf, 3) && !cube->textures[DO])
 		cube->textures[DO] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
-	else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
+	else if (!ft_strncmp("SP ", buf, 3) && !cube->textures[SP])
 		cube->textures[SP] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
 	else
 		return (2);
@@ -69,11 +69,11 @@ int	parse_filler2(char *buf, t_parse *cube)
 	if (!ft_strchr(buf, '\n'))
 		return (1);
 	tmp = ft_strchr(buf, '\n') - buf - 3;
-	if (!strncmp("NO ", buf, 3) && !cube->textures[NO])
+	if (!ft_strncmp("NO ", buf, 3) && !cube->textures[NO])
 		cube->textures[NO] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
-	else if (!strncmp("WE ", buf, 3) && !cube->textures[WE])
+	else if (!ft_strncmp("WE ", buf, 3) && !cube->textures[WE])
 		cube->textures[WE] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
-	else if (!strncmp("SO ", buf, 3) && !cube->textures[SO])
+	else if (!ft_strncmp("SO ", buf, 3) && !cube->textures[SO])
 		cube->textures[SO] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
 	else
 		return (parse_filler3(buf, cube, tmp));
