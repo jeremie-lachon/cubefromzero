@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_starter.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 15:28:00 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 18:11:08 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 09:16:23 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ void	freetexts(t_cube *cube)
 	int	j;
 
 	j = 0;
-	while (j < 6)
+	while (j < 5)
 	{
-		if (j < 5 && cube->texture[j]->img_ptr)
+		if (cube->texture[j]->img_ptr)
 			mlx_destroy_image(cube->mlx->mlx, cube->texture[j]->img_ptr);
 		free(cube->texture[j]);
 		cube->texture[j++] = 0;

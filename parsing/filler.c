@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   filler.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
+/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 13:53:49 by snek              #+#    #+#             */
-/*   Updated: 2025/02/21 17:52:05 by dakojic          ###   ########.fr       */
+/*   Updated: 2025/02/22 02:11:24 by snek             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,10 @@
 
 #define WH " \t\v\f\r\n"
 
-static int	get_color(char *s)
+static int	get_color(char *s, int i, int ret)
 {
-	int	i;
-	int	ret;
 	int	tmp;
 
-	ret = 0;
-	i = 1;
 	if (skip(s, &i, 0) || !s[i])
 		return (-1);
 	tmp = ft_atoi(s + i);
@@ -39,6 +35,8 @@ static int	get_color(char *s)
 	tmp = ft_atoi(s + i);
 	if (tmp < 0 || tmp > 255)
 		return (-1);
+	if (skip(s, &i, 1) || s[i] != '\n')
+		return (-1);
 	ret |= tmp;
 	return (ret);
 }
@@ -48,9 +46,9 @@ static int	parse_filler3(char *buf, t_parse *cube, int tmp)
 	if (!strncmp("EA ", buf, 3) && !cube->textures[EA])
 		cube->textures[EA] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
 	else if (!strncmp("F ", buf, 2) && cube->f == -1)
-		cube->f = get_color(buf);
+		cube->f = get_color(buf, 1, 0);
 	else if (!strncmp("C ", buf, 2) && cube->c == -1)
-		cube->c = get_color(buf);
+		cube->c = get_color(buf, 1, 0);
 	else if (!strncmp("DO ", buf, 3) && !cube->textures[DO])
 		cube->textures[DO] = ft_strtrim(ft_substr(buf, sett(buf), tmp), WH);
 	else if (!strncmp("SP ", buf, 3) && !cube->textures[SP])
