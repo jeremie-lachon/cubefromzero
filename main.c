@@ -1,22 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/23 17:30:54 by dakojic           #+#    #+#             */
-/*   Updated: 2025/01/16 16:57:47 by snek             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 static int	cub_check(char *str)
 {
 	int	i;
 
-	i = ft_strlen(str);
+	i = cb_strlen(str);
 	if (i < 5)
 		return (1);
 	i--;
@@ -53,7 +41,7 @@ static int	init(t_parse *parse, int fd, t_mlx **mlx, t_cube **cube)
 	if (parse_filler(fd, parse))
 		return (parsefree(parse), 1);
 	*mlx = 0;
-	if (ft_mlx_start(mlx))
+	if (cb_mlx_start(mlx))
 		return (printf("Error\nProblem initialising mlx structs\n"), \
 		free(*mlx), parsefree(parse), 1);
 	*cube = parse_to_cube(parse, *mlx);

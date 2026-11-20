@@ -9,16 +9,14 @@ MLX_INCLUDE = minilibx-linux/
 
 # Path to utils directory
 UTILS_DIR = utils/
-#PRINTF_DIR = $(UTILS_DIR)printf/
 GNL_DIR = -I$(UTILS_DIR)gnl/
 
-# CFLAGS += $(MLX_INCLUDE) $(GNL_DIR)
 
 SRC_GNL = get_next_line.c get_next_line_utils.c
 
 SRC_PARSE = main.c
 
-SRC_LIB = ft_strlen.c ft_split.c list_tools.c frees.c angle_tools.c misc.c ft_strtrim.c ft_calloc.c ft_atoi.c ft_strncmp.c ft_strdup.c
+SRC_LIB = cb_strlen.c cb_split.c list_tools.c frees.c angle_tools.c misc.c cb_strtrim.c cb_calloc.c cb_atoi.c cb_strncmp.c cb_strdup.c
 
 SRC_PARSING = check_map.c  filler.c  init.c map_tools.c \
 				mlx_starter.c  parse_to_cube.c \
@@ -26,7 +24,6 @@ SRC_PARSING = check_map.c  filler.c  init.c map_tools.c \
 
 SRC_EXEC = draw.c find_x_ray.c find_y_ray.c display.c movement.c raycast_checks.c keys.c minimap.c raycasting.c
 SRC = main.c
-# SRC = essai.c
 
 DIR_GNL = utils/gnl/
 DIR_EXEC = exec/
@@ -49,6 +46,11 @@ DEP = $(OBJ_ALLPARSE:.o=.d)
 
 all: $(NAME)
 
+$(MLX_INCLUDE)Makefile:
+	git submodule update --init $(MLX_INCLUDE)
+
+$(OBJ_ALLPARSE): | $(MLX_INCLUDE)Makefile
+
 $(NAME): $(OBJ_ALLPARSE)
 	$(MAKE) -C $(MLX_INCLUDE)
 	$(CC) $(OBJ_ALLPARSE) $(INC) -L$(MLX_INCLUDE) -lmlx -L/usr/lib -lXext -lX11 -lm -lz -fPIE -pie -o $(NAME)
@@ -64,11 +66,8 @@ fclean: clean
 
 re: fclean all
 
-gdb: fclean all
-	gdb --command=gdbcmds $(NAME)
 
-launch: re
-	clear
-	./$(NAME)
+launch: all
+	./$(NAME) maps/example.cub
 
-.PHONY: all clean fclean re launch gdb 
+.PHONY: all clean fclean re launch 

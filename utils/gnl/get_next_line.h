@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jla-chon <jla-chon@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/16 18:35:07 by snek              #+#    #+#             */
-/*   Updated: 2023/12/07 18:52:00 by jla-chon         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
@@ -31,8 +19,8 @@ typedef struct s_clist
 }					t_clist;
 
 char				*get_next_line(int fd);
-char				*ft_stcpy(char *str, char *a, int n, int check);
-int					ft_stlenchec(char *a, ssize_t *check, int ck);
-char				*ft_stcat(char *a, char *b);
-char				*ft_freegnl(char **a, char *b);
+char				*cb_stcpy(char *str, char *a, int n, int check);
+int					cb_stlenchec(char *a, ssize_t *check, int ck);
+char				*cb_stcat(char *a, char *b);
+char				*cb_freegnl(char **a, char *b);
 #endif

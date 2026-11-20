@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minimap2.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 15:24:03 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/21 16:32:36 by dakojic          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
-static void	ft_putpixel2(int ray, int i, t_cube *cube, int flag)
+static void	cb_putpixel2(int ray, int i, t_cube *cube, int flag)
 {
 	if (flag)
 	{
@@ -32,7 +20,7 @@ static void	draw_map_line(t_cube *cube, int x)
 	y = 0;
 	while (y < cube->minimap_h)
 	{
-		ft_putpixel2(x, y, cube, 0);
+		cb_putpixel2(x, y, cube, 0);
 		y++;
 	}
 }

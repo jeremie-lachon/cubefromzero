@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   list_tools.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 12:59:39 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 17:04:43 by dakojic          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 int	listfree(t_list *list)
@@ -63,7 +51,7 @@ int	maxsize(t_list *list)
 	maxlen = -1;
 	while (list)
 	{
-		len = ft_strlen((char *)list->data);
+		len = cb_strlen((char *)list->data);
 		if (len > maxlen)
 			maxlen = len;
 		list = list->next;

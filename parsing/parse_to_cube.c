@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_to_cube.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 15:27:11 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 16:56:41 by dakojic          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 static void	freecubetext(t_cube *cube)
@@ -24,18 +12,18 @@ static void	freecubetext(t_cube *cube)
 	}
 }
 
-static t_cube	*ft_cube_init(void)
+static t_cube	*cb_cube_init(void)
 {
 	t_cube	*cube;
 	int		i;
 
 	i = 0;
-	cube = ft_calloc(sizeof(t_cube), 1);
+	cube = cb_calloc(sizeof(t_cube), 1);
 	if (!cube)
 		return (perror("Error\n"), NULL);
 	while (i < 5)
 	{
-		cube->texture[i] = ft_calloc(sizeof(t_img_data), 1);
+		cube->texture[i] = cb_calloc(sizeof(t_img_data), 1);
 		if (!cube->texture[i++])
 			return (perror("Error\n"), freecubetext(cube), free(cube), NULL);
 	}
@@ -61,9 +49,9 @@ t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx)
 {
 	t_cube	*cube;
 
-	cube = ft_cube_init();
+	cube = cb_cube_init();
 	if (!cube)
-		return (parsefree(parse), ft_clear_display(mlx), NULL);
+		return (parsefree(parse), cb_clear_display(mlx), NULL);
 	cube->mlx = mlx;
 	cube->data.map = parse->map;
 	parse->map = 0;

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   mlx_starter.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 15:28:00 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 09:16:23 by snek             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 void	freetexts(t_cube *cube)
@@ -40,17 +28,17 @@ int	imgstruct(t_cube *c, int num, t_mlx *mlx, t_parse *p)
 	return (0);
 }
 
-static t_mlx	*ft_mlx_init(void)
+static t_mlx	*cb_mlx_init(void)
 {
 	t_mlx	*mlx;
 
-	mlx = ft_calloc(sizeof(t_mlx), 1);
+	mlx = cb_calloc(sizeof(t_mlx), 1);
 	if (!mlx)
 		return (NULL);
-	mlx->img1 = ft_calloc(sizeof(t_img_data), 1);
+	mlx->img1 = cb_calloc(sizeof(t_img_data), 1);
 	if (!mlx->img1)
 		return (free(mlx), NULL);
-	mlx->img2 = ft_calloc(sizeof(t_img_data), 1);
+	mlx->img2 = cb_calloc(sizeof(t_img_data), 1);
 	if (!mlx->img2)
 		return (free(mlx->img1), free(mlx), NULL);
 	return (mlx);
@@ -63,11 +51,11 @@ void	destroyer(t_mlx *mlx)
 	mlx_destroy_display(mlx->mlx);
 }
 
-int	ft_mlx_start(t_mlx **mlx_address)
+int	cb_mlx_start(t_mlx **mlx_address)
 {
 	t_mlx	*mlx;
 
-	mlx = ft_mlx_init();
+	mlx = cb_mlx_init();
 	if (!mlx)
 		return (1);
 	mlx->mlx = mlx_init();

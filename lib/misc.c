@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   misc.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 19:18:37 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 17:04:35 by dakojic          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 char	*custom_read(int fd, int check)
@@ -27,7 +15,7 @@ char	*custom_read(int fd, int check)
 	}
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*cb_strchr(const char *s, int c)
 {
 	char	*ptr;
 	int		i;
@@ -49,7 +37,7 @@ char	*ft_strchr(const char *s, int c)
 	return (ptr);
 }
 
-char	*ft_substr(char const *s, int start, int len)
+char	*cb_substr(char const *s, int start, int len)
 {
 	int		i;
 	int		j;
@@ -57,12 +45,12 @@ char	*ft_substr(char const *s, int start, int len)
 
 	if (start < 0)
 		return (0);
-	if (start > (int)ft_strlen(s))
-		return (ft_calloc(1, 1));
-	if (len + start <= (int)ft_strlen(s))
+	if (start > (int)cb_strlen(s))
+		return (cb_calloc(1, 1));
+	if (len + start <= (int)cb_strlen(s))
 		copy = (char *)malloc(sizeof(char) * (len + 1));
 	else
-		copy = (char *)malloc(sizeof(char) * (ft_strlen(s + start) + 1));
+		copy = (char *)malloc(sizeof(char) * (cb_strlen(s + start) + 1));
 	if (!copy)
 		return (NULL);
 	i = -1;
@@ -83,7 +71,7 @@ int	sett(char *str)
 	i = 2;
 	while (str[i])
 	{
-		if (!ft_strchr(" \t\v\f\r", str[i]))
+		if (!cb_strchr(" \t\v\f\r", str[i]))
 			return (i);
 		i++;
 	}
@@ -95,12 +83,12 @@ int	skip(char *s, int *i, int check)
 	int	com;
 
 	com = 0;
-	while (ft_strchr(" \t\v\f\r", s[*i]))
+	while (cb_strchr(" \t\v\f\r", s[*i]))
 		(*i)++;
 	if (check)
 		while (s[*i] <= '9' && s[*i] >= '0')
 			(*i)++;
-	while (ft_strchr(" \t\v\f\r,", s[*i]))
+	while (cb_strchr(" \t\v\f\r,", s[*i]))
 	{
 		if (s[*i] == ',')
 			com++;

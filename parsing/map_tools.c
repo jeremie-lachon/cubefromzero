@@ -1,25 +1,13 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   map_tools.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 15:20:30 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 17:04:00 by dakojic          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 char	*remove_end(char *str)
 {
 	char	*tmp;
 
-	tmp = ft_strchr(str, '\n');
+	tmp = cb_strchr(str, '\n');
 	if (!tmp)
-		return (ft_strdup(str));
-	tmp = ft_substr(str, 0, tmp - str);
+		return (cb_strdup(str));
+	tmp = cb_substr(str, 0, tmp - str);
 	return (tmp);
 }
 
@@ -56,7 +44,7 @@ int	fillmap(t_list *node, t_parse *parse, int i)
 			parse->map[i][j] = DOOR;
 		else if (str[j] == 'P')
 			parse->map[i][j] = SPRITE;
-		else if (ft_strchr("NSEW", str[j]))
+		else if (cb_strchr("NSEW", str[j]))
 			nswe(i, j, str, parse);
 		else if (str[j] == ' ')
 			parse->map[i][j] = OUT;
@@ -74,7 +62,7 @@ int	mapcheckandstock(t_list *list, t_parse *map)
 	t_list	*tmp;
 
 	map->height = listsize(list);
-	map->map = ft_calloc(sizeof(int *), map->height);
+	map->map = cb_calloc(sizeof(int *), map->height);
 	if (!map->map)
 		return (perror("Error\n"), listfree(list), 1);
 	map->width = maxsize(list);
@@ -82,7 +70,7 @@ int	mapcheckandstock(t_list *list, t_parse *map)
 	tmp = list;
 	while (i < map->height)
 	{
-		map->map[i] = ft_calloc(sizeof(int), map->width);
+		map->map[i] = cb_calloc(sizeof(int), map->width);
 		if (!map->map[i])
 			return (perror("Error\n"), listfree(list), intfree(&map->map, i), 1);
 		if (fillmap(tmp, map, i))

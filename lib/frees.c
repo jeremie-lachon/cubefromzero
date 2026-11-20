@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   frees.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: snek <snek@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/19 13:01:45 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 09:21:44 by snek             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 int	intfree(int ***array, int i)
@@ -50,7 +38,7 @@ int	parsefree(t_parse *parse)
 	return (0);
 }
 
-int	ft_clear_display(t_mlx *mlx)
+int	cb_clear_display(t_mlx *mlx)
 {
 	mlx_destroy_image(mlx->mlx, mlx->img1->img_ptr);
 	mlx_destroy_image(mlx->mlx, mlx->img2->img_ptr);
@@ -87,7 +75,7 @@ int	free_cube(t_cube *c)
 	while (i < c->data.map_h)
 		free(c->data.map[i++]);
 	free(c->data.map);
-	ft_clear_display(c->mlx);
+	cb_clear_display(c->mlx);
 	free(c);
 	return (0);
 }

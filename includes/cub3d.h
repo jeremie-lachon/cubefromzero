@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dakojic <dakojic@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/21 16:54:50 by dakojic           #+#    #+#             */
-/*   Updated: 2025/02/22 17:12:55 by dakojic          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CUB3D_H
 # define CUB3D_H
 # include "mlx.h"
@@ -162,27 +150,27 @@ typedef struct s_cube
 	t_mlx		*mlx;
 }	t_cube;
 
-char	*ft_strdup(const char *s1);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char	**ft_split(char const *s, char c);
-char	**ft_freesplit(char **res, int n);
+char	*cb_strdup(const char *s1);
+int		cb_strncmp(const char *s1, const char *s2, size_t n);
+char	**cb_split(char const *s, char c);
+char	**cb_freesplit(char **res, int n);
 char	*custom_read(int fd, int check);
-char	*ft_strchr(const char *s, int c);
-char	*ft_substr(char const *s, int start, int len);
-char	*ft_strtrim(char *s1, char *set);
+char	*cb_strchr(const char *s, int c);
+char	*cb_substr(char const *s, int start, int len);
+char	*cb_strtrim(char *s1, char *set);
 void	printmap(t_parse *parse);
-void	*ft_calloc(size_t nmemb, size_t size);
+void	*cb_calloc(size_t nmemb, size_t size);
 void	mouse_rotation(t_cube *cube);
 void	moving(t_cube *cube);
 float	added_angle(t_cube *cube);
 float	fix_angle(float angle);
-size_t	ft_strlen(const char *str);
+size_t	cb_strlen(const char *str);
 t_parse	*parseinit(void);
 t_cube	*parse_to_cube(t_parse *parse, t_mlx *mlx);
 t_list	*listnew(void *data);
 void	freetexts(t_cube *cube);
 void	display_pix(t_img_data *img, int x, int y, int color);
-void	ft_putpixel(int i, t_cube *cube, int color, int flag);
+void	cb_putpixel(int i, t_cube *cube, int color, int flag);
 void	draw_wall(float top_pixel, t_cube *cube, float offset);
 void	draw_wall_other(t_cube *cube, float pixel, float offset, int i);
 void	draw_other(float top, t_cube *cube);
@@ -193,7 +181,7 @@ float	find_y_ray(t_cube *cube, float angle, float fixed_angle);
 
 void	raycasting(t_cube *cube);
 void	wall_check(float distxy[2], t_cube *cube, float angle, float cosangled);
-int		ft_atoi(const char *nptr);
+int		cb_atoi(const char *nptr);
 int		key_release(int keysym, t_cube *cube);
 int		key_press(int keysym, t_cube *cube);
 int		escape(t_cube *cube);
@@ -209,8 +197,8 @@ int		listaddfront(t_list **list, t_list *new);
 int		intfree(int ***array, int i);
 int		parsefree(t_parse *parse);
 int		free_cube(t_cube *cube);
-int		ft_clear_display(t_mlx *mlx);
-int		ft_mlx_start(t_mlx **mlx_address);
+int		cb_clear_display(t_mlx *mlx);
+int		cb_mlx_start(t_mlx **mlx_address);
 int		mapper(int fd, t_parse *parse, char *str);
 int		imgstruct(t_cube *cube, int num, t_mlx *mlx, t_parse *parse);
 int		parse_filler(int fd, t_parse *cube);
